@@ -1,0 +1,8 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Tailwind CSS className fold settings
+  "inlineFold.regex": "(class|className)=[`'{\"]([^`'\"}]{50,})[`'\"}]",
+  "inlineFold.regexFlags": "g",
+  "inlineFold.regexGroup": 2
+}
