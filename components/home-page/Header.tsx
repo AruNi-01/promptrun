@@ -1,5 +1,7 @@
+"use client";
 import {
   Button,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -12,8 +14,8 @@ import {
   cn,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
-import { ChevronDownIcon } from "./icons";
-import AnimateArrow from "./ui/AnimateArrow";
+import { ChevronDownIcon } from "../icons";
+import AnimateArrow from "../ui/AnimateArrow";
 
 export default function App() {
   const pathname = usePathname();
@@ -22,7 +24,7 @@ export default function App() {
   };
 
   return (
-    <Navbar height={"80px"}>
+    <Navbar height={"80px"} isBordered>
       <NavbarBrand>
         <Link href="/" color="foreground">
           <p className="font-bold text-lg">

@@ -1,7 +1,6 @@
 export default function MarketPage() {
   return (
-    <div>
-      <h1>Market</h1>
-    </div>
+    <section className="flex gap-4">
+    </section>
   );
 }

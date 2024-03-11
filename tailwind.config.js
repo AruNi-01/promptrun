@@ -25,7 +25,7 @@ module.exports = {
         "slide-in-from-right-800": "slideInRight 0.8s ease-in",
         "slide-in-from-right-1000": "slideInRight 1s ease-in",
         "slide-out-to-up-500": "slideOutUp 0.5s ease-out forwards",
-        "scale-3000": "scale 3s ease-in-out infinite",
+        "scale-5000": "scale 5s ease-in-out infinite",
       },
       keyframes: {
         bounce: {
