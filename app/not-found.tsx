@@ -7,8 +7,8 @@ import Lottie from "lottie-react";
 
 export default function NotFoundPage({ pathname }: { pathname?: string }) {
   return (
-    <section className="flex flex-col md:flex-row md:mx-0 mx-5 items-center justify-center mt-10">
-      <Lottie animationData={notFoundIcon} className="md:w-2/3" />
+    <section className="flex flex-col md:flex-row mx-5 items-center justify-center mt-10">
+      <Lottie animationData={notFoundIcon} className="md:w-1/2" />
       <div className="flex flex-col gap-3 md:w-1/3">
         <span className="font-bold text-4xl animate-slide-in-to-up-500">Oops!</span>
         <span className="pathname-neutral-500 pathname-lg animate-slide-in-to-up-1000">

@@ -1,5 +1,5 @@
-import { Footer } from "@/components/home-page/Footer";
-import Header from "@/components/home-page/Header";
+import { Footer } from "@/components/Footer";
+import Header from "@/components/Header";
 import { fontSans } from "@/config/fonts";
 import "@/styles/globals.css";
 import { Analytics } from "@vercel/analytics/react";
@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="flex flex-col gap-10">
             <Header />
             {children}
-            <Footer />
+            {/* <Footer /> */}
             <Analytics />
             <SpeedInsights />
           </main>

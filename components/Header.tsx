@@ -1,7 +1,9 @@
 "use client";
 import {
+  Avatar,
+  AvatarIcon,
+  Badge,
   Button,
-  Divider,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -14,8 +16,9 @@ import {
   cn,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
-import { ChevronDownIcon } from "../icons";
-import AnimateArrow from "../ui/AnimateArrow";
+import { ChevronDownIcon } from "./icons";
+import AnimateArrow from "./ui/AnimateArrow";
+import Login from "./login/Login";
 
 export default function App() {
   const pathname = usePathname();
@@ -27,14 +30,14 @@ export default function App() {
     <Navbar height={"80px"} isBordered>
       <NavbarBrand>
         <Link href="/" color="foreground">
-          <p className="font-bold text-lg">
+          <p className="font-bold text-2xl">
             Prompt
             <span className="text-primary">Run</span>
           </p>
         </Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <Dropdown>
+        <Dropdown placement="bottom-start">
           <NavbarItem isActive={navItemIsActive("/market")}>
             <DropdownTrigger>
               <Button
@@ -76,11 +79,11 @@ export default function App() {
             <DropdownItem
               key="autoscaling"
               // startContent={icons.cloud}
-              endContent={<AnimateArrow arrowColor="text-primary" size={18} />}
+              endContent={<AnimateArrow size={18} />}
               color="primary"
               href="market/all"
             >
-              <p className="text-primary">所有模型</p>
+              所有模型
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -97,9 +100,7 @@ export default function App() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button as={Link} color="primary" href="/login" variant="flat">
-            <AnimateArrow text="登录" size={18} />
-          </Button>
+          <Login />
         </NavbarItem>
       </NavbarContent>
     </Navbar>
