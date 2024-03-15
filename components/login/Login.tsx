@@ -17,13 +17,19 @@ import {
   Tabs,
   User,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, UserIcon, XIcon } from "../icons";
-import { login, register } from "@/api/passport";
+import { login, logout, register } from "@/api/passport";
 import { LoginReq, RegisterReq } from "@/types/api/passport";
+import { useLocalStorageWithLoginUser } from "@/hooks/localStorage";
+import { useLoginUserStore } from "@/hooks/state_stores/loginUserStore";
+import { useRouter } from "next/navigation";
+import { getCookieValue } from "@/utils/cookie";
 
 export default function Login() {
   const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
+
+  const router = useRouter();
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [tabsSelected, setTabsSelected] = useState<string | number>("login");
@@ -40,7 +46,19 @@ export default function Login() {
 
   const [formErrorMsg, setFormErrorMsg] = useState("");
 
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const { loginUser, setLoginUser, removeLoginUser } = useLoginUserStore((state) => ({
+    loginUser: state.loginUser,
+    setLoginUser: state.setLoginUser,
+    removeLoginUser: state.removeLoginUser,
+  }));
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    if (loginUser !== null) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, [loginUser]);
 
   const handlePressLoginBtn = () => {
     setModalOpen(true);
@@ -59,7 +77,15 @@ export default function Login() {
         setFormErrorMsg(rsp.errMsg);
       } else {
         // TODO: 登录成功后的操作，rsp.data 获取到用户信息
-        setIsLogin(true);
+        setLoginUser({
+          id: rsp.data.id,
+          email: rsp.data.email,
+          password: rsp.data.password,
+          nickname: rsp.data.nickname,
+          headerUrl: rsp.data.header_url,
+          type: rsp.data.type,
+          createTime: rsp.data.create_time,
+        });
         setModalOpen(false);
         setFormErrorMsg("");
         setLoginForm({ email: "", password: "" });
@@ -85,6 +111,29 @@ export default function Login() {
     } catch (error) {
       // TODO: 错误处理
       console.error("Error:", error);
+    }
+  };
+  const handleProfileDropdownMenu = async (key: Key) => {
+    if (key === "logout") {
+      try {
+        const rsp = await logout();
+        if (rsp.errCode === Number(401) || rsp.errCode !== Number(0)) {
+          // TODO: 未登录状态
+          console.error("Error:", rsp.errMsg);
+          removeLoginUser();
+          router.refresh();
+        } else {
+          removeLoginUser();
+          router.refresh();
+        }
+      } catch (error) {
+        // TODO: 错误处理
+        console.error("Error:", error);
+      }
+    } else if (key === "seller") {
+      router.push("/seller");
+    } else if (key === "settings") {
+      router.push("/user/settings");
     }
   };
 
@@ -274,11 +323,17 @@ export default function Login() {
             as="button"
             avatarProps={{}}
             className={`${isLogin ? "" : "hidden"} transition-transform`}
-            description="hello@0x3f4.run"
-            name="AarynLu"
+            description={loginUser?.email}
+            name={loginUser?.nickname}
           />
         </DropdownTrigger>
-        <DropdownMenu aria-label="User Actions" variant="flat">
+        <DropdownMenu
+          aria-label="User Actions"
+          variant="flat"
+          onAction={(key) => {
+            handleProfileDropdownMenu(key);
+          }}
+        >
           <DropdownItem key="settings" startContent={<SettingIcon className={iconClasses} />}>
             个人设置
           </DropdownItem>

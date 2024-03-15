@@ -1,10 +1,9 @@
-export type LoginReq = {
+export interface LoginReq {
   email: string;
   password: string;
-};
+}
 
-export type RegisterReq = {
-  email: string;
-  password: string;
+export interface RegisterReq extends LoginReq {
   confirmPassword: string;
-};
+}
+
