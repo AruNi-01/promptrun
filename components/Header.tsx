@@ -1,23 +1,6 @@
 "use client";
-import {
-  Avatar,
-  AvatarIcon,
-  Badge,
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Link,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  cn,
-} from "@nextui-org/react";
+import { Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
-import { ChevronDownIcon } from "./icons";
-import AnimateArrow from "./ui/AnimateArrow";
 import Login from "./login/Login";
 
 export default function App() {

@@ -1,3 +1,6 @@
+import { login, logout, register } from "@/api/passport";
+import { useLoginUserStore } from "@/state_stores/loginUserStore";
+import { LoginReq, RegisterReq } from "@/types/api/passport";
 import { Button } from "@nextui-org/button";
 import {
   Card,
@@ -17,14 +20,9 @@ import {
   Tabs,
   User,
 } from "@nextui-org/react";
-import { Key, useEffect, useState } from "react";
-import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, UserIcon, XIcon } from "../icons";
-import { login, logout, register } from "@/api/passport";
-import { LoginReq, RegisterReq } from "@/types/api/passport";
-import { useLocalStorageWithLoginUser } from "@/hooks/localStorage";
-import { useLoginUserStore } from "@/hooks/state_stores/loginUserStore";
 import { useRouter } from "next/navigation";
-import { getCookieValue } from "@/utils/cookie";
+import { Key, useEffect, useState } from "react";
+import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, XIcon } from "../icons";
 
 export default function Login() {
   const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
