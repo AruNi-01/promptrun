@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import clsx from "clsx";
 import { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
+import { Toaster } from "react-hot-toast";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -39,6 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             {children}
             {/* <Footer /> */}
+
+            <Toaster />
             <Analytics />
             <SpeedInsights />
           </main>

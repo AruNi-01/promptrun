@@ -1,6 +1,7 @@
 import { login, logout, register } from "@/api/passport";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { LoginReq, RegisterReq } from "@/types/api/passport";
+import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Button } from "@nextui-org/button";
 import {
   Card,
@@ -22,9 +23,7 @@ import {
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { Key, useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
 import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, XIcon } from "../icons";
-import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 
 export default function Login() {
   const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
@@ -144,8 +143,6 @@ export default function Login() {
 
   return (
     <>
-      <Toaster />
-
       {/* 未登录状态 */}
       <div className={`${isLogin ? "hidden" : ""} flex gap-2`}>
         <Button onPress={handlePressLoginBtn} className="text-md" color="primary" variant="light">
