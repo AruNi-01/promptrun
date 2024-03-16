@@ -142,7 +142,7 @@ export default function Login() {
         <Button onPress={handlePressLoginBtn} className="text-md" color="primary" variant="light">
           登录
         </Button>
-        <Button onPress={handlePressSignBtn} className="text-md" color="primary" variant="flat">
+        <Button onPress={handlePressSignBtn} className="text-md" color="primary" variant="shadow" >
           注册
         </Button>
       </div>

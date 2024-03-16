@@ -1,6 +1,6 @@
 "use client";
-import { Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
+import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, Tab, Tabs, button } from "@nextui-org/react";
+import { usePathname, useRouter } from "next/navigation";
 import Login from "./login/Login";
 
 export default function App() {
@@ -8,6 +8,8 @@ export default function App() {
   const navItemIsActive = (path: string): boolean => {
     return path !== "/" ? pathname.startsWith(path) : false;
   };
+
+  const route = useRouter();
 
   return (
     <Navbar height={"80px"} isBordered>
@@ -19,21 +21,39 @@ export default function App() {
           </p>
         </Link>
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem isActive={navItemIsActive("/market")}>
-          <Link color={navItemIsActive("/market") ? "primary" : "foreground"} href="/market">
+      <NavbarContent className="hidden sm:flex gap-4 bg-default-50 rounded-full h-12 " justify="center">
+        <NavbarItem isActive={navItemIsActive("/market")} className="ml-1">
+          <Button
+            as={Link}
+            variant={navItemIsActive("/market") ? "shadow" : "light"}
+            radius="full"
+            color={navItemIsActive("/market") ? "primary" : "default"}
+            href="/market"
+          >
             交易市场
-          </Link>
+          </Button>
         </NavbarItem>
         <NavbarItem isActive={navItemIsActive("/seller")}>
-          <Link color={navItemIsActive("/seller") ? "primary" : "foreground"} href="/seller">
+          <Button
+            as={Link}
+            variant={navItemIsActive("/seller") ? "shadow" : "light"}
+            radius="full"
+            color={navItemIsActive("/seller") ? "primary" : "default"}
+            href="/seller"
+          >
             出售 Prompt
-          </Link>
+          </Button>
         </NavbarItem>
-        <NavbarItem isActive={navItemIsActive("/about")}>
-          <Link color={navItemIsActive("/about") ? "primary" : "foreground"} href="/about">
+        <NavbarItem isActive={navItemIsActive("/about")} className="mr-1">
+          <Button
+            as={Link}
+            variant={navItemIsActive("/about") ? "shadow" : "light"}
+            radius="full"
+            color={navItemIsActive("/about") ? "primary" : "default"}
+            href="/about"
+          >
             关于我们
-          </Link>
+          </Button>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
