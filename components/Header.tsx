@@ -1,6 +1,6 @@
 "use client";
-import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem, Tab, Tabs, button } from "@nextui-org/react";
-import { usePathname, useRouter } from "next/navigation";
+import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 import Login from "./login/Login";
 
 export default function App() {
@@ -8,8 +8,6 @@ export default function App() {
   const navItemIsActive = (path: string): boolean => {
     return path !== "/" ? pathname.startsWith(path) : false;
   };
-
-  const route = useRouter();
 
   return (
     <Navbar height={"80px"} isBordered>

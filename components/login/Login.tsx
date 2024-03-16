@@ -22,7 +22,9 @@ import {
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { Key, useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, XIcon } from "../icons";
+import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 
 export default function Login() {
   const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
@@ -74,7 +76,6 @@ export default function Login() {
       if (rsp.errCode !== 0) {
         setFormErrorMsg(rsp.errMsg);
       } else {
-        // TODO: 登录成功后的操作，rsp.data 获取到用户信息
         setLoginUser({
           id: rsp.data.id,
           email: rsp.data.email,
@@ -87,10 +88,12 @@ export default function Login() {
         setModalOpen(false);
         setFormErrorMsg("");
         setLoginForm({ email: "", password: "" });
+
+        toastSuccessMsg("登录成功，欢迎来到 Prompt Run!");
       }
     } catch (error) {
-      // TODO: 错误处理
       console.error("Error:", error);
+      toastErrorMsg("登录失败，服务器开小差了，请稍后重试！");
     }
   };
   const handleRegister = async (e: { preventDefault: () => void }) => {
@@ -100,15 +103,16 @@ export default function Login() {
       if (rsp.errCode !== 0) {
         setFormErrorMsg(rsp.errMsg);
       } else {
-        // TODO: 注册成功后的操作，rsp.data 获取到用户信息
         loginForm.email = registerForm.email;
         loginForm.password = registerForm.password;
         setRegisterForm({ email: "", password: "", confirmPassword: "" });
         handleLogin(e);
+
+        toastSuccessMsg("注册成功，欢迎来到 Prompt Run!");
       }
     } catch (error) {
-      // TODO: 错误处理
       console.error("Error:", error);
+      toastErrorMsg("注册失败，服务器开小差了，请稍后重试！");
     }
   };
   const handleProfileDropdownMenu = async (key: Key) => {
@@ -116,17 +120,20 @@ export default function Login() {
       try {
         const rsp = await logout();
         if (rsp.errCode === Number(401) || rsp.errCode !== Number(0)) {
-          // TODO: 未登录状态
           console.error("Error:", rsp.errMsg);
           removeLoginUser();
           router.refresh();
+
+          toastErrorMsg("退出登录失败，您还未登录！");
         } else {
           removeLoginUser();
           router.refresh();
+
+          toastSuccessMsg("退出登录成功！");
         }
       } catch (error) {
-        // TODO: 错误处理
         console.error("Error:", error);
+        toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
       }
     } else if (key === "seller") {
       router.push("/seller");
@@ -137,12 +144,14 @@ export default function Login() {
 
   return (
     <>
+      <Toaster />
+
       {/* 未登录状态 */}
       <div className={`${isLogin ? "hidden" : ""} flex gap-2`}>
         <Button onPress={handlePressLoginBtn} className="text-md" color="primary" variant="light">
           登录
         </Button>
-        <Button onPress={handlePressSignBtn} className="text-md" color="primary" variant="shadow" >
+        <Button onPress={handlePressSignBtn} className="text-md" color="primary" variant="shadow">
           注册
         </Button>
       </div>
