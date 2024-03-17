@@ -220,8 +220,8 @@ export default function Login() {
                               variant="bordered"
                               value={loginForm.email}
                               onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
-                              label="Email"
-                              placeholder="Enter your email"
+                              label="邮箱"
+                              placeholder="请输入您的邮箱"
                               type="email"
                               endContent={
                                 <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
@@ -232,8 +232,8 @@ export default function Login() {
                               variant="bordered"
                               value={loginForm.password}
                               onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                              label="Password"
-                              placeholder="Enter your password"
+                              label="密码"
+                              placeholder="请输入您的密码"
                               type="password"
                               endContent={
                                 <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
@@ -262,8 +262,8 @@ export default function Login() {
                               variant="bordered"
                               value={registerForm.email}
                               onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
-                              label="Email"
-                              placeholder="Enter your email"
+                              label="邮箱"
+                              placeholder="请输入您的邮箱"
                               type="email"
                               endContent={
                                 <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
@@ -274,8 +274,8 @@ export default function Login() {
                               variant="bordered"
                               value={registerForm.password}
                               onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
-                              label="Password"
-                              placeholder="Enter your password"
+                              label="密码"
+                              placeholder="请输入您的密码"
                               type="password"
                               endContent={
                                 <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
@@ -286,8 +286,8 @@ export default function Login() {
                               variant="bordered"
                               value={registerForm.confirmPassword}
                               onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
-                              label="Confirm Password"
-                              placeholder="Enter your password again"
+                              label="确认密码"
+                              placeholder="请再次输入您的密码"
                               type="password"
                               endContent={
                                 <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
