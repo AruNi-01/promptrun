@@ -36,10 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <main className="flex flex-col gap-10">
+          <main className="flex flex-col gap-5">
             <Header />
-            {children}
-            {/* <Footer /> */}
+            <center className="flex-1 overflow-y-auto min-h-screen">{children}</center>
+            <Footer />
 
             <Toaster />
             <Analytics />
