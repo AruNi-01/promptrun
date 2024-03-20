@@ -22,7 +22,7 @@ export default function Home() {
         <span className="rounded-3xl mx-1 bg-gradient-to-r from-purple-500 to-pink-500"> LLMs </span>
         更容易、更高效、更符合预期
       </p>
-      <p className="text-2xl cursor-default bg-gradient-to-r from-pink-500 to-blue-500 bg-clip-text text-transparent">
+      <p className="text-2xl cursor-default bg-gradient-to-r from-pink-600 via-purple-500 to-blue-600 bg-clip-text text-transparent">
         GPT, Claude 3, Midjourney, DALL·E, Stable Diffusion ···
       </p>
       <div className="flex gap-10 mt-5">

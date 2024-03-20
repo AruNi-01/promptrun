@@ -163,21 +163,6 @@ export const HeartIcon: React.FC<IconSvgProps> = ({ ...props }) => {
   );
 };
 
-export const ChevronDownIcon: React.FC<IconSvgProps> = ({ ...props }) => {
-  return (
-    <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height={16} width={16} {...props}>
-      <path
-        d="m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={1.5}
-      />
-    </svg>
-  );
-};
-
 export const UnderlineIcon: React.FC<IconSvgProps> = ({ ...props }) => {
   return (
     <svg aria-hidden="true" viewBox="0 0 401 42" fill="currentColor" preserveAspectRatio="none" {...props}>
@@ -280,7 +265,14 @@ export const SettingIcon: React.FC<IconSvgProps> = ({ ...props }) => {
 
 export const SellerIcon: React.FC<IconSvgProps> = ({ ...props }) => {
   return (
-    <svg height="1em" width="1em" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      height="1em"
+      width="1em"
+      viewBox="0 0 1024 1024"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <path
         d="M952.832 352.768c-0.064-0.48-0.16-0.928-0.256-1.312-0.384-1.856-0.896-3.648-1.632-5.376L875.936 159.36c-12.992-38.72-50.304-62.464-93.952-62.56L255.488 96.8c-44.224 0-78.592 23.52-91.04 60.704l-80.64 190.528c-0.384 1.12-0.8 2.784-1.152 4.48-5.856 17.984-8.8 36.448-8.8 54.976 0.064 65.152 35.808 124.64 93.248 155.264 0 0 0 0.032 0.032 0.032s0.032 0 0.032 0.032l0 0c0 0 0.032 0 0.032 0.032 23.648 12.608 51.456 19.008 82.784 19.008 52.512-0.16 101.152-23.232 134.304-62.72 32.992 39.168 81.248 62.08 133.664 62.4 52-0.416 100.128-23.424 132.96-62.56 33.152 39.488 81.856 62.464 134.624 62.464 31.936-0.16 60.288-6.88 84.16-19.968 56.576-30.912 91.68-90.176 91.648-154.656C961.44 388.288 958.4 369.696 952.832 352.768zM839.072 505.312c-14.496 7.936-32.576 12-53.6 12.128-38.976 0-74.496-19.776-95.232-53.344-1.472-3.168-3.936-8.416-8.544-13.472-5.28-5.92-14.88-12.928-30.688-12.928-12.736 0-24.288 5.216-30.816 13.216-4.32 4.864-6.688 9.696-8.384 13.216-20.48 33.152-55.712 53.12-93.888 53.408-38.656-0.224-73.984-20.128-94.592-53.536-1.44-2.944-3.84-7.904-7.584-12.096-15.04-17.952-48.704-17.024-61.824-1.376-4.832 5.28-7.36 10.592-8.992 14.208-20.672 33.152-56.224 53.024-95.008 53.152-20.672 0-38.368-3.872-52.64-11.488 0 0-0.032 0-0.032 0 0 0 0 0-0.032 0-36.608-19.488-59.36-57.376-59.392-98.848 0-12.256 2.048-24.608 6.144-36.64 0.288-0.864 0.544-1.824 0.768-2.816l79.424-187.776c1.632-4.8 6.56-19.424 31.264-19.424L782.08 160.896c10.144 0.608 27.616 2.4 33.824 20.672l74.368 185.184c0.288 1.344 0.64 2.624 0.96 3.68 4.128 12.064 6.176 24.32 6.176 36.48C897.472 447.904 875.104 485.6 839.072 505.312zM863.072 608c-17.696 0-32 14.304-32 32l0.064 174.592c0 9.92-8.096 17.984-17.984 18.016L211.072 832.992c-9.92 0-17.984-8-17.984-17.856l-0.224-171.584c-0.032-17.664-14.368-31.936-32-31.936 0 0-0.032 0-0.064 0-17.664 0.032-31.968 14.368-31.936 32.064l0.224 171.488c0 45.12 36.768 81.824 81.984 81.824l602.176-0.384c45.152-0.096 81.888-36.896 81.888-82.048L895.072 640C895.072 622.304 880.736 608 863.072 608zM768 384 256 384c-17.664 0-32-14.336-32-32s14.336-32 32-32l512 0c17.696 0 32 14.336 32 32S785.696 384 768 384z"
         fillRule="evenodd"
@@ -301,3 +293,168 @@ export const LogoutIcon: React.FC<IconSvgProps> = ({ ...props }) => {
     </svg>
   );
 };
+
+export const VerticalDotsIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, ...props }) => {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height={size || height}
+      role="presentation"
+      viewBox="0 0 24 24"
+      width={size || width}
+      {...props}
+    >
+      <path
+        d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
+export const PlusIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, ...props }) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height={size || height}
+    role="presentation"
+    viewBox="0 0 24 24"
+    width={size || width}
+    {...props}
+  >
+    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}>
+      <path d="M6 12h12" />
+      <path d="M12 18V6" />
+    </g>
+  </svg>
+);
+
+export const ChevronDownIcon: React.FC<IconSvgProps> = ({ strokeWidth = 1.5, ...otherProps }) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height="1em"
+    role="presentation"
+    viewBox="0 0 24 24"
+    width="1em"
+    {...otherProps}
+  >
+    <path
+      d="m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeMiterlimit={10}
+      strokeWidth={strokeWidth}
+    />
+  </svg>
+);
+
+export const EditIcon: React.FC<IconSvgProps> = ({ ...props }) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height="1em"
+    role="presentation"
+    viewBox="0 0 20 20"
+    width="1em"
+    {...props}
+  >
+    <path
+      d="M11.05 3.00002L4.20835 10.2417C3.95002 10.5167 3.70002 11.0584 3.65002 11.4334L3.34169 14.1334C3.23335 15.1084 3.93335 15.775 4.90002 15.6084L7.58335 15.15C7.95835 15.0834 8.48335 14.8084 8.74168 14.525L15.5834 7.28335C16.7667 6.03335 17.3 4.60835 15.4583 2.86668C13.625 1.14168 12.2334 1.75002 11.05 3.00002Z"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeMiterlimit={10}
+      strokeWidth={1.5}
+    />
+    <path
+      d="M9.90833 4.20831C10.2667 6.50831 12.1333 8.26665 14.45 8.49998"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeMiterlimit={10}
+      strokeWidth={1.5}
+    />
+    <path
+      d="M2.5 18.3333H17.5"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeMiterlimit={10}
+      strokeWidth={1.5}
+    />
+  </svg>
+);
+
+export const DeleteIcon: React.FC<IconSvgProps> = ({ ...props }) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height="1em"
+    role="presentation"
+    viewBox="0 0 20 20"
+    width="1em"
+    {...props}
+  >
+    <path
+      d="M17.5 4.98332C14.725 4.70832 11.9333 4.56665 9.15 4.56665C7.5 4.56665 5.85 4.64998 4.2 4.81665L2.5 4.98332"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    />
+    <path
+      d="M7.08331 4.14169L7.26665 3.05002C7.39998 2.25835 7.49998 1.66669 8.90831 1.66669H11.0916C12.5 1.66669 12.6083 2.29169 12.7333 3.05835L12.9166 4.14169"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    />
+    <path
+      d="M15.7084 7.61664L15.1667 16.0083C15.075 17.3166 15 18.3333 12.675 18.3333H7.32502C5.00002 18.3333 4.92502 17.3166 4.83335 16.0083L4.29169 7.61664"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    />
+    <path
+      d="M8.60834 13.75H11.3833"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    />
+    <path
+      d="M7.91669 10.4167H12.0834"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    />
+  </svg>
+);
+
+export const CheckIcon = (props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height="1em"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    viewBox="0 0 24 24"
+    width="1em"
+    {...props}
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
