@@ -30,7 +30,7 @@ export default function MarketPage() {
   const [promptMasterImgList, setPromptMasterImgList] = useState<PromptImg[]>([]);
   const [paginate, setPaginate] = useState<Paginate>({
     page: 1,
-    pageSize: 8,
+    pageSize: 12,
   });
   const [rows, setRows] = useState<number>(0);
 
@@ -100,7 +100,9 @@ export default function MarketPage() {
         <div className="flex gap-1">
           <h2 className="text-lg">模型：</h2>
           <RadioGroup orientation="horizontal" value={modelSelected} onValueChange={setModelSelected}>
-            <Radio value="all">All</Radio>
+            <Radio key="all" value="all">
+              All
+            </Radio>
             {modelList.map((model) => (
               <Radio key={model.id} value={model.name}>
                 {model.name}
@@ -149,7 +151,7 @@ export default function MarketPage() {
           ))}
         </CheckboxGroup>
       </div>
-      <div className="gap-4 grid grid-cols-2 sm:grid-cols-4 mt-2">
+      <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
         {promptList?.map((prompt) => (
           <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
             <CardBody className="overflow-visible p-0">
@@ -159,23 +161,29 @@ export default function MarketPage() {
                   radius="lg"
                   width="100%"
                   alt={prompt.title}
-                  className="w-full object-cover h-[160px]"
+                  className="w-full object-cover h-[150px]"
                   src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === prompt.id)?.img_url}
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-60 z-10">
-                  <div className="flex gap-1 justify-between">
-                    <Chip variant="flat" size="md" color="primary" className="self-start">
-                      {modelList.find((model) => model.id === prompt.model_id)?.name}
-                    </Chip>
-                    <Rating
-                      value={
-                        // 四舍五入计算评分
-                        Math.round(prompt.rating)
-                      }
-                      readonly
-                      ratedColor="blue"
-                    />
-                  </div>
+                <Chip
+                  variant="flat"
+                  radius="sm"
+                  size="md"
+                  className="absolute top-0 right-0 m-1 z-10"
+                  classNames={{
+                    base: "bg-black/80 text-white",
+                  }}
+                >
+                  {modelList.find((model) => model.id === prompt.model_id)?.name}
+                </Chip>
+                <div className="absolute h-8 bottom-0 left-0 right-0 p-1 rounded-b-xl bg-black bg-opacity-50 z-10">
+                  <Rating
+                    value={
+                      // 四舍五入计算评分
+                      Math.round(prompt.rating)
+                    }
+                    readonly
+                    ratedColor="blue"
+                  />
                 </div>
               </div>
             </CardBody>
@@ -187,7 +195,7 @@ export default function MarketPage() {
         ))}
       </div>
       <div className="py-2 px-2 flex justify-between items-center">
-        <span className="text-default-400 text-medium">共计 {promptList.length} Prompts</span>
+        <span className="text-default-400 text-medium">共计 {rows} Prompts</span>
         <Pagination
           showControls
           classNames={{
