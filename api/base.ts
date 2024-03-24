@@ -1,5 +1,13 @@
 import { Result } from "@/types/api/result";
 
+export const httpMethod = {
+  GET: "GET",
+  POST: "POST",
+  PUT: "PUT",
+  OPTION: "OPTION",
+  DELETE: "DELETE",
+};
+
 export const baseFetch = async (url: string, method: string, data?: any): Promise<Result> => {
   try {
     const options: RequestInit = {

@@ -1,5 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { findModelList } from "@/api/model";
+import { findPromptList, findPromptMasterImgListByPromptIds } from "@/api/prompt";
+import { CustomCheckbox } from "@/components/market-page/CustomCheckBox";
+import { Model } from "@/types/api/model";
+import { Paginate } from "@/types/api/paginate";
+import { Prompt } from "@/types/api/prompt";
+import { PromptImg } from "@/types/api/prompt_img";
+import { categoryOptions, sortByOptions } from "@/utils/constant";
+import { toastErrorMsg } from "@/utils/messageToast";
+import { Rating } from "@material-tailwind/react";
 import {
   Card,
   CardBody,
@@ -11,137 +20,186 @@ import {
   Pagination,
   Radio,
   RadioGroup,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
-import { CustomCheckbox } from "@/components/market-page/CustomCheckBox";
-import { Rating } from "@material-tailwind/react";
-import { users } from "@/mock_data/seller_prompts";
+import { useEffect, useState } from "react";
 
 export default function MarketPage() {
-  const list = [
-    {
-      title: "Orange",
-      img: "/images/fruit-1.jpeg",
-      price: "5.50",
-    },
-    {
-      title: "Tangerine",
-      img: "/images/fruit-2.jpeg",
-      price: "3.00",
-    },
-    {
-      title: "Raspberry",
-      img: "/images/fruit-3.jpeg",
-      price: "10.00",
-    },
-    {
-      title: "Lemon",
-      img: "/images/fruit-4.jpeg",
-      price: "5.30",
-    },
-    {
-      title: "Avocado",
-      img: "/images/fruit-5.jpeg",
-      price: "15.70",
-    },
-    {
-      title: "Lemon 2",
-      img: "/images/fruit-6.jpeg",
-      price: "8.00",
-    },
-    {
-      title: "Banana",
-      img: "/images/fruit-7.jpeg",
-      price: "7.50",
-    },
-    {
-      title: "Watermelon",
-      img: "/images/fruit-8.jpeg",
-      price: "12.20",
-    },
-  ];
+  const [promptList, setPromptList] = useState<Prompt[]>([]);
+  const [promptMasterImgList, setPromptMasterImgList] = useState<PromptImg[]>([]);
+  const [paginate, setPaginate] = useState<Paginate>({
+    page: 1,
+    pageSize: 8,
+  });
+  const [rows, setRows] = useState<number>(0);
 
+  const [modelList, setModelList] = useState<Model[]>([]);
   const [modelSelected, setModelSelected] = useState<string>("all");
-  const [categorySelected, setCategorySelected] = useState<string[]>([]);
+  const [categorySelected, setCategorySelected] = useState<number[]>([]);
+  const [sortBy, setSortBy] = useState<string>("time");
 
-  const [page, setPage] = useState(1);
-  const pages = 4;
+  useEffect(() => {
+    fetchModelList();
+  }, []);
+
+  const fetchModelList = async () => {
+    try {
+      const rsp = await findModelList();
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("获取模型列表失败，请稍后刷新重试！");
+        return;
+      }
+      setModelList(rsp.data);
+    } catch (error) {
+      toastErrorMsg("获取模型列表失败，请稍后刷新重试！");
+    }
+  };
+
+  useEffect(() => {
+    fetchPromptData();
+
+    // 注意：React 默认通过比较对象的引用来判断是否发生变化，而对象每次重新渲染后引用都会改变。
+    // 所以对象的比较需要通过 JSON.stringify 转换为字符串再比较，否则会导致死循环。
+  }, [JSON.stringify(paginate), categorySelected, sortBy, modelSelected]);
+
+  const fetchPromptData = async () => {
+    try {
+      // fetch prompt list
+      var rsp = await findPromptList({
+        paginate: paginate,
+        sortBy: sortBy,
+        categoryTypes: categorySelected.length === 0 ? undefined : categorySelected,
+        // 如果 modelSelected 为 all，则不传 modelId；否则传 modelId，需要根据 modelSelected 去匹配 modelList 中的 id
+        modelId: modelSelected === "all" ? undefined : modelList.find((model) => model.name === modelSelected)?.id,
+      });
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("查询 Prompt 列表失败，请稍后刷新重试！");
+        return;
+      }
+      setPromptList(rsp.data.prompts);
+      setRows(rsp.data.rows);
+
+      // fetch prompt master_img list
+      rsp = await findPromptMasterImgListByPromptIds(rsp.data.prompts.map((prompt: { id: number }) => prompt.id));
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("查询 Prompt 主图列表失败，请稍后刷新重试！");
+        return;
+      }
+      setPromptMasterImgList(rsp.data);
+    } catch (error) {
+      toastErrorMsg("获取提示词列表失败，请稍后刷新重试！");
+    }
+  };
 
   return (
     <section className="flex flex-col gap-5 w-4/6 mt-8">
       <h1 className="text-4xl self-start">所有 Prompts</h1>
       <Divider />
-      <div className="flex gap-1">
-        <h2 className="text-lg">模型：</h2>
-        <RadioGroup orientation="horizontal" value={modelSelected} onValueChange={setModelSelected}>
-          <Radio value="all">All</Radio>
-          <Radio value="gap">GPT</Radio>
-          <Radio value="claude3">Claude 3</Radio>
-          <Radio value="midjourney">Midjourney</Radio>
-          <Radio value="dalle">DALL·E</Radio>
-          <Radio value="stablediffusion">Stable Diffusion</Radio>
-        </RadioGroup>
+      <div className="flex justify-between">
+        <div className="flex gap-1">
+          <h2 className="text-lg">模型：</h2>
+          <RadioGroup orientation="horizontal" value={modelSelected} onValueChange={setModelSelected}>
+            <Radio value="all">All</Radio>
+            {modelList.map((model) => (
+              <Radio key={model.id} value={model.name}>
+                {model.name}
+              </Radio>
+            ))}
+          </RadioGroup>
+        </div>
+        <Select
+          label="排行方式"
+          disallowEmptySelection
+          defaultSelectedKeys={["time"]}
+          className="max-w-[120px] h-8"
+          onChange={(e) => {
+            setSortBy(e.target.value);
+          }}
+        >
+          {sortByOptions.map((option) => (
+            <SelectItem key={option.key} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </Select>
       </div>
       <div className="flex gap-1">
         <h2 className="text-lg">分类：</h2>
         <CheckboxGroup
           className="gap-1"
           orientation="horizontal"
-          value={categorySelected}
-          onValueChange={setCategorySelected}
+          // 选中的分类，需要根据选中的 type 去匹配 value
+          value={categoryOptions
+            .filter((category) => categorySelected.includes(category.type))
+            .map((category) => category.value)}
+          // 设置选中的分类，需要根据选中的 value 去匹配 type
+          onValueChange={(selectedValues) => {
+            setCategorySelected(
+              categoryOptions
+                .filter((category) => selectedValues.includes(category.value))
+                .map((category) => category.type)
+            );
+          }}
         >
-          <CustomCheckbox value="anime">动漫</CustomCheckbox>
-          <CustomCheckbox value="advertise">广告</CustomCheckbox>
-          <CustomCheckbox value="animal">动物</CustomCheckbox>
+          {categoryOptions.map((category) => (
+            <CustomCheckbox key={category.type} value={category.value}>
+              {category.label}
+            </CustomCheckbox>
+          ))}
         </CheckboxGroup>
       </div>
       <div className="gap-4 grid grid-cols-2 sm:grid-cols-4 mt-2">
-        {list.map((item, index) => (
-          <Card
-            shadow="sm"
-            key={index}
-            isPressable
-            onPress={() => console.log("item pressed")}
-            className=""
-          >
+        {promptList?.map((prompt) => (
+          <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
             <CardBody className="overflow-visible p-0">
               <div className="relative">
                 <Image
                   shadow="sm"
                   radius="lg"
                   width="100%"
-                  alt={item.title}
+                  alt={prompt.title}
                   className="w-full object-cover h-[160px]"
-                  src="https://run-notes.oss-cn-beijing.aliyuncs.com/notes/202304202145141.png"
+                  src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === prompt.id)?.img_url}
                 />
                 <div className="absolute bottom-0 left-0 right-0 p-2 bg-black bg-opacity-60 z-10">
                   <div className="flex gap-1 justify-between">
                     <Chip variant="flat" size="md" color="primary" className="self-start">
-                      {item.title}
+                      {modelList.find((model) => model.id === prompt.model_id)?.name}
                     </Chip>
-                    <Rating value={4} readonly ratedColor="blue" />
+                    <Rating
+                      value={
+                        // 四舍五入计算评分
+                        Math.round(prompt.rating)
+                      }
+                      readonly
+                      ratedColor="blue"
+                    />
                   </div>
                 </div>
               </div>
             </CardBody>
             <CardFooter className="justify-between">
-              <b>{item.title}</b>
-              <p className="text-default-500 text-lg">￥{item.price}</p>
+              <b>{prompt.title}</b>
+              <p className="text-default-500 text-lg">￥{prompt.price}</p>
             </CardFooter>
           </Card>
         ))}
       </div>
       <div className="py-2 px-2 flex justify-between items-center">
-        <span className="text-default-400 text-medium">Total {users.length} Prompts</span>
+        <span className="text-default-400 text-medium">共计 {promptList.length} Prompts</span>
         <Pagination
           showControls
           classNames={{
             cursor: "bg-foreground text-background",
           }}
           color="default"
-          page={page}
-          total={pages}
+          page={paginate.page}
+          total={rows > paginate.pageSize ? Math.ceil(rows / paginate.pageSize) : 1}
           variant="light"
-          onChange={setPage}
+          onChange={(page) => {
+            setPaginate((prev) => ({ ...prev, page: page }));
+          }}
         />
       </div>
     </section>

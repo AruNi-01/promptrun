@@ -68,7 +68,7 @@ export default function Login() {
     setTabsSelected("sign-up");
   };
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
+  const handleLogin = async (e: { preventDefault: () => void }, fromRegister?: boolean) => {
     e.preventDefault();
     try {
       const rsp = await login(loginForm);
@@ -88,7 +88,7 @@ export default function Login() {
         setFormErrorMsg("");
         setLoginForm({ email: "", password: "" });
 
-        toastSuccessMsg("登录成功，欢迎来到 Prompt Run!");
+        fromRegister ? "" : toastSuccessMsg("登录成功，欢迎来到 Prompt Run!");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -105,7 +105,7 @@ export default function Login() {
         loginForm.email = registerForm.email;
         loginForm.password = registerForm.password;
         setRegisterForm({ email: "", password: "", confirmPassword: "" });
-        handleLogin(e);
+        handleLogin(e, true);
 
         toastSuccessMsg("注册成功，欢迎来到 Prompt Run!");
       }

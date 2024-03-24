@@ -1,11 +1,11 @@
 import API from "@/config/apiConfig.";
 import { LoginReq, RegisterReq } from "@/types/api/passport";
 import { Result } from "@/types/api/result";
-import { baseFetch } from "./base";
+import { baseFetch, httpMethod } from "./base";
 
 export const login = async (formData: LoginReq): Promise<Result> => {
   try {
-    return await baseFetch(API.passport.login, "POST", formData);
+    return await baseFetch(API.passport.login, httpMethod.POST, formData);
   } catch (error) {
     throw new Error("An error occurred during login.");
   }
@@ -13,7 +13,7 @@ export const login = async (formData: LoginReq): Promise<Result> => {
 
 export const register = async (formData: RegisterReq): Promise<Result> => {
   try {
-    return await baseFetch(API.passport.register, "POST", formData);
+    return await baseFetch(API.passport.register, httpMethod.POST, formData);
   } catch (error) {
     throw new Error("An error occurred during registration.");
   }
@@ -21,7 +21,7 @@ export const register = async (formData: RegisterReq): Promise<Result> => {
 
 export const logout = async (): Promise<Result> => {
   try {
-    return await baseFetch(API.passport.logout, "GET");
+    return await baseFetch(API.passport.logout, httpMethod.GET);
   } catch (error) {
     throw new Error("An error occurred during logout.");
   }
