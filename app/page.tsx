@@ -3,6 +3,7 @@ import Accordion from "@/components/home-page/Accordion";
 import { UnderlineIcon } from "@/components/icons";
 import AnimateArrow from "@/components/ui/AnimateArrow";
 import { Button } from "@nextui-org/button";
+import { Link } from "@nextui-org/link";
 
 export default function Home() {
   return (
@@ -27,6 +28,8 @@ export default function Home() {
       </p>
       <div className="flex gap-10 mt-5">
         <Button
+          as={Link}
+          href="/market"
           size="lg"
           variant="shadow"
           radius="sm"
@@ -34,7 +37,7 @@ export default function Home() {
         >
           <AnimateArrow text="购买 Prompts" size={24} />
         </Button>
-        <Button size="lg" color="secondary" variant="ghost" radius="sm">
+        <Button as={Link} href="/seller" size="lg" color="secondary" variant="ghost" radius="sm">
           成为卖家
         </Button>
       </div>
