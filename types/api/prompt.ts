@@ -10,6 +10,11 @@ export interface PromptListReq {
   sortBy?: string;
 }
 
+export interface PromptListByBuyerIdReq {
+  paginate: Paginate;
+  buyerId: number | undefined;
+}
+
 export interface Prompt {
   id: number;
   seller_id: number;

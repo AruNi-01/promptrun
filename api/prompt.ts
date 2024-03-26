@@ -1,13 +1,21 @@
 import API from "@/config/apiConfig.";
 import { baseFetch, httpMethod } from "./base";
 import { Result } from "@/types/api/result";
-import { PromptListReq } from "@/types/api/prompt";
+import { PromptListByBuyerIdReq, PromptListReq } from "@/types/api/prompt";
 
 export const findPromptList = async (reqData: PromptListReq): Promise<Result> => {
   try {
     return await baseFetch(API.prompt.list, httpMethod.POST, reqData);
   } catch (error) {
     throw new Error("An error occurred while querying the prompt list.");
+  }
+};
+
+export const findPromptListByBuyerId = async (reqData: PromptListByBuyerIdReq): Promise<Result> => {
+  try {
+    return await baseFetch(API.prompt.listByBuyerId, httpMethod.POST, reqData);
+  } catch (error) {
+    throw new Error("An error occurred while querying the prompt list by buyer.");
   }
 };
 

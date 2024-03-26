@@ -9,6 +9,7 @@ const API = {
 
   prompt: {
     list: API_URL + "/api/v1/prompt/list",
+    listByBuyerId: API_URL + "/api/v1/prompt/listByBuyerId",
     findById: (id: number): string => {
       return API_URL + `/api/v1/prompt/findById/${id}`;
     },

@@ -57,7 +57,7 @@ export default function Login() {
     } else {
       setIsLogin(false);
     }
-  }, [loginUser]);
+  }, [JSON.stringify(loginUser)]);
 
   const handlePressLoginBtn = () => {
     setModalOpen(true);
@@ -136,8 +136,8 @@ export default function Login() {
       }
     } else if (key === "seller") {
       router.push("/seller");
-    } else if (key === "settings") {
-      router.push("/user/settings");
+    } else if (key === "profile") {
+      router.push("/profile");
     }
   };
 
@@ -338,8 +338,8 @@ export default function Login() {
             handleProfileDropdownMenu(key);
           }}
         >
-          <DropdownItem key="settings" startContent={<SettingIcon className={iconClasses} />}>
-            个人设置
+          <DropdownItem key="profile" startContent={<SettingIcon className={iconClasses} />}>
+            个人主页
           </DropdownItem>
           <DropdownItem key="seller" showDivider startContent={<SellerIcon className={iconClasses} />}>
             卖家页面
