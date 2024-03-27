@@ -34,7 +34,10 @@ const API = {
   },
 
   user: {
-    getUserInfo: API_URL + "/api/v1/user/userInfo",
+    findById: (id: number): string => {
+      return API_URL + `/api/v1/user/findById/${id}`;
+    },
+    update: API_URL + "/api/v1/user/update",
   },
 };
 

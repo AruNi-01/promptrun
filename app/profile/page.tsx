@@ -1,14 +1,23 @@
 "use client";
 import { findModelList } from "@/api/model";
-import { findPromptList, findPromptListByBuyerId, findPromptMasterImgListByPromptIds } from "@/api/prompt";
+import { findPromptListByBuyerId, findPromptMasterImgListByPromptIds } from "@/api/prompt";
+import { findUserById, userUpdate } from "@/api/user";
 import { UploadIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Model } from "@/types/api/model";
 import { Paginate } from "@/types/api/paginate";
 import { Prompt } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
-import { toastErrorMsg } from "@/utils/messageToast";
-import { Rating } from "@material-tailwind/react";
+import { UserUpdateReq } from "@/types/api/user";
+import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
+import {
+  CardHeader,
+  Avatar as MaterialAvatar,
+  Card as MaterialCard,
+  CardBody as MaterialCardBody,
+  Rating,
+  Typography,
+} from "@material-tailwind/react";
 import {
   Avatar,
   Button,
@@ -23,39 +32,67 @@ import {
   Pagination,
   cn,
 } from "@nextui-org/react";
-import {
-  Card as MaterialCard,
-  CardHeader,
-  CardBody as MaterialCardBody,
-  Typography,
-  Avatar as MaterialAvatar,
-} from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 
 export default function UserPage() {
-  const { loginUser } = useLoginUserStore((state) => ({
+  const { loginUser, setLoginUser } = useLoginUserStore((state) => ({
     loginUser: state.loginUser,
+    setLoginUser: state.setLoginUser,
   }));
 
   const [isEdit, setIsEdit] = useState(false);
   const [editBtnIsLoading, setEditBtnIsLoading] = useState(false);
 
-  const [userForm, setUserForm] = useState({
+  const [userForm, setUserForm] = useState<UserUpdateReq>({
+    userId: loginUser?.id || 0,
     nickname: loginUser?.nickname || "",
     email: loginUser?.email || "",
+    headerImgBase64: undefined,
   });
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUserFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setEditBtnIsLoading(true);
-    setTimeout(() => {
-      setEditBtnIsLoading(false);
-    }, 1000);
+    if (!isEdit) {
+      return;
+    }
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    console.log(data);
+    setEditBtnIsLoading(true);
+
+    try {
+      var rsp = await userUpdate(userForm);
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("更新用户信息失败，请稍后重试！");
+        return;
+      }
+      toastSuccessMsg("更新用户信息成功！");
+      setUserForm({
+        ...userForm,
+        headerImgBase64: undefined,
+      });
+
+      // 更新 loginUser Store
+      rsp = await findUserById(userForm.userId);
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("重新查询用户信息失败，请稍后重试！");
+        return;
+      }
+
+      setLoginUser({
+        id: rsp.data.id,
+        email: rsp.data.email,
+        password: rsp.data.password,
+        nickname: rsp.data.nickname,
+        headerUrl: rsp.data.header_url,
+        type: rsp.data.type,
+        createTime: rsp.data.create_time,
+      });
+    } catch (error) {
+      toastErrorMsg("更新用户信息失败，请稍后重试！");
+    }
+
+    setEditBtnIsLoading(false);
+    setIsEdit(false);
   };
 
   const [promptList, setPromptList] = useState<Prompt[]>([]);
@@ -70,6 +107,14 @@ export default function UserPage() {
   useEffect(() => {
     fetchModelList();
     fetchBuyerPromptData();
+
+    // 监听到 loginUser 变化时，更新相关数据，防止相关数据在登录状态变化后不更新（loginUser Store 加载较慢）
+    setUserForm({
+      userId: loginUser?.id || 0,
+      nickname: loginUser?.nickname || "",
+      email: loginUser?.email || "",
+      headerImgBase64: undefined,
+    });
 
     // 注意：React 默认通过比较对象的引用来判断是否发生变化，而对象每次重新渲染后引用都会改变。
     // 所以对象的比较需要通过 JSON.stringify 转换为字符串再比较，否则会导致死循环。
@@ -121,15 +166,24 @@ export default function UserPage() {
           <h2 className="text-4xl">个人信息</h2>
           <div className="flex gap-2">
             <Button
-              color={`${isEdit ? "success" : "primary"}`}
-              variant={`${isEdit ? "shadow" : "ghost"}`}
-              type="submit"
+              color="primary"
+              variant="ghost"
               onClick={() => {
-                setIsEdit(!isEdit);
+                setIsEdit(true);
               }}
-              isLoading={editBtnIsLoading}
+              className={`${isEdit ? "hidden" : ""}`}
             >
-              {isEdit ? "保存" : "编辑"}
+              编辑
+            </Button>
+            <Button
+              color="success"
+              variant="shadow"
+              type="submit"
+              form="user-form"
+              isLoading={editBtnIsLoading}
+              className={`${isEdit ? "" : "hidden"}`}
+            >
+              保存
             </Button>
             <Button
               onClick={() => {
@@ -145,7 +199,7 @@ export default function UserPage() {
         </div>
         <Divider />
         <div className="flex justify-between"></div>
-        <form onSubmit={handleFormSubmit} className="grid grid-cols-2 gap-6">
+        <form id="user-form" onSubmit={handleUserFormSubmit} className="grid grid-cols-2 gap-6">
           <div className="flex gap-2 items-center">
             <span>头像</span>
             <div className="flex items-center gap-4">
@@ -159,7 +213,10 @@ export default function UserPage() {
                   )}
                 >
                   <div className="relative inline-block">
-                    <Avatar src={loginUser?.headerUrl} className="w-16 h-16 opacity-30" />
+                    <Avatar
+                      src={`${userForm.headerImgBase64 ? userForm.headerImgBase64 : loginUser?.headerUrl}`}
+                      className="w-16 h-16 opacity-30"
+                    />
                     <UploadIcon className="absolute top-4 left-4 w-8 h-8 text-white" />
                   </div>
                   <input
@@ -167,6 +224,16 @@ export default function UserPage() {
                     type="file"
                     accept="image/jpeg,image/jpg,image/png,image/svg"
                     className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = (e) => {
+                          setUserForm({ ...userForm, headerImgBase64: e.target?.result as string });
+                        };
+                      }
+                    }}
                   />
                 </label>
               </div>
