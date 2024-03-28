@@ -325,7 +325,9 @@ export default function Login() {
         <DropdownTrigger>
           <User
             as="button"
-            avatarProps={{}}
+            avatarProps={{
+              src: loginUser?.headerUrl,
+            }}
             className={`${isLogin ? "" : "hidden"} transition-transform`}
             description={loginUser?.email}
             name={loginUser?.nickname}
