@@ -1,9 +1,12 @@
 "use client";
 import Accordion from "@/components/home-page/Accordion";
+import ImgGallery from "@/components/home-page/ImgGallery";
 import { UnderlineIcon } from "@/components/icons";
 import AnimateArrow from "@/components/ui/AnimateArrow";
+import Tip from "@/components/ui/Tip";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
+import { Divider } from "@nextui-org/react";
 
 export default function Home() {
   return (
@@ -41,7 +44,17 @@ export default function Home() {
           成为卖家
         </Button>
       </div>
-      <div className="flex flex-col gap-3 w-3/5 mt-8">
+      <div className="w-4/6 mt-10 flex flex-col">
+        <div className="self-start flex gap-2">
+          <p className="text-2xl cursor-default text-default-600">AI 绘画，如此简单</p>
+          <div className="mt-[6px]">
+            <Tip tipContent="以下绘画由 Midjourney | Stable Diffusion 生成" className="mt-1" />
+          </div>
+        </div>
+        <Divider className="mb-4 mt-1" />
+        <ImgGallery />
+      </div>
+      <div className="flex flex-col gap-3 w-3/5 mt-8 mb-5">
         <h2 className="self-center cursor-default text-2xl font-bold text-default-600">了解更多</h2>
         <Accordion />
       </div>
