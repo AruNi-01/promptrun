@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import AnimateArrow from "../ui/AnimateArrow";
 import { cn } from "@nextui-org/system";
 
-const DarkMouseShadowColors = ["#281645"];
+const DarkMouseShadowColors = ["#291645"];
 
 export default function NavCard({ className }: { className?: string }) {
   const router = useRouter();

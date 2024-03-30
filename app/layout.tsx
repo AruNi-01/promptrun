@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
 import { Toaster } from "react-hot-toast";
+import { ThemeModeScript } from "flowbite-react";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -33,7 +34,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <ThemeModeScript />
+      </head>
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <main className="flex flex-col bg-gradient-to-tr from-[#010513] via-black to-[#010513] relative">
