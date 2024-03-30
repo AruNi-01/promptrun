@@ -26,8 +26,42 @@ module.exports = {
         "slide-in-from-right-1000": "slideInRight 1s ease-in",
         "slide-out-to-up-500": "slideOutUp 0.5s ease-out forwards",
         "scale-5000": "scale 5s ease-in-out infinite",
+
+        // 首页光影背景 animation
+        "blob-tr-7000": "blobTopRight 7s infinite",
+        "blob-lb-7000": "blobLeftBottom 7s infinite",
       },
       keyframes: {
+        // 首页光影背景 keyframe
+        blobTopRight: {
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+          "32%": {
+            transform: "translate(30px, -50px) scale(1.2)",
+          },
+          "66%": {
+            transform: "translate(-20px, 20px) scale(0.8)",
+          },
+          "100%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+        },
+        blobLeftBottom: {
+          "0%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+          "32%": {
+            transform: "translate(-30px, 50px) scale(1.2)",
+          },
+          "66%": {
+            transform: "translate(20px, -20px) scale(0.8)",
+          },
+          "100%": {
+            transform: "translate(0px, 0px) scale(1)",
+          },
+        },
+
         bounce: {
           "0%, 100%": {
             transform: "translateY(-10%)",

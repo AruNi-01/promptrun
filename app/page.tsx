@@ -1,6 +1,7 @@
 "use client";
 import Accordion from "@/components/home-page/Accordion";
 import ImgGallery from "@/components/home-page/ImgGallery";
+import NavCard from "@/components/home-page/NavCard";
 import { UnderlineIcon } from "@/components/icons";
 import AnimateArrow from "@/components/ui/AnimateArrow";
 import Tip from "@/components/ui/Tip";
@@ -10,7 +11,7 @@ import { Divider } from "@nextui-org/react";
 
 export default function Home() {
   return (
-    <section className="flex flex-col justify-around w-full items-center gap-10">
+    <section className="flex flex-col justify-around w-full items-center gap-10 relative z-10">
       <h1 className="text-7xl font-bold cursor-default">
         Prompt
         <div className="inline-block text-primary bg-primary-100/40 rounded-xl ml-1">
@@ -54,10 +55,22 @@ export default function Home() {
         <Divider className="mb-4 mt-1" />
         <ImgGallery />
       </div>
-      <div className="flex flex-col gap-3 w-3/5 mt-8 mb-5">
-        <h2 className="self-center cursor-default text-2xl font-bold text-default-600">了解更多</h2>
+      <div className="flex gap-16 w-4/6 mt-8">
+        <div className="flex flex-col gap-2 w-5/12 my-auto">
+          <p className="cursor-default text-3xl font-bold bg-gradient-to-r from-default-900 to-default-100 bg-clip-text text-transparent">
+            Frequently Asked Questions
+          </p>
+          <p className="cursor-default text-default-500 text-medium">了解更多关于 Prompt 的问题和解答</p>
+        </div>
         <Accordion />
       </div>
+      <NavCard className="w-4/6 h-[300px] overflow-hidden" />
+
+      <div className="absolute top-8 left-[34%] w-72 h-72 bg-blue-900 rounded-full mix-blend-multiply blur-2xl opacity-30 z-0 filter animate-blob-tr-7000"></div>
+      <div className="absolute top-8 left-[46%] w-72 h-72 bg-purple-900 rounded-full mix-blend-multiply blur-2xl opacity-30 z-0 filter animate-blob-tr-7000 animation-delay-2000"></div>
+      <div className="absolute top-24 left-[41%] w-72 h-72 bg-pink-900/50 rounded-full mix-blend-multiply blur-2xl opacity-30 z-0 filter animate-blob-tr-7000 animation-delay-4000"></div>
+
+      <div className="absolute top-0 right-0 w-72 h-72 bg-blue-950 rounded-full mix-blend-multiply blur-2xl opacity-30 -z-50 filter animate-blob-lb-7000"></div>
     </section>
   );
 }

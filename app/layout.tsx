@@ -36,9 +36,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <main className="flex flex-col gap-5 bg-gradient-to-tr from-[#010513] via-black to-[#010513] ">
+          <main className="flex flex-col bg-gradient-to-tr from-[#010513] via-black to-[#010513] relative">
             <Header />
-            <center className="flex-1 overflow-y-auto min-h-screen">{children}</center>
+            <center className="flex-1 overflow-y-auto pt-5 min-h-screen">{children}</center>
             <Footer />
 
             <Toaster />

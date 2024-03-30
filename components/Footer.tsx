@@ -4,7 +4,7 @@ import Link from "./ui/Link";
 
 export const Footer = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("flex flex-col gap-3 mb-3", className)}>
+    <div className={cn("flex flex-col gap-3 mb-3 mt-10", className)}>
       <Divider className="mx-auto w-9/12" />
       <div className={cn("mx-auto text-medium text-[#71717A]", "flex gap-2")}>
         <div className="flex">
