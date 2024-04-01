@@ -1,4 +1,5 @@
 "use client";
+import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Badge, FooterDivider, Sidebar } from "flowbite-react";
 import { ReactNode } from "react";
 import {
@@ -12,6 +13,12 @@ import {
 } from "react-icons/hi";
 
 export default function SellerLayout({ children }: { children: ReactNode }) {
+  const { loginUser, setLoginUser, removeLoginUser } = useLoginUserStore((state) => ({
+    loginUser: state.loginUser,
+    setLoginUser: state.setLoginUser,
+    removeLoginUser: state.removeLoginUser,
+  }));
+
   return (
     <section className="flex gap-10 w-9/12 mt-8">
       <Sidebar className="w-[30%] h-screen flex text-start rounded-2xl">
@@ -20,28 +27,31 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
         </Sidebar.Logo>
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="#" icon={HiChartPie}>
+            <Sidebar.Item href="/seller/dashboard" icon={HiChartPie}>
               整体看板
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiViewBoards}>
+            <Sidebar.Item href="/seller/goods" icon={HiViewBoards}>
               上架商品
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiShoppingBag}>
+            <Sidebar.Item href="/seller/order" icon={HiShoppingBag}>
               我的订单
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiSpeakerphone} label="3" labelColor="green">
+            <Sidebar.Item href="/seller/notice" icon={HiSpeakerphone} label="3" labelColor="green">
               消息通知
             </Sidebar.Item>
             <FooterDivider />
-            <Sidebar.Item href="#" icon={HiUserCircle}>
+            <Sidebar.Item href="/seller/profile" icon={HiUserCircle}>
               个人信息
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiLockClosed}>
+            <Sidebar.Item href="/seller/update_password" icon={HiLockClosed}>
               修改密码
+            </Sidebar.Item>
+            <Sidebar.Item href="/logout" icon={HiLockClosed}>
+              退出登录
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
-        <Sidebar.CTA className="mt-[calc(100vh-35rem)]">
+        <Sidebar.CTA className="mt-[calc(100vh-38rem)]">
           <div className="mb-2 flex justify-between">
             <HiFire className="h-[22px] w-[22px] text-green-300" />
             <Badge color="success">卖家须知</Badge>
