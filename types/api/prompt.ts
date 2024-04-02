@@ -8,6 +8,11 @@ export interface PromptListReq {
   modelId?: number;
   categoryTypes?: number[];
   sortBy?: string;
+
+  publishStatus?: number[];
+  AuditStatus?: number[];
+
+  userId?: number; // // 用户 ID，用于获取某个用户（seller）发布的提示词
 }
 
 export interface PromptListByBuyerIdReq {

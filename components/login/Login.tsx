@@ -206,7 +206,6 @@ export default function Login() {
                       <Tabs
                         fullWidth
                         size="md"
-                        aria-label="Tabs form"
                         selectedKey={tabsSelected}
                         onSelectionChange={(key) => {
                           setTabsSelected(key);
@@ -334,7 +333,6 @@ export default function Login() {
           />
         </DropdownTrigger>
         <DropdownMenu
-          aria-label="User Actions"
           variant="flat"
           onAction={(key) => {
             handleProfileDropdownMenu(key);

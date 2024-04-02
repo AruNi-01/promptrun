@@ -1,30 +1,27 @@
 "use client";
-import React, { ChangeEvent, Key, useCallback, useMemo, useState } from "react";
+import { ChevronDownIcon, DeleteIcon, EditIcon, PlusIcon } from "@/components/icons";
+import { columns, statusOptions, users } from "@/mock_data/seller_prompts";
+import { capitalize } from "@/utils/common";
 import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
   Button,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
   Chip,
-  User,
+  ChipProps,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Pagination,
   Selection,
-  ChipProps,
-  SortDescriptor,
-  CheckboxIcon,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
   Tooltip,
+  User,
 } from "@nextui-org/react";
-import { columns, users, statusOptions } from "@/mock_data/seller_prompts";
-import { ChevronDownIcon, DeleteIcon, EditIcon, PlusIcon, VerticalDotsIcon } from "@/components/icons";
-import { capitalize } from "@/utils/common";
+import React, { ChangeEvent, Key, useCallback, useMemo, useState } from "react";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -139,7 +136,6 @@ export default function SellPage() {
               </DropdownTrigger>
               <DropdownMenu
                 disallowEmptySelection
-                aria-label="Table Columns"
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
@@ -183,7 +179,6 @@ export default function SellPage() {
   return (
     <Table
       removeWrapper
-      aria-label="Example table with custom cells, pagination and sorting"
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
       topContent={topContent}

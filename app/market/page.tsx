@@ -2,11 +2,12 @@
 import { findModelList } from "@/api/model";
 import { findPromptList, findPromptMasterImgListByPromptIds } from "@/api/prompt";
 import { CustomCheckbox } from "@/components/market-page/CustomCheckBox";
+import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Model } from "@/types/api/model";
 import { Paginate } from "@/types/api/paginate";
 import { Prompt } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
-import { categoryOptions, sortByOptions } from "@/utils/constant";
+import { auditStatus, categoryOptions, publishStatus, sortByOptions } from "@/utils/constant";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { Rating } from "@material-tailwind/react";
 import {
@@ -68,6 +69,8 @@ export default function MarketPage() {
       // fetch prompt list
       var rsp = await findPromptList({
         paginate: paginate,
+        publishStatus: [publishStatus.PublishOn],
+        AuditStatus: [auditStatus.AuditPass],
         sortBy: sortBy,
         categoryTypes: categorySelected.length === 0 ? undefined : categorySelected,
         // 如果 modelSelected 为 all，则不传 modelId；否则传 modelId，需要根据 modelSelected 去匹配 modelList 中的 id

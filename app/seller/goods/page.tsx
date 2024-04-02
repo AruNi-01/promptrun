@@ -1,42 +1,33 @@
 "use client";
 import { findModelList } from "@/api/model";
 import { findPromptList, findPromptMasterImgListByPromptIds } from "@/api/prompt";
-import { ChevronDownIcon } from "@/components/icons";
-import { CustomCheckbox } from "@/components/market-page/CustomCheckBox";
+import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Model } from "@/types/api/model";
 import { Paginate } from "@/types/api/paginate";
 import { Prompt } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
-import { auditStatusOptions, categoryOptions, publishStatusOptions, sortByOptions } from "@/utils/constant";
+import { auditStatusOptions, publishStatusOptions } from "@/utils/constant";
 import { toastErrorMsg } from "@/utils/messageToast";
-import { Rating } from "@material-tailwind/react";
 import {
-  Button,
   Card,
   CardBody,
   CardFooter,
+  Checkbox,
   CheckboxGroup,
   Chip,
   ChipProps,
   Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Image,
   Pagination,
   Radio,
   RadioGroup,
-  Select,
-  SelectItem,
-  Selection,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 const auditStatusColorMap: Record<string, ChipProps["color"]> = {
   2: "success",
   0: "danger",
-  1: "primary",
+  1: "warning",
 };
 
 const publishStatusColorMap: Record<string, ChipProps["color"]> = {
@@ -45,6 +36,12 @@ const publishStatusColorMap: Record<string, ChipProps["color"]> = {
 };
 
 export default function SellerGoodsPage() {
+  const { loginUser, setLoginUser, removeLoginUser } = useLoginUserStore((state) => ({
+    loginUser: state.loginUser,
+    setLoginUser: state.setLoginUser,
+    removeLoginUser: state.removeLoginUser,
+  }));
+
   const [promptList, setPromptList] = useState<Prompt[]>([]);
   const [promptMasterImgList, setPromptMasterImgList] = useState<PromptImg[]>([]);
   const [paginate, setPaginate] = useState<Paginate>({
@@ -56,8 +53,8 @@ export default function SellerGoodsPage() {
   const [modelList, setModelList] = useState<Model[]>([]);
   const [modelSelected, setModelSelected] = useState<string>("all");
 
-  const [publishStatus, setPublishStatus] = useState<Selection>(new Set([]));
-  const [auditStatus, setAuditStatus] = useState<Selection>(new Set([]));
+  const [publishStatus, setPublishStatus] = useState<string[]>();
+  const [auditStatus, setAuditStatus] = useState<string[]>();
 
   useEffect(() => {
     fetchModelList();
@@ -81,13 +78,16 @@ export default function SellerGoodsPage() {
 
     // 注意：React 默认通过比较对象的引用来判断是否发生变化，而对象每次重新渲染后引用都会改变。
     // 所以对象的比较需要通过 JSON.stringify 转换为字符串再比较，否则会导致死循环。
-  }, [JSON.stringify(paginate), publishStatus, auditStatus, modelSelected]);
+  }, [JSON.stringify(paginate), JSON.stringify(loginUser), publishStatus, auditStatus, modelSelected]);
 
   const fetchPromptData = async () => {
     try {
       // fetch prompt list
       var rsp = await findPromptList({
         paginate: paginate,
+        publishStatus: publishStatus?.length !== 0 ? publishStatus?.map((str) => Number(str)) : undefined,
+        AuditStatus: auditStatus?.length !== 0 ? auditStatus?.map((str) => Number(str)) : undefined,
+        userId: loginUser?.id,
 
         // 如果 modelSelected 为 all，则不传 modelId；否则传 modelId，需要根据 modelSelected 去匹配 modelList 中的 id
         modelId: modelSelected === "all" ? undefined : modelList.find((model) => model.name === modelSelected)?.id,
@@ -116,60 +116,38 @@ export default function SellerGoodsPage() {
       <h1 className="text-3xl self-start">我上架的 Prompts</h1>
       <Divider />
 
-      <div className="flex justify-between">
-        <div className="flex gap-1">
-          <h2 className="text-lg">模型：</h2>
-          <RadioGroup orientation="horizontal" value={modelSelected} onValueChange={setModelSelected}>
-            <Radio key="all" value="all">
-              All
+      <div className="flex">
+        <h2 className="text-lg">模型：</h2>
+        <RadioGroup orientation="horizontal" value={modelSelected} onValueChange={setModelSelected}>
+          <Radio key="all" value="all">
+            All
+          </Radio>
+          {modelList.map((model) => (
+            <Radio key={model.id} value={model.name}>
+              {model.name}
             </Radio>
-            {modelList.map((model) => (
-              <Radio key={model.id} value={model.name}>
-                {model.name}
-              </Radio>
-            ))}
-          </RadioGroup>
-        </div>
-        <div className="flex gap-2">
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button endContent={<ChevronDownIcon className="text-small" />} size="md" variant="flat">
-                发布状态
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              closeOnSelect={false}
-              selectedKeys={publishStatus}
-              selectionMode="multiple"
-              onSelectionChange={setPublishStatus}
-            >
-              {publishStatusOptions.map((option) => (
-                <DropdownItem key={option.type} className="capitalize">
-                  {option.label}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button endContent={<ChevronDownIcon className="text-small" />} size="md" variant="flat">
-                审核状态
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              closeOnSelect={false}
-              selectedKeys={auditStatus}
-              selectionMode="multiple"
-              onSelectionChange={setAuditStatus}
-            >
-              {auditStatusOptions.map((option) => (
-                <DropdownItem key={option.type} className="capitalize">
-                  {option.label}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-        </div>
+          ))}
+        </RadioGroup>
+      </div>
+      <div className="flex">
+        <span>发布状态：</span>
+        <CheckboxGroup orientation="horizontal" color="primary" value={publishStatus} onValueChange={setPublishStatus}>
+          {publishStatusOptions.map((option) => (
+            <Checkbox value={option.type} key={option.type}>
+              {option.label}
+            </Checkbox>
+          ))}
+        </CheckboxGroup>
+      </div>
+      <div className="flex">
+        <span>审核状态：</span>
+        <CheckboxGroup orientation="horizontal" color="primary" value={auditStatus} onValueChange={setAuditStatus}>
+          {auditStatusOptions.map((option) => (
+            <Checkbox value={option.type} key={option.type}>
+              {option.label}
+            </Checkbox>
+          ))}
+        </CheckboxGroup>
       </div>
       <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
         {promptList?.map((prompt) => (
@@ -197,11 +175,11 @@ export default function SellerGoodsPage() {
                 </Chip>
                 <div className="absolute h-8 bottom-0 left-0 right-0 p-1 rounded-b-xl bg-black bg-opacity-50 z-10">
                   <div className="flex justify-between">
-                    <Chip color={auditStatusColorMap[prompt.audit_status]} size="sm" variant="dot">
-                      {auditStatusOptions.find((option) => option.type === prompt.audit_status)?.label}
+                    <Chip color={auditStatusColorMap[prompt.audit_status]} size="sm" variant="flat">
+                      {auditStatusOptions.find((option) => parseInt(option.type) === prompt.audit_status)?.label}
                     </Chip>
                     <Chip color={publishStatusColorMap[prompt.publish_status]} size="sm" variant="dot">
-                      {publishStatusOptions.find((option) => option.type === prompt.publish_status)?.label}
+                      {publishStatusOptions.find((option) => parseInt(option.type) === prompt.publish_status)?.label}
                     </Chip>
                   </div>
                 </div>
