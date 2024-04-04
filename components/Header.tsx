@@ -37,7 +37,7 @@ export default function App() {
             variant={navItemIsActive("/seller") ? "shadow" : "light"}
             radius="full"
             color={navItemIsActive("/seller") ? "primary" : "default"}
-            href="/seller"
+            href="/seller/dashboard"
           >
             出售 Prompt
           </Button>

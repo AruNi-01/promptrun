@@ -70,3 +70,27 @@ export const auditStatus = {
   Auditing: 1,
   AuditPass: 2,
 };
+
+export const categoryTypeMap = new Map<number, string>(
+  categoryOptions.map((category) => [category.type, category.label])
+);
+
+export const sellerOrderTableColumns = [
+  { key: "prompt_title", label: "Prompt 标题", defaultVisible: true, disabledKey: true },
+  { key: "prompt_model", label: "Prompt 模型", defaultVisible: true },
+  { key: "prompt_category", label: "Prompt 分类", defaultVisible: true },
+  { key: "buyer", label: "买家", defaultVisible: true, disabledKey: true },
+  { key: "rating", label: "评分" },
+  { key: "price", label: "价格", defaultVisible: true, disabledKey: true, sortable: true },
+  { key: "create_time", label: "时间", defaultVisible: true, sortable: true },
+];
+
+export const SellerOrderTableColumnsEnum = {
+  prompt_title: "prompt_title",
+  prompt_model: "prompt_model",
+  prompt_category: "prompt_category",
+  buyer: "buyer",
+  rating: "rating",
+  price: "price",
+  create_time: "create_time",
+};

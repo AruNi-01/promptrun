@@ -31,7 +31,7 @@ export default function NavCard({ className }: { className?: string }) {
       </CardBody>
       <CardFooter className="pt-0 z-50">
         <Button
-          onClick={() => router.push("/seller")}
+          onClick={() => router.push("/seller/dashboard")}
           size="lg"
           radius="md"
           variant="shadow"

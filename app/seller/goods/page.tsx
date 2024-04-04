@@ -36,10 +36,8 @@ const publishStatusColorMap: Record<string, ChipProps["color"]> = {
 };
 
 export default function SellerGoodsPage() {
-  const { loginUser, setLoginUser, removeLoginUser } = useLoginUserStore((state) => ({
+  const { loginUser } = useLoginUserStore((state) => ({
     loginUser: state.loginUser,
-    setLoginUser: state.setLoginUser,
-    removeLoginUser: state.removeLoginUser,
   }));
 
   const [promptList, setPromptList] = useState<Prompt[]>([]);
@@ -81,6 +79,8 @@ export default function SellerGoodsPage() {
   }, [JSON.stringify(paginate), JSON.stringify(loginUser), publishStatus, auditStatus, modelSelected]);
 
   const fetchPromptData = async () => {
+    if (!loginUser) return;
+
     try {
       // fetch prompt list
       var rsp = await findPromptList({
@@ -118,7 +118,12 @@ export default function SellerGoodsPage() {
 
       <div className="flex">
         <h2 className="text-lg">模型：</h2>
-        <RadioGroup orientation="horizontal" value={modelSelected} onValueChange={setModelSelected}>
+        <RadioGroup
+          className="mt-[2px]"
+          orientation="horizontal"
+          value={modelSelected}
+          onValueChange={setModelSelected}
+        >
           <Radio key="all" value="all">
             All
           </Radio>

@@ -2,7 +2,6 @@
 import { findModelList } from "@/api/model";
 import { findPromptList, findPromptMasterImgListByPromptIds } from "@/api/prompt";
 import { CustomCheckbox } from "@/components/market-page/CustomCheckBox";
-import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Model } from "@/types/api/model";
 import { Paginate } from "@/types/api/paginate";
 import { Prompt } from "@/types/api/prompt";
@@ -57,6 +56,7 @@ export default function MarketPage() {
     }
   };
 
+  // TODO: Bug —— 页面初始渲染时请求了一次，modelList 变化后页面重新渲染又请求了一次。其他地方也有类似的 Bug
   useEffect(() => {
     fetchPromptData();
 
@@ -102,7 +102,12 @@ export default function MarketPage() {
       <div className="flex justify-between">
         <div className="flex gap-1">
           <h2 className="text-lg">模型：</h2>
-          <RadioGroup orientation="horizontal" value={modelSelected} onValueChange={setModelSelected}>
+          <RadioGroup
+            className="mt-[2px]"
+            orientation="horizontal"
+            value={modelSelected}
+            onValueChange={setModelSelected}
+          >
             <Radio key="all" value="all">
               All
             </Radio>

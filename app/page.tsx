@@ -41,7 +41,7 @@ export default function Home() {
         >
           <AnimateArrow text="购买 Prompts" size={24} />
         </Button>
-        <Button as={Link} href="/seller" size="lg" color="secondary" variant="ghost" radius="sm">
+        <Button as={Link} href="/seller/dashboard" size="lg" color="secondary" variant="ghost" radius="sm">
           成为卖家
         </Button>
       </div>

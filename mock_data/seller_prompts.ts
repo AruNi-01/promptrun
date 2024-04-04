@@ -1,12 +1,12 @@
 const columns = [
-  { name: "ID", uid: "id" },
-  { name: "SELLER_ID", uid: "name" },
-  { name: "AGE", uid: "age" },
-  { name: "ROLE", uid: "role" },
+  { name: "ID", uid: "id", sortable: true },
+  { name: "NAME", uid: "name", sortable: true, defaultVisible: true, disabledKey: true },
+  { name: "AGE", uid: "age", sortable: true, defaultVisible: true },
+  { name: "ROLE", uid: "role", sortable: true, defaultVisible: true },
   { name: "TEAM", uid: "team" },
   { name: "EMAIL", uid: "email" },
-  { name: "STATUS", uid: "status" },
-  { name: "ACTIONS", uid: "actions" },
+  { name: "STATUS", uid: "status", sortable: true, defaultVisible: true, disabledKey: true },
+  { name: "ACTIONS", uid: "actions", defaultVisible: true, disabledKey: true },
 ];
 
 const statusOptions = [

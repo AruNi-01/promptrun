@@ -1,6 +1,8 @@
 "use client";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Badge, FooterDivider, Sidebar } from "flowbite-react";
+import { Divider, User } from "@nextui-org/react";
+import { Badge, Sidebar } from "flowbite-react";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import {
   HiChartPie,
@@ -10,6 +12,7 @@ import {
   HiSpeakerphone,
   HiUserCircle,
   HiViewBoards,
+  HiLogin,
 } from "react-icons/hi";
 
 export default function SellerLayout({ children }: { children: ReactNode }) {
@@ -19,36 +22,106 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
     removeLoginUser: state.removeLoginUser,
   }));
 
+  const route = useRouter();
+
+  const pathname = usePathname();
+  const sideItemActiveCN = (path: string): string => {
+    return path !== "/" ? (pathname.startsWith(path) ? "bg-[#374151]" : "") : "";
+  };
+
   return (
     <section className="flex gap-10 w-9/12 mt-8">
-      <Sidebar className="w-[30%] h-screen flex text-start rounded-2xl">
-        <Sidebar.Logo href="#" img="/logo.png" imgAlt="logo" className="text-center">
-          AarynLu 晚上好！
-        </Sidebar.Logo>
+      <Sidebar className="w-[25%] h-screen flex text-start rounded-2xl">
+        <User
+          as="button"
+          avatarProps={{
+            src: loginUser?.headerUrl,
+          }}
+          name={"Hello, " + loginUser?.nickname}
+          classNames={{
+            name: "ml-1 text-xl text-default-800 font-bold",
+            base: "ml-2 mb-3",
+          }}
+          onClick={() => {
+            route.push("/seller/dashboard");
+          }}
+        />
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="/seller/dashboard" icon={HiChartPie}>
-              整体看板
-            </Sidebar.Item>
-            <Sidebar.Item href="/seller/goods" icon={HiViewBoards}>
-              上架商品
-            </Sidebar.Item>
-            <Sidebar.Item href="/seller/order" icon={HiShoppingBag}>
-              我的订单
-            </Sidebar.Item>
-            <Sidebar.Item href="/seller/notice" icon={HiSpeakerphone} label="3" labelColor="green">
-              消息通知
-            </Sidebar.Item>
-            <FooterDivider />
-            <Sidebar.Item href="/seller/profile" icon={HiUserCircle}>
-              个人信息
-            </Sidebar.Item>
-            <Sidebar.Item href="/seller/update_password" icon={HiLockClosed}>
-              修改密码
-            </Sidebar.Item>
-            <Sidebar.Item href="/logout" icon={HiLockClosed}>
-              退出登录
-            </Sidebar.Item>
+            <div className="cursor-pointer flex flex-col gap-2">
+              <Sidebar.Item
+                onClick={() => {
+                  route.push("/seller/dashboard");
+                }}
+                icon={HiChartPie}
+                className={sideItemActiveCN("/seller/dashboard")}
+                label="图表"
+                labelColor="blue"
+              >
+                整体看板
+              </Sidebar.Item>
+              <Sidebar.Item
+                onClick={() => {
+                  route.push("/seller/goods");
+                }}
+                icon={HiViewBoards}
+                className={sideItemActiveCN("/seller/goods")}
+                label="发布"
+                labelColor="dark"
+              >
+                上架商品
+              </Sidebar.Item>
+              <Sidebar.Item
+                onClick={() => {
+                  route.push("/seller/order");
+                }}
+                icon={HiShoppingBag}
+                className={sideItemActiveCN("/seller/order")}
+                label="卖出"
+                labelColor="dark"
+              >
+                我的订单
+              </Sidebar.Item>
+              <Sidebar.Item
+                onClick={() => {
+                  route.push("/seller/notice");
+                }}
+                icon={HiSpeakerphone}
+                className={sideItemActiveCN("/seller/notice")}
+                label={"0 未读"}
+                labelColor="green"
+              >
+                消息通知
+              </Sidebar.Item>
+              <Divider />
+              <Sidebar.Item
+                onClick={() => {
+                  route.push("/seller/profile");
+                }}
+                icon={HiUserCircle}
+                className={sideItemActiveCN("/seller/profile")}
+              >
+                个人信息
+              </Sidebar.Item>
+              <Sidebar.Item
+                onClick={() => {
+                  route.push("/seller/update_password");
+                }}
+                icon={HiLockClosed}
+                className={sideItemActiveCN("/seller/update_password")}
+              >
+                修改密码
+              </Sidebar.Item>
+              <Sidebar.Item
+                onClick={() => {
+                  route.push("/seller/logout");
+                }}
+                icon={HiLogin}
+                className={sideItemActiveCN("/seller/logout")}
+              >
+                退出登录
+              </Sidebar.Item>
+            </div>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
         <Sidebar.CTA className="mt-[calc(100vh-38rem)]">
@@ -68,7 +141,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
           </a>
         </Sidebar.CTA>
       </Sidebar>
-      {children}
+      <div className="w-[75%]">{children}</div>
     </section>
   );
 }

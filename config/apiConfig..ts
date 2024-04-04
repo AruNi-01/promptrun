@@ -39,6 +39,10 @@ const API = {
     },
     update: API_URL + "/api/v1/user/update",
   },
+
+  order: {
+    listAttachFullInfoBySellerUserId: API_URL + "/api/v1/order/listAttachFullInfoBySellerUserId",
+  },
 };
 
 export default API;

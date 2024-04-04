@@ -1,5 +1,5 @@
-export type Result = {
+export type Result<T = any> = {
   errCode: number;
   errMsg: string;
-  data: any;
+  data: T;
 };

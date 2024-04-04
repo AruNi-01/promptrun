@@ -24,6 +24,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Key, useEffect, useState } from "react";
 import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, XIcon } from "../icons";
+import { checkIsLogin } from "@/utils/common";
 
 export default function Login() {
   const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
@@ -118,12 +119,10 @@ export default function Login() {
     if (key === "logout") {
       try {
         const rsp = await logout();
-        if (rsp.errCode === Number(401) || rsp.errCode !== Number(0)) {
+        if (!checkIsLogin(rsp.errCode)) return;
+        if (rsp.errCode !== Number(0)) {
           console.error("Error:", rsp.errMsg);
-          removeLoginUser();
-          router.refresh();
-
-          toastErrorMsg("退出登录失败，您还未登录！");
+          toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
         } else {
           removeLoginUser();
           router.refresh();
@@ -135,7 +134,7 @@ export default function Login() {
         toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
       }
     } else if (key === "seller") {
-      router.push("/seller");
+      router.push("/seller/dashboard");
     } else if (key === "profile") {
       router.push("/profile");
     }

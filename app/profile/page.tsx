@@ -332,7 +332,7 @@ export default function UserPage() {
         </div>
       </div>
 
-      <Link href="/seller" className="group h-[20rem] max-w-[55rem] my-10 mx-auto">
+      <Link href="/seller/dashboard" className="group h-[20rem] max-w-[55rem] my-10 mx-auto">
         <MaterialCard shadow={false} className="relative grid items-end justify-center overflow-hidden text-center">
           <CardHeader
             floated={false}
