@@ -1,10 +1,6 @@
 "use client";
-import { findModelList } from "@/api/model";
 import { findOrderListAttachFullInfoBySellerUserId } from "@/api/order";
-import { EyeIcon } from "@/components/icons";
-import { users } from "@/mock_data/seller_prompts";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Model } from "@/types/api/model";
 import { OrderListAttachFullInfo } from "@/types/api/order";
 import { Paginate } from "@/types/api/paginate";
 import { checkIsLogin } from "@/utils/common";
@@ -16,8 +12,6 @@ import {
   ChipProps,
   Divider,
   Pagination,
-  Radio,
-  RadioGroup,
   Select,
   SelectItem,
   SelectedItems,
@@ -29,12 +23,10 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Tooltip,
-  User,
 } from "@nextui-org/react";
-import { HiCube, HiTag } from "react-icons/hi";
 import { format } from "date-fns";
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
+import { HiCube, HiTag } from "react-icons/hi";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",

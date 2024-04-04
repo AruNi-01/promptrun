@@ -1,7 +1,7 @@
+import API from "@/config/apiConfig.";
 import { OrderListAttachFullInfoBySellerUserIdReq, OrderListAttachFullInfoRsp } from "@/types/api/order";
 import { Result } from "@/types/api/result";
 import { baseFetch, httpMethod } from "./base";
-import API from "@/config/apiConfig.";
 
 export const findOrderListAttachFullInfoBySellerUserId = async (
   reqData: OrderListAttachFullInfoBySellerUserIdReq
