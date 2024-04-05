@@ -1,7 +1,3 @@
-import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { toastErrorMsg } from "./messageToast";
-import { useRouter } from "next/navigation";
-
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -22,14 +18,6 @@ export function getCookieValue(cookieName: string): string | null {
 
 export function checkIsLogin(code: number): boolean {
   if (code === 401) {
-    const { removeLoginUser } = useLoginUserStore((state) => ({
-      removeLoginUser: state.removeLoginUser,
-    }));
-    const router = useRouter();
-
-    removeLoginUser();
-    router.refresh();
-    toastErrorMsg("您未登录，请登录后再操作");
     return false;
   } else {
     return true;

@@ -20,6 +20,7 @@ import {
   Tab,
   Tabs,
   User,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { Key, useEffect, useState } from "react";
@@ -30,6 +31,13 @@ export default function Login() {
   const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
 
   const router = useRouter();
+
+  const {
+    isOpen: isLogoutModalOpen,
+    onOpen: onLogoutModalOpen,
+    onClose: onLogoutModalClose,
+    onOpenChange: onLogoutModalOpenChange,
+  } = useDisclosure();
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [tabsSelected, setTabsSelected] = useState<string | number>("login");
@@ -115,24 +123,32 @@ export default function Login() {
       toastErrorMsg("注册失败，服务器开小差了，请稍后重试！");
     }
   };
+  const handleLogout = async () => {
+    try {
+      const rsp = await logout();
+      if (!checkIsLogin(rsp.errCode)) {
+        removeLoginUser();
+        router.refresh();
+        toastErrorMsg("您未登录，请登录后再操作！");
+      } else if (rsp.errCode !== Number(0)) {
+        console.error("Error:", rsp.errMsg);
+        toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
+      } else {
+        removeLoginUser();
+        router.refresh();
+        toastSuccessMsg("退出登录成功！");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
+    }
+
+    onLogoutModalClose();
+  };
+
   const handleProfileDropdownMenu = async (key: Key) => {
     if (key === "logout") {
-      try {
-        const rsp = await logout();
-        if (!checkIsLogin(rsp.errCode)) return;
-        if (rsp.errCode !== Number(0)) {
-          console.error("Error:", rsp.errMsg);
-          toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
-        } else {
-          removeLoginUser();
-          router.refresh();
-
-          toastSuccessMsg("退出登录成功！");
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
-      }
+      onLogoutModalOpen();
     } else if (key === "seller") {
       router.push("/seller/dashboard");
     } else if (key === "profile") {
@@ -348,6 +364,33 @@ export default function Login() {
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
+
+      <Modal isOpen={isLogoutModalOpen} onOpenChange={onLogoutModalOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">退出登录</ModalHeader>
+              <ModalBody>
+                <p>您确定要退出登录吗？退出登录后，您将无法继续进行卖家相关操作或购买 Prompt，直到重新登录。</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="success" variant="flat" onPress={onClose}>
+                  取消
+                </Button>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={() => {
+                    handleLogout();
+                  }}
+                >
+                  确定
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }

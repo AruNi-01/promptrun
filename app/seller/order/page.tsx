@@ -25,21 +25,19 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { HiCube, HiTag } from "react-icons/hi";
-
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
 
 type TableColumn = (typeof sellerOrderTableColumns)[number];
 
 export default function SellerOrderPage() {
-  const { loginUser } = useLoginUserStore((state) => ({
+  const { loginUser, removeLoginUser } = useLoginUserStore((state) => ({
     loginUser: state.loginUser,
+    removeLoginUser: state.removeLoginUser,
   }));
+
+  const router = useRouter();
 
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>();
@@ -79,7 +77,13 @@ export default function SellerOrderPage() {
         toastErrorMsg("查询订单列表失败，请稍后刷新重试！");
         return;
       }
-      if (!checkIsLogin(rsp.errCode)) return;
+      if (!checkIsLogin(rsp.errCode)) {
+        removeLoginUser();
+        router.refresh();
+
+        toastErrorMsg("您未登录，请登录后再操作！");
+        return;
+      }
 
       setOrderListAttachFullInfo(rsp.data.orderListAttachFullInfo);
       setRows(rsp.data.rows);

@@ -1,6 +1,19 @@
 "use client";
+import { logout } from "@/api/passport";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Divider, User } from "@nextui-org/react";
+import { checkIsLogin } from "@/utils/common";
+import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
+import {
+  Button,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  User,
+  useDisclosure,
+} from "@nextui-org/react";
 import { Badge, Sidebar } from "flowbite-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
@@ -27,6 +40,36 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const sideItemActiveCN = (path: string): string => {
     return path !== "/" ? (pathname.startsWith(path) ? "bg-[#374151]" : "") : "";
+  };
+
+  const {
+    isOpen: isLogoutModalOpen,
+    onOpen: onLogoutModalOpen,
+    onClose: onLogoutModalClose,
+    onOpenChange: onLogoutModalOpenChange,
+  } = useDisclosure();
+
+  const handleLogout = async () => {
+    try {
+      const rsp = await logout();
+      if (!checkIsLogin(rsp.errCode)) {
+        removeLoginUser();
+        route.refresh();
+        toastErrorMsg("您未登录，请登录后再操作！");
+      } else if (rsp.errCode !== Number(0)) {
+        console.error("Error:", rsp.errMsg);
+        toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
+      } else {
+        removeLoginUser();
+        route.refresh();
+        toastSuccessMsg("退出登录成功！");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
+    }
+
+    onLogoutModalClose();
   };
 
   return (
@@ -114,7 +157,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
               </Sidebar.Item>
               <Sidebar.Item
                 onClick={() => {
-                  route.push("/seller/logout");
+                  onLogoutModalOpen();
                 }}
                 icon={HiLogin}
                 className={sideItemActiveCN("/seller/logout")}
@@ -142,6 +185,33 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
         </Sidebar.CTA>
       </Sidebar>
       <div className="w-[75%]">{children}</div>
+
+      <Modal isOpen={isLogoutModalOpen} onOpenChange={onLogoutModalOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">退出登录</ModalHeader>
+              <ModalBody>
+                <p>您确定要退出登录吗？退出登录后，您将无法继续进行卖家相关操作或购买 Prompt，直到重新登录。</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="success" variant="flat" onPress={onClose}>
+                  取消
+                </Button>
+                <Button
+                  color="danger"
+                  variant="light"
+                  onPress={() => {
+                    handleLogout();
+                  }}
+                >
+                  确定
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </section>
   );
 }
