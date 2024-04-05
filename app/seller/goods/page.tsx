@@ -22,7 +22,9 @@ import {
   Radio,
   RadioGroup,
 } from "@nextui-org/react";
+import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
+import ghostMoveAnimation from "@/public/lottie/ghost-move.json";
 
 const auditStatusColorMap: Record<string, ChipProps["color"]> = {
   2: "success",
@@ -154,49 +156,61 @@ export default function SellerGoodsPage() {
           ))}
         </CheckboxGroup>
       </div>
-      <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
-        {promptList?.map((prompt) => (
-          <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
-            <CardBody className="overflow-visible p-0">
-              <div className="relative">
-                <Image
-                  shadow="sm"
-                  radius="lg"
-                  width="100%"
-                  alt={prompt.title}
-                  className="w-full object-cover h-[150px]"
-                  src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === prompt.id)?.img_url}
-                />
-                <Chip
-                  variant="flat"
-                  radius="sm"
-                  size="md"
-                  className="absolute top-0 right-0 m-1 z-10"
-                  classNames={{
-                    base: "bg-black/80 text-white",
-                  }}
-                >
-                  {modelList.find((model) => model.id === prompt.model_id)?.name}
-                </Chip>
-                <div className="absolute h-8 bottom-0 left-0 right-0 p-1 rounded-b-xl bg-black bg-opacity-50 z-10">
-                  <div className="flex justify-between">
-                    <Chip color={auditStatusColorMap[prompt.audit_status]} size="sm" variant="flat">
-                      {auditStatusOptions.find((option) => parseInt(option.type) === prompt.audit_status)?.label}
+      {promptList.length > 0 ? (
+        <>
+          <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
+            {promptList?.map((prompt) => (
+              <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
+                <CardBody className="overflow-visible p-0">
+                  <div className="relative">
+                    <Image
+                      shadow="sm"
+                      radius="lg"
+                      width="100%"
+                      alt={prompt.title}
+                      className="w-full object-cover h-[150px]"
+                      src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === prompt.id)?.img_url}
+                    />
+                    <Chip
+                      variant="flat"
+                      radius="sm"
+                      size="md"
+                      className="absolute top-0 right-0 m-1 z-10"
+                      classNames={{
+                        base: "bg-black/80 text-white",
+                      }}
+                    >
+                      {modelList.find((model) => model.id === prompt.model_id)?.name}
                     </Chip>
-                    <Chip color={publishStatusColorMap[prompt.publish_status]} size="sm" variant="dot">
-                      {publishStatusOptions.find((option) => parseInt(option.type) === prompt.publish_status)?.label}
-                    </Chip>
+                    <div className="absolute h-8 bottom-0 left-0 right-0 p-1 rounded-b-xl bg-black bg-opacity-50 z-10">
+                      <div className="flex justify-between">
+                        <Chip color={auditStatusColorMap[prompt.audit_status]} size="sm" variant="flat">
+                          {auditStatusOptions.find((option) => parseInt(option.type) === prompt.audit_status)?.label}
+                        </Chip>
+                        <Chip color={publishStatusColorMap[prompt.publish_status]} size="sm" variant="dot">
+                          {
+                            publishStatusOptions.find((option) => parseInt(option.type) === prompt.publish_status)
+                              ?.label
+                          }
+                        </Chip>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </CardBody>
-            <CardFooter className="justify-between">
-              <b>{prompt.title}</b>
-              <p className="text-default-500 text-lg">￥{prompt.price}</p>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                </CardBody>
+                <CardFooter className="justify-between">
+                  <b>{prompt.title}</b>
+                  <p className="text-default-500 text-lg">￥{prompt.price}</p>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="h-80">
+          <Lottie animationData={ghostMoveAnimation} className="h-64" />
+          <span className="text-default-400 text-medium self-center">您还未上架任何 Prompt，赶紧去上架一个吧！</span>
+        </div>
+      )}
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="text-default-400 text-medium">共计 {rows} Prompts</span>
         <Pagination

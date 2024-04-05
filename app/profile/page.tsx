@@ -34,7 +34,7 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
-export default function UserPage() {
+export default function UserProfilePage() {
   const { loginUser, setLoginUser } = useLoginUserStore((state) => ({
     loginUser: state.loginUser,
     setLoginUser: state.setLoginUser,
@@ -52,11 +52,6 @@ export default function UserPage() {
 
   const handleUserFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!isEdit) {
-      return;
-    }
-
     setEditBtnIsLoading(true);
 
     try {

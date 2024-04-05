@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -22,4 +24,18 @@ export function checkIsLogin(code: number): boolean {
   } else {
     return true;
   }
+}
+
+export function formatStringDate(time: string | undefined): string {
+  return time ? format(new Date(time), "yyyy-MM-dd HH:mm:ss") : "";
+}
+
+export function formatDate(date: Date): string {
+  return format(date, "yyyy-MM-dd HH:mm:ss");
+}
+
+export function getDayDiffUtilNow(date: Date): number {
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
 }

@@ -40,6 +40,13 @@ const API = {
     update: API_URL + "/api/v1/user/update",
   },
 
+  seller: {
+    findByUserId: (userId: number): string => {
+      return API_URL + `/api/v1/seller/findByUserId/${userId}`;
+    },
+    update: API_URL + "/api/v1/seller/update",
+  },
+
   order: {
     listAttachFullInfoBySellerUserId: API_URL + "/api/v1/order/listAttachFullInfoBySellerUserId",
   },

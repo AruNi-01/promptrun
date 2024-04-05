@@ -3,13 +3,12 @@ import { findOrderListAttachFullInfoBySellerUserId } from "@/api/order";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { OrderListAttachFullInfo } from "@/types/api/order";
 import { Paginate } from "@/types/api/paginate";
-import { checkIsLogin } from "@/utils/common";
+import { checkIsLogin, formatStringDate } from "@/utils/common";
 import { SellerOrderTableColumnsEnum, categoryTypeMap, sellerOrderTableColumns } from "@/utils/constant";
 import { toastErrorMsg } from "@/utils/messageToast";
 import {
   Avatar,
   Chip,
-  ChipProps,
   Divider,
   Pagination,
   Select,
@@ -24,7 +23,8 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { format } from "date-fns";
+import Lottie from "lottie-react";
+import ghostMoveAnimation from "@/public/lottie/ghost-move.json";
 import { useRouter } from "next/navigation";
 import { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { HiCube, HiTag } from "react-icons/hi";
@@ -140,7 +140,7 @@ export default function SellerOrderPage() {
       case SellerOrderTableColumnsEnum.price:
         return <p>{"￥" + data.order.price}</p>;
       case SellerOrderTableColumnsEnum.create_time:
-        return <p>{format(new Date(data.order.create_time), "yyyy-MM-dd HH:mm:ss")}</p>;
+        return <p>{formatStringDate(data.order.create_time)}</p>;
       default:
         return "-";
     }
@@ -237,7 +237,15 @@ export default function SellerOrderPage() {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"这里空空如也，您还未卖出过 Prompt"} items={sortedItems}>
+      <TableBody
+        emptyContent={
+          <div className="h-80">
+            <Lottie animationData={ghostMoveAnimation} className="h-64" />
+            <span className="text-default-400 text-medium self-center">您还未卖出过任何 Prompt，继续努力哦！</span>
+          </div>
+        }
+        items={sortedItems}
+      >
         {(item) => (
           <TableRow key={item.order.id}>{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>
         )}

@@ -8,3 +8,12 @@ export interface Seller {
   like_amount: number;
   create_time: string;
 }
+
+export interface SellerUpdateReq {
+  userId: number;
+  nickname: string;
+  email: string;
+  headerImgBase64: string | undefined;
+
+  intro: string;
+}

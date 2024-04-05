@@ -13,7 +13,7 @@ interface ILoginUser {
   nickname: string;
   headerUrl: string;
   type: number;
-  createTime: number;
+  createTime: string;
 }
 
 interface ILoginUserState {
