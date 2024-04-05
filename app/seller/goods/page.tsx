@@ -114,7 +114,7 @@ export default function SellerGoodsPage() {
   };
 
   return (
-    <section className="flex flex-col gap-5 overflow-hidden">
+    <section className="flex flex-col gap-4 overflow-hidden">
       <h1 className="text-3xl self-start">我上架的 Prompts</h1>
       <Divider />
 

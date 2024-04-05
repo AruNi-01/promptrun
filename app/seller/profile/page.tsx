@@ -113,149 +113,147 @@ export default function SellerProfilePage() {
   };
 
   return (
-    <section className="flex flex-col gap-5 mt-8">
-      <div key="profile" className="flex flex-col gap-5">
-        <div className="flex justify-between">
-          <h2 className="text-4xl">个人信息</h2>
-          <div className="flex gap-2">
-            <Button
-              color="primary"
-              variant="ghost"
-              onClick={() => {
-                setIsEdit(true);
-              }}
-              className={`${isEdit ? "hidden" : ""}`}
-            >
-              编辑
-            </Button>
-            <Button
-              color="success"
-              variant="shadow"
-              type="submit"
-              form="user-form"
-              isLoading={editBtnIsLoading}
-              className={`${isEdit ? "" : "hidden"}`}
-            >
-              保存
-            </Button>
-            <Button
-              onClick={() => {
-                setIsEdit(false);
-                route.refresh();
-              }}
-              color="danger"
-              variant="light"
-              className={`${isEdit ? "" : "hidden"}`}
-            >
-              取消
-            </Button>
-          </div>
+    <section className="flex flex-col gap-3 mt-8">
+      <div className="flex justify-between">
+        <h2 className="text-3xl">个人信息</h2>
+        <div className="flex gap-2">
+          <Button
+            color="primary"
+            variant="ghost"
+            onClick={() => {
+              setIsEdit(true);
+            }}
+            className={`${isEdit ? "hidden" : ""}`}
+          >
+            编辑
+          </Button>
+          <Button
+            color="success"
+            variant="shadow"
+            type="submit"
+            form="user-form"
+            isLoading={editBtnIsLoading}
+            className={`${isEdit ? "" : "hidden"}`}
+          >
+            保存
+          </Button>
+          <Button
+            onClick={() => {
+              setIsEdit(false);
+              route.refresh();
+            }}
+            color="danger"
+            variant="light"
+            className={`${isEdit ? "" : "hidden"}`}
+          >
+            取消
+          </Button>
         </div>
-        <Divider />
-        <div className="flex justify-between"></div>
-        <form id="user-form" onSubmit={handleUserFormSubmit} className="grid grid-cols-1 gap-6">
-          <div className="flex gap-2 items-center">
-            <span>头像</span>
-            <div className="flex items-center gap-4">
-              <Avatar src={loginUser?.headerUrl} className={cn("w-16 h-16 text-large", `${isEdit ? "hidden" : ""}`)} />
-              <div className="flex items-center justify-center h-16 w-16">
-                <label
-                  htmlFor="dropzone-file"
-                  className={cn(
-                    `${!isEdit ? "hidden" : ""}`,
-                    "flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                  )}
-                >
-                  <div className="relative inline-block">
-                    <Avatar
-                      src={`${sellerFrom.headerImgBase64 ? sellerFrom.headerImgBase64 : loginUser?.headerUrl}`}
-                      className="w-16 h-16 opacity-30"
-                    />
-                    <UploadIcon className="absolute top-4 left-4 w-8 h-8 text-white" />
-                  </div>
-                  <input
-                    id="dropzone-file"
-                    type="file"
-                    accept="image/jpeg,image/jpg,image/png,image/svg"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onload = (e) => {
-                          setSellerForm({ ...sellerFrom, headerImgBase64: e.target?.result as string });
-                        };
-                      }
-                    }}
+      </div>
+      <Divider />
+      <div className="flex justify-between"></div>
+      <form id="user-form" onSubmit={handleUserFormSubmit} className="grid grid-cols-1 gap-6">
+        <div className="flex gap-2 items-center">
+          <span>头像</span>
+          <div className="flex items-center gap-4">
+            <Avatar src={loginUser?.headerUrl} className={cn("w-16 h-16 text-large", `${isEdit ? "hidden" : ""}`)} />
+            <div className="flex items-center justify-center h-16 w-16">
+              <label
+                htmlFor="dropzone-file"
+                className={cn(
+                  `${!isEdit ? "hidden" : ""}`,
+                  "flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                )}
+              >
+                <div className="relative inline-block">
+                  <Avatar
+                    src={`${sellerFrom.headerImgBase64 ? sellerFrom.headerImgBase64 : loginUser?.headerUrl}`}
+                    className="w-16 h-16 opacity-30"
                   />
-                </label>
-              </div>
+                  <UploadIcon className="absolute top-4 left-4 w-8 h-8 text-white" />
+                </div>
+                <input
+                  id="dropzone-file"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/svg"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.readAsDataURL(file);
+                      reader.onload = (e) => {
+                        setSellerForm({ ...sellerFrom, headerImgBase64: e.target?.result as string });
+                      };
+                    }
+                  }}
+                />
+              </label>
             </div>
           </div>
-          <Input
-            value={sellerFrom.nickname}
-            onValueChange={(value) => {
-              setSellerForm({ ...sellerFrom, nickname: value });
-            }}
-            isReadOnly={!isEdit}
-            label="昵称"
-            isRequired={isEdit}
-            labelPlacement="outside-left"
-            size="lg"
-          />
-          <Input
-            value={sellerFrom.email}
-            onValueChange={(value) => {
-              setSellerForm({ ...sellerFrom, email: value });
-            }}
-            isReadOnly={!isEdit}
-            label="邮箱"
-            isRequired={isEdit}
-            type="email"
-            labelPlacement="outside-left"
-            size="lg"
-          />
-          <Textarea
-            value={sellerFrom.intro}
-            onValueChange={(value) => {
-              setSellerForm({ ...sellerFrom, intro: value });
-            }}
-            isReadOnly={!isEdit}
-            label="简介"
-            placeholder="输入简介，让买家更了解你吧！"
-            labelPlacement="outside-left"
-            type="text"
-            className="max-w-xl"
-          />
-          <Divider />
-          {seller && loginUser && (
-            <>
-              <div className="flex items-center">
-                获得评分：
-                <Rating
-                  value={
-                    // 四舍五入计算评分
-                    Math.round(seller.rating)
-                  }
-                  readonly
-                  ratedColor="blue"
-                />
-                <Chip variant="flat" color="primary" size="sm" radius="sm" className="ml-2">
-                  {seller.rating}
-                </Chip>
-                <span className="ml-1"> — 基于 {seller?.sell_amount} 个已评价订单</span>
-              </div>
-              <div className="flex mt-3 text-sm text-default-500">
-                今天是您加入 PromptRun 的第
-                <span className="mx-1 text-default-700">{getDayDiffUtilNow(new Date(loginUser.createTime))}</span>
-                天，成为卖家的第
-                <span className="mx-1 text-default-700">{getDayDiffUtilNow(new Date(seller.create_time))}</span>天
-              </div>
-            </>
-          )}
-        </form>
-      </div>
+        </div>
+        <Input
+          value={sellerFrom.nickname}
+          onValueChange={(value) => {
+            setSellerForm({ ...sellerFrom, nickname: value });
+          }}
+          isReadOnly={!isEdit}
+          label="昵称"
+          isRequired={isEdit}
+          labelPlacement="outside-left"
+          size="lg"
+        />
+        <Input
+          value={sellerFrom.email}
+          onValueChange={(value) => {
+            setSellerForm({ ...sellerFrom, email: value });
+          }}
+          isReadOnly={!isEdit}
+          label="邮箱"
+          isRequired={isEdit}
+          type="email"
+          labelPlacement="outside-left"
+          size="lg"
+        />
+        <Textarea
+          value={sellerFrom.intro}
+          onValueChange={(value) => {
+            setSellerForm({ ...sellerFrom, intro: value });
+          }}
+          isReadOnly={!isEdit}
+          label="简介"
+          placeholder="输入简介，让买家更了解你吧！"
+          labelPlacement="outside-left"
+          type="text"
+          className="max-w-xl"
+        />
+        <Divider />
+        {seller && loginUser && (
+          <>
+            <div className="flex items-center">
+              获得评分：
+              <Rating
+                value={
+                  // 四舍五入计算评分
+                  Math.round(seller.rating)
+                }
+                readonly
+                ratedColor="blue"
+              />
+              <Chip variant="flat" color="primary" size="sm" radius="sm" className="ml-2">
+                {seller.rating}
+              </Chip>
+              <span className="ml-1"> — 基于 {seller?.sell_amount} 个已评价订单</span>
+            </div>
+            <div className="flex mt-3 text-sm text-default-500">
+              今天是您加入 PromptRun 的第
+              <span className="mx-1 text-default-700">{getDayDiffUtilNow(new Date(loginUser.createTime))}</span>
+              天，成为卖家的第
+              <span className="mx-1 text-default-700">{getDayDiffUtilNow(new Date(seller.create_time))}</span>天
+            </div>
+          </>
+        )}
+      </form>
     </section>
   );
 }

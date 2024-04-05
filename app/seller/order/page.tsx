@@ -183,8 +183,8 @@ export default function SellerOrderPage() {
       selectionMode="single"
       sortDescriptor={sortDescriptor}
       topContent={
-        <div className="flex flex-col gap-3">
-          <h1 className="text-3xl self-start">我上架的 Prompts</h1>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-3xl self-start">我卖出的 Prompts</h1>
           <Divider />
           <Select
             label="可见列："
