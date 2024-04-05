@@ -32,6 +32,7 @@ import {
   Pagination,
   cn,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function UserProfilePage() {
@@ -39,6 +40,8 @@ export default function UserProfilePage() {
     loginUser: state.loginUser,
     setLoginUser: state.setLoginUser,
   }));
+
+  const router = useRouter();
 
   const [isEdit, setIsEdit] = useState(false);
   const [editBtnIsLoading, setEditBtnIsLoading] = useState(false);
@@ -183,6 +186,7 @@ export default function UserProfilePage() {
             <Button
               onClick={() => {
                 setIsEdit(false);
+                router.refresh();
               }}
               color="danger"
               variant="light"

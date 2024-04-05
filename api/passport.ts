@@ -2,6 +2,7 @@ import API from "@/config/apiConfig.";
 import { LoginReq, RegisterReq } from "@/types/api/passport";
 import { Result } from "@/types/api/result";
 import { baseFetch, httpMethod } from "./base";
+import { UpdatePasswordReq } from "@/types/api/passport";
 
 export const login = async (formData: LoginReq): Promise<Result> => {
   try {
@@ -16,6 +17,14 @@ export const register = async (formData: RegisterReq): Promise<Result> => {
     return await baseFetch(API.passport.register, httpMethod.POST, formData);
   } catch (error) {
     throw new Error("An error occurred during registration.");
+  }
+};
+
+export const updatePassword = async (formData: UpdatePasswordReq): Promise<Result> => {
+  try {
+    return await baseFetch(API.passport.updatePassword, httpMethod.POST, formData);
+  } catch (error) {
+    throw new Error("An error occurred during update password.");
   }
 };
 

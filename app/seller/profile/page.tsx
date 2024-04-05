@@ -141,6 +141,7 @@ export default function SellerProfilePage() {
             <Button
               onClick={() => {
                 setIsEdit(false);
+                route.refresh();
               }}
               color="danger"
               variant="light"

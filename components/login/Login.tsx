@@ -1,6 +1,6 @@
-import { login, logout, register } from "@/api/passport";
+import { login, logout, register, updatePassword } from "@/api/passport";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { LoginReq, RegisterReq } from "@/types/api/passport";
+import { LoginReq, RegisterReq, UpdatePasswordReq } from "@/types/api/passport";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Button } from "@nextui-org/button";
 import {
@@ -37,6 +37,13 @@ export default function Login() {
     onOpen: onLogoutModalOpen,
     onClose: onLogoutModalClose,
     onOpenChange: onLogoutModalOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isUpdatePasswordModalOpen,
+    onOpen: onUpdatePasswordModalOpen,
+    onClose: onUpdatePasswordModalClose,
+    onOpenChange: onUpdatePasswordModalChange,
   } = useDisclosure();
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -114,6 +121,7 @@ export default function Login() {
         loginForm.email = registerForm.email;
         loginForm.password = registerForm.password;
         setRegisterForm({ email: "", password: "", confirmPassword: "" });
+        setFormErrorMsg("");
         handleLogin(e, true);
 
         toastSuccessMsg("注册成功，欢迎来到 Prompt Run!");
@@ -145,6 +153,38 @@ export default function Login() {
 
     onLogoutModalClose();
   };
+  const handleUpdatePassword = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      const rsp = await updatePassword(updatePasswordForm);
+      if (rsp.errCode !== 0) {
+        setFormErrorMsg(rsp.errMsg);
+        return;
+      } else {
+        setUpdatePasswordForm({ userId: loginUser?.id || 0, oldPassword: "", newPassword: "", confirmNewPassword: "" });
+        setFormErrorMsg("");
+        await logout();
+        removeLoginUser();
+        router.push("/");
+        toastSuccessMsg("密码修改成功，请重新登录 Prompt Run!");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toastErrorMsg("密码修改失败，服务器开小差了，请稍后重试！");
+    }
+    onUpdatePasswordModalClose();
+  };
+
+  const [updatePasswordForm, setUpdatePasswordForm] = useState<UpdatePasswordReq>({
+    userId: loginUser?.id || 0,
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+
+  useEffect(() => {
+    setUpdatePasswordForm({ userId: loginUser?.id || 0, oldPassword: "", newPassword: "", confirmNewPassword: "" });
+  }, [loginUser]);
 
   const handleProfileDropdownMenu = async (key: Key) => {
     if (key === "logout") {
@@ -153,6 +193,8 @@ export default function Login() {
       router.push("/seller/dashboard");
     } else if (key === "profile") {
       router.push("/profile");
+    } else if (key === "update_password") {
+      onUpdatePasswordModalOpen();
     }
   };
 
@@ -359,11 +401,68 @@ export default function Login() {
           <DropdownItem key="seller" showDivider startContent={<SellerIcon className={iconClasses} />}>
             卖家页面
           </DropdownItem>
+          <DropdownItem key="update_password" color="primary" startContent={<LockIcon className={iconClasses} />}>
+            修改密码
+          </DropdownItem>
           <DropdownItem key="logout" color="danger" startContent={<LogoutIcon className={iconClasses} />}>
             退出登录
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
+
+      <Modal isOpen={isUpdatePasswordModalOpen} onOpenChange={onUpdatePasswordModalChange} backdrop="blur">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">修改密码</ModalHeader>
+              <ModalBody>
+                <form onSubmit={handleUpdatePassword} className="flex flex-col gap-4 mb-2">
+                  <Input
+                    isRequired
+                    variant="bordered"
+                    value={updatePasswordForm.oldPassword}
+                    onChange={(e) => setUpdatePasswordForm({ ...updatePasswordForm, oldPassword: e.target.value })}
+                    label="原密码"
+                    placeholder="请输入您的原密码"
+                    type="password"
+                    endContent={<LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />}
+                  />
+                  <Input
+                    isRequired
+                    variant="bordered"
+                    value={updatePasswordForm.newPassword}
+                    onChange={(e) => setUpdatePasswordForm({ ...updatePasswordForm, newPassword: e.target.value })}
+                    label="新密码"
+                    placeholder="请输入您的新密码"
+                    type="password"
+                    endContent={<LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />}
+                  />
+                  <Input
+                    isRequired
+                    variant="bordered"
+                    value={updatePasswordForm.confirmNewPassword}
+                    onChange={(e) =>
+                      setUpdatePasswordForm({ ...updatePasswordForm, confirmNewPassword: e.target.value })
+                    }
+                    label="确认新密码"
+                    placeholder="请再次输入您的新密码"
+                    type="password"
+                    endContent={<LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />}
+                  />
+                  <div className="flex flex-col gap-2 justify-end">
+                    <span hidden={!formErrorMsg} className="text-danger text-[14px] self-center">
+                      修改错误：{formErrorMsg}
+                    </span>
+                    <Button type="submit" fullWidth color="primary">
+                      修改密码
+                    </Button>
+                  </div>
+                </form>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 
       <Modal isOpen={isLogoutModalOpen} onOpenChange={onLogoutModalOpenChange}>
         <ModalContent>
