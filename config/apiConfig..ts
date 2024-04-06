@@ -50,6 +50,9 @@ const API = {
 
   order: {
     listAttachFullInfoBySellerUserId: API_URL + "/api/v1/order/listAttachFullInfoBySellerUserId",
+    findChartsFullInfoBySellerUserId: (sellerUserId: number): string => {
+      return API_URL + `/api/v1/order/findChartsFullInfoBySellerUserId/${sellerUserId}`;
+    },
   },
 };
 

@@ -2,8 +2,8 @@
 import { cn } from "@nextui-org/system";
 import { Cell, Pie, PieChart as RePieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-export default function PieChart({ className }: { className?: string }) {
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+export default function PieChart({ data, dataKey, className }: { data: any[]; dataKey: string; className?: string }) {
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#3f2542"];
 
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
@@ -50,12 +50,14 @@ export default function PieChart({ className }: { className?: string }) {
       </g>
     );
   };
-  const data2 = [
-    { name: "Group A", value: 400 },
-    { name: "Group B", value: 300 },
-    { name: "Group C", value: 300 },
-    { name: "Group D", value: 200 },
-  ];
+
+  console.log(
+    "data: " +
+      data.forEach((element) => {
+        console.log(element);
+      }),
+    "dataKey: " + dataKey
+  );
 
   return (
     <div className={cn("border rounded-lg shadow bg-gray-800 border-gray-700 flex flex-col gap-3 py-2", className)}>
@@ -64,15 +66,15 @@ export default function PieChart({ className }: { className?: string }) {
         <ResponsiveContainer>
           <RePieChart>
             <Pie
-              data={data2}
+              data={data}
               cx="50%"
               cy="50%"
               outerRadius={80}
               fill="#8884d8"
-              dataKey="value"
+              dataKey={dataKey}
               label={renderCustomizedLabel}
             >
-              {data2.map((entry, index) => (
+              {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>

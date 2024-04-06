@@ -4,6 +4,29 @@ import { Prompt } from "./prompt";
 import { PromptImg } from "./prompt_img";
 import { User } from "./user";
 
+export interface ChartsRsp {
+  sellMoneyEveryMonth: SellMoneyVo[];
+  sellCountEveryMonth: SellCountVo[];
+  sellModelRatio: SellModelRatioVo[];
+
+  publishPromptCount: number;
+  sellPromptCount: number;
+  earnMoney: number;
+  becomeSellerDay: number;
+}
+export interface SellMoneyVo {
+  month: string;
+  sellMoney: number;
+}
+export interface SellCountVo {
+  month: string;
+  sellCount: number;
+}
+export interface SellModelRatioVo {
+  name: string;
+  sellCount: number;
+}
+
 export interface OrderListAttachFullInfoBySellerUserIdReq {
   paginate: Paginate;
   sellerUserId: number | undefined;
