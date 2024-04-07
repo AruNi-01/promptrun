@@ -7,8 +7,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import clsx from "clsx";
 import { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
-import { Toaster } from "react-hot-toast";
 import { ThemeModeScript } from "flowbite-react";
+import { Toaster } from "sonner";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <center className="flex-1 overflow-y-auto pt-5 min-h-screen">{children}</center>
             <Footer />
 
-            <Toaster />
+            <Toaster richColors closeButton theme="dark" position="bottom-right" />
             <Analytics />
             <SpeedInsights />
           </main>
