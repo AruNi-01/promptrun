@@ -131,7 +131,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                 }}
                 icon={HiSpeakerphone}
                 className={sideItemActiveCN("/seller/notice")}
-                label={"0 未读"}
+                label={"10 未读"}
                 labelColor="green"
               >
                 消息通知
