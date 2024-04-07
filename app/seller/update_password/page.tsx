@@ -47,7 +47,7 @@ export default function SellerUpdatePasswordPage() {
   };
 
   return (
-    <section className="flex flex-col gap-3 mt-8">
+    <section className="flex flex-col gap-3">
       <h1 className="text-3xl self-start">修改密码</h1>
       <Divider />
       <form onSubmit={handleUpdatePassword} className="flex flex-col gap-4 w-1/2">

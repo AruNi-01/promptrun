@@ -1,16 +1,27 @@
 "use client";
 import { Checkbox, Divider } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function SellerNoticePage() {
   const [isSelected, setIsSelected] = useState(false);
 
+  // 消息列表滚动到底部
+  const msgContainerEndRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (msgContainerEndRef.current) {
+      msgContainerEndRef.current.scrollTop = msgContainerEndRef.current.scrollHeight;
+    }
+  }, []);
+
   return (
-    <section className="flex flex-col gap-3 mt-8 items-start">
+    <section className="flex flex-col gap-3 items-start">
       <h2 className="text-3xl">消息列表</h2>
       <Divider />
 
-      <div className="border rounded-lg shadow bg-gray-800 border-gray-700 flex flex-col items-start w-3/4 h-[600px] overflow-y-scroll">
+      <div
+        ref={msgContainerEndRef}
+        className="border rounded-lg shadow bg-gray-800 border-gray-700 flex flex-col items-start w-3/4 h-[600px] overflow-y-scroll scroll-smooth"
+      >
         {Array.from({ length: 10 }).map((_, index) => (
           <div className="flex items-start gap-2.5 mx-3 my-3">
             <img className="w-8 h-8 rounded-full" src="/logo.png" alt="Jese image" />

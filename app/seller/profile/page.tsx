@@ -114,7 +114,7 @@ export default function SellerProfilePage() {
   };
 
   return (
-    <section className="flex flex-col gap-3 mt-8">
+    <section className="flex flex-col gap-3">
       <div className="flex justify-between">
         <h2 className="text-3xl">个人信息</h2>
         <div className="flex gap-2">
