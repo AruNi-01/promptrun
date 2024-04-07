@@ -10,7 +10,7 @@ import { toastErrorMsg } from "@/utils/messageToast";
 import { useEffect, useState } from "react";
 
 export default function SellerDashboardPage() {
-  const { loginUser } = useLoginUserStore();
+  const { loginUser, removeLoginUser } = useLoginUserStore();
 
   const [chartsData, setChartsData] = useState<ChartsRsp>();
   useEffect(() => {
@@ -18,10 +18,11 @@ export default function SellerDashboardPage() {
 
     findChartsFullInfoBySellerUserId(loginUser?.id)
       .then((res) => {
-        if (res.errCode !== 0) {
-          toastErrorMsg(res.errMsg);
-        } else if (!checkIsLogin(res.errCode)) {
+        if (!checkIsLogin(res.errCode)) {
+          removeLoginUser();
           toastErrorMsg("您还未登录，请先登录在操作！");
+        } else if (res.errCode !== 0) {
+          toastErrorMsg(res.errMsg);
         } else {
           setChartsData(res.data);
         }

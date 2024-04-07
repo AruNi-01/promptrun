@@ -39,13 +39,14 @@ export default function SellerProfilePage() {
 
     try {
       var rsp = await sellerUpdate(sellerFrom);
-      if (rsp.errCode !== 0) {
-        toastErrorMsg("更新卖家信息失败，请稍后重试！");
-        return;
-      } else if (!checkIsLogin(rsp.errCode)) {
+      if (!checkIsLogin(rsp.errCode)) {
         removeLoginUser();
         route.refresh();
         toastErrorMsg("您未登录，请登录后再操作！");
+        return;
+      } else if (rsp.errCode !== 0) {
+        toastErrorMsg("更新卖家信息失败，请稍后重试！");
+        return;
       }
       toastSuccessMsg("更新卖家信息成功！");
       setSellerForm({

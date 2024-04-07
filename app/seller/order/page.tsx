@@ -73,15 +73,15 @@ export default function SellerOrderPage() {
         paginate: paginate,
         sellerUserId: loginUser?.id,
       });
-      if (rsp.errCode !== 0) {
-        toastErrorMsg("查询订单列表失败，请稍后刷新重试！");
-        return;
-      }
       if (!checkIsLogin(rsp.errCode)) {
         removeLoginUser();
         router.refresh();
 
         toastErrorMsg("您未登录，请登录后再操作！");
+        return;
+      }
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("查询订单列表失败，请稍后刷新重试！");
         return;
       }
 
