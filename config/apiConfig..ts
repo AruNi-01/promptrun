@@ -54,6 +54,11 @@ const API = {
       return API_URL + `/api/v1/order/findChartsFullInfoBySellerUserId/${sellerUserId}`;
     },
   },
+
+  likes: {
+    isLike: API_URL + "/api/v1/likes/isLike",
+    like: API_URL + "/api/v1/likes/like",
+  },
 };
 
 export default API;

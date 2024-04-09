@@ -2,6 +2,7 @@ import { Model } from "./model";
 import { Paginate } from "./paginate";
 import { PromptImg } from "./prompt_img";
 import { Seller } from "./seller";
+import { User } from "./user";
 
 export interface PromptListReq {
   paginate: Paginate;
@@ -41,6 +42,7 @@ export interface Prompt {
 export interface PromptFullInfo {
   prompt: Prompt;
   seller: Seller;
+  sellerUser: User;
   model: Model;
   promptImgList: PromptImg[];
 }

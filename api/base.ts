@@ -8,7 +8,7 @@ export const httpMethod = {
   DELETE: "DELETE",
 };
 
-export const baseFetch = async (url: string, method: string, data?: any): Promise<Result> => {
+export const baseFetch = async (url: string, method: string, data?: any, queryParamsObj?: {}): Promise<Result> => {
   try {
     const options: RequestInit = {
       credentials: "include", // 允许跨域携带 cookie 等凭证
@@ -20,6 +20,10 @@ export const baseFetch = async (url: string, method: string, data?: any): Promis
 
     if (data) {
       options.body = JSON.stringify(data);
+    }
+    if (queryParamsObj) {
+      const queryParams = new URLSearchParams(queryParamsObj).toString();
+      url = `${url}?${queryParams}`;
     }
 
     const response = await fetch(url, options);

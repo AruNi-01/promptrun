@@ -23,9 +23,13 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function MarketPage() {
+  const router = useRouter();
+
   const [promptList, setPromptList] = useState<Prompt[]>([]);
   const [promptMasterImgList, setPromptMasterImgList] = useState<PromptImg[]>([]);
   const [paginate, setPaginate] = useState<Paginate>({
@@ -161,7 +165,15 @@ export default function MarketPage() {
       </div>
       <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
         {promptList?.map((prompt) => (
-          <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
+          <Card
+            key={prompt.id}
+            isPressable
+            isHoverable
+            shadow="sm"
+            as={Link}
+            href={`/market/${prompt.id}`}
+            target="_blank"
+          >
             <CardBody className="overflow-visible p-0">
               <div className="relative">
                 <Image
