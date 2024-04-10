@@ -1,6 +1,7 @@
 "use client";
 import { isLike, like } from "@/api/likes";
 import { findPromptFullInfoById } from "@/api/prompt";
+import { AliPayIcon, WechatPayIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { PromptFullInfo } from "@/types/api/prompt";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
@@ -8,7 +9,22 @@ import { categoryTypeMap } from "@/utils/constant";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { Avatar, Card, CardBody, CardHeader, Carousel, Rating, Typography } from "@material-tailwind/react";
 import { Button } from "@nextui-org/button";
-import { Chip, Divider, Link, Tooltip, cn } from "@nextui-org/react";
+import {
+  Chip,
+  Divider,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Tab,
+  Tabs,
+  Tooltip,
+  cn,
+  useDisclosure,
+  Image,
+} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiCube, HiEye, HiHeart, HiShieldCheck, HiTag } from "react-icons/hi";
@@ -21,6 +37,13 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   const [promptFullInfo, setPromptFullInfo] = useState<PromptFullInfo | null>(null);
   const [likeState, setLikeState] = useState<boolean>();
   const [likeAmount, setLikeAmount] = useState<number>(0);
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onModalOpen,
+    onClose: onModalClose,
+    onOpenChange: onModalOpenChange,
+  } = useDisclosure();
 
   useEffect(() => {
     findPromptFullInfoById(promptId)
@@ -108,7 +131,11 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         <CardBody className="relative my-auto">
           <div className="flex flex-col gap-3 rounded-xl bg-black bg-opacity-50 z-10 p-5 backdrop-blur-sm">
             <Tooltip placement="top-start" showArrow content="点击查看卖家信息">
-              <Link className="flex gap-4 items-center" href="/profile">
+              <Link
+                className="flex gap-4 items-center"
+                href={`/seller_info/${promptFullInfo.seller.id}`}
+                target="_blank"
+              >
                 <Avatar
                   size="lg"
                   variant="circular"
@@ -227,12 +254,60 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             <Typography variant="h2">{promptFullInfo.prompt.price}</Typography>
           </div>
           <Tooltip placement="right-end" showArrow content="请确保您有该模型的访问权，否则无法使用">
-            <Button color="primary" variant="ghost" className="w-44 h-16 text-xl">
+            <Button onPress={onModalOpen} color="primary" variant="ghost" className="w-44 h-16 text-xl">
               购买 Prompt
             </Button>
           </Tooltip>
         </div>
       </div>
+
+      <Modal size="2xl" isDismissable={false} isOpen={isModalOpen} onOpenChange={onModalOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex gap-1 text-2xl ">Prompt 名称：{promptFullInfo.prompt.title}</ModalHeader>
+              <ModalBody className="flex flex-col gap-3 items-start">
+                <div className="text-xl">支付金额：￥{promptFullInfo.prompt.price}</div>
+                <Divider />
+                <div className="flex w-full flex-col">
+                  <Tabs size="lg" aria-label="Options" color="default" variant="solid">
+                    <Tab
+                      key="wechatPay"
+                      title={
+                        <div className="flex items-center space-x-2 text-green-500">
+                          <WechatPayIcon />
+                          <span>微信支付</span>
+                        </div>
+                      }
+                    >
+                      <div className="flex flex-col gap-3 items-startx">
+                        <Image width="300px" src="/gallery/9.png" alt="wechat_pay_qr_code" />
+                      </div>
+                    </Tab>
+                    <Tab
+                      key="aliPay"
+                      title={
+                        <div className="flex items-center space-x-2 text-blue-500">
+                          <AliPayIcon />
+                          <span>支付宝支付</span>
+                        </div>
+                      }
+                    >
+                      <div className="flex flex-col gap-3 items-start">
+                        <Image width="300px" src="/gallery/9.png" alt="wechat_pay_qr_code" />
+                      </div>
+                    </Tab>
+                  </Tabs>
+                  <Typography variant="paragraph" className="text-sm text-gray-300">
+                    支付后，您将拥有此 Prompt 的访问权，可到对应大模型中使用！
+                  </Typography>
+                </div>
+              </ModalBody>
+              <ModalFooter></ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </section>
   );
 }

@@ -1,7 +1,7 @@
 import API from "@/config/apiConfig.";
 import { baseFetch, httpMethod } from "./base";
 import { Result } from "@/types/api/result";
-import { PromptFullInfo, PromptListByBuyerIdReq, PromptListReq } from "@/types/api/prompt";
+import { PromptFullInfo, PromptListByBuyerIdReq, PromptListBySellerIdReq, PromptListReq } from "@/types/api/prompt";
 
 export const findPromptList = async (reqData: PromptListReq): Promise<Result> => {
   try {
@@ -56,5 +56,13 @@ export const findPromptMasterImgListByPromptIds = async (promptIds: number[]): P
     return await baseFetch(API.prompt.findMasterImgListByPromptIds, httpMethod.POST, { promptIds: promptIds });
   } catch (error) {
     throw new Error("An error occurred while querying the prompt.");
+  }
+};
+
+export const findPromptListBySellerId = async (reqData: PromptListBySellerIdReq): Promise<Result> => {
+  try {
+    return await baseFetch(API.prompt.listBySellerId, httpMethod.POST, reqData);
+  } catch (error) {
+    throw new Error("An error occurred while querying the prompt list by seller.");
   }
 };

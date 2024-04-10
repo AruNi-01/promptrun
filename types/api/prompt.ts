@@ -21,6 +21,11 @@ export interface PromptListByBuyerIdReq {
   buyerId: number | undefined;
 }
 
+export interface PromptListBySellerIdReq {
+  paginate: Paginate;
+  sellerId: number | undefined;
+}
+
 export interface Prompt {
   id: number;
   seller_id: number;
