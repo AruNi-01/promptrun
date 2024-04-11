@@ -34,9 +34,9 @@ export default function App() {
         <NavbarItem isActive={navItemIsActive("/seller")}>
           <Button
             as={Link}
-            variant={navItemIsActive("/seller") ? "shadow" : "light"}
+            variant={navItemIsActive("/seller/") ? "shadow" : "light"}
             radius="full"
-            color={navItemIsActive("/seller") ? "primary" : "default"}
+            color={navItemIsActive("/seller/") ? "primary" : "default"}
             href="/seller/dashboard"
           >
             出售 Prompt

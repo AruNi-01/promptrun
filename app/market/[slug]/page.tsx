@@ -139,7 +139,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                 <Avatar
                   size="lg"
                   variant="circular"
-                  alt="tania andrew"
+                  alt="avatar"
                   className="border-2 border-default-600"
                   src={promptFullInfo?.sellerUser.header_url}
                 />

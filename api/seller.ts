@@ -18,3 +18,11 @@ export const sellerUpdate = async (formData: SellerUpdateReq): Promise<Result> =
     throw new Error("An error occurred during update seller profile.");
   }
 };
+
+export const findSellerById = async (id: number): Promise<Result<Seller>> => {
+  try {
+    return await baseFetch(API.seller.findById(id), httpMethod.GET);
+  } catch (error) {
+    throw new Error("An error occurred during find seller profile.");
+  }
+};

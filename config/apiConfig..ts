@@ -47,6 +47,9 @@ const API = {
       return API_URL + `/api/v1/seller/findByUserId/${userId}`;
     },
     update: API_URL + "/api/v1/seller/update",
+    findById: (id: number): string => {
+      return API_URL + `/api/v1/seller/findById/${id}`;
+    },
   },
 
   order: {

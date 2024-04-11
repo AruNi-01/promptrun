@@ -7,7 +7,7 @@ export const findUserById = async (id: number): Promise<Result> => {
   try {
     return await baseFetch(API.user.findById(id), httpMethod.GET);
   } catch (error) {
-    throw new Error("An error occurred during update user profile.");
+    throw new Error("An error occurred during find user profile.");
   }
 };
 
