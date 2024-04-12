@@ -11,12 +11,8 @@ import { PromptImg } from "@/types/api/prompt_img";
 import { Seller } from "@/types/api/seller";
 import { User } from "@/types/api/user";
 import { toastErrorMsg } from "@/utils/messageToast";
-import {
-  Avatar,
-  Rating,
-  Typography
-} from "@material-tailwind/react";
-import { Card, CardBody, CardFooter, Chip, Divider, Image, Pagination } from "@nextui-org/react";
+import { Avatar, Rating, Typography } from "@material-tailwind/react";
+import { Card, CardBody, CardFooter, Chip, Divider, Image, Link, Pagination } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 
@@ -148,7 +144,15 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
         <Divider />
         <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
           {promptList?.map((prompt) => (
-            <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
+            <Card
+              key={prompt.id}
+              isPressable
+              isHoverable
+              shadow="sm"
+              as={Link}
+              href={`/market/${prompt.id}`}
+              target="_blank"
+            >
               <CardBody className="overflow-visible p-0">
                 <div className="relative">
                   <Image
