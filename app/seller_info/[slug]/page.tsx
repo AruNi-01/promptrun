@@ -1,28 +1,24 @@
 "use client";
 import { findModelList } from "@/api/model";
 import { findPromptListBySellerId, findPromptMasterImgListByPromptIds } from "@/api/prompt";
-import { useLoginUserStore } from "@/state_stores/loginUserStore";
+import { findSellerById } from "@/api/seller";
+import { findUserById } from "@/api/user";
+import loadingIcon2 from "@/public/lottie/loading2.json";
 import { Model } from "@/types/api/model";
 import { Paginate } from "@/types/api/paginate";
 import { Prompt } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
+import { Seller } from "@/types/api/seller";
+import { User } from "@/types/api/user";
 import { toastErrorMsg } from "@/utils/messageToast";
-import { Card, CardBody, CardFooter, Chip, Divider, Pagination, Image, Tooltip, Link, cn } from "@nextui-org/react";
 import {
   Avatar,
-  Card as MaterialCard,
-  CardBody as MaterialCardBody,
-  CardHeader as MaterialCardHeader,
   Rating,
-  Typography,
+  Typography
 } from "@material-tailwind/react";
-import { useEffect, useState } from "react";
-import { Seller } from "@/types/api/seller";
-import { findSellerById } from "@/api/seller";
+import { Card, CardBody, CardFooter, Chip, Divider, Image, Pagination } from "@nextui-org/react";
 import Lottie from "lottie-react";
-import ball from "@/public/lottie/ball.json";
-import { User } from "@/types/api/user";
-import { findUserById } from "@/api/user";
+import { useEffect, useState } from "react";
 
 export default function SellerDetailPage({ params }: { params: { slug: number } }) {
   const { slug: sellerId } = params;
@@ -119,17 +115,11 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
   };
 
   if (!seller || !modelList || !promptList || !promptMasterImgList) {
-    return (
-      <div>
-        {/* TODO: loading component */}
-        <Typography variant="h1">loading...</Typography>
-      </div>
-    );
+    return <Lottie animationData={loadingIcon2} className="h-48" />;
   }
 
   return (
-    <section className="flex flex-col gap-3 w-4/6 mt-5 overflow-hidden">
-      {/* TODO: 卖家头部 Banner */}
+    <section className="flex flex-col gap-3 w-4/6 overflow-hidden">
       <div className="relative bg-cover bg-[url('/seller_bg.png')] w-full h-[20rem] overflow-hidden text-center" />
       <div className="absolute ml-8 mt-[280px] z-20">
         <Avatar size="xl" variant="rounded" alt="avatar" src={sellerUserInfo?.header_url} />

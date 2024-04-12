@@ -2,6 +2,7 @@
 import { isLike, like } from "@/api/likes";
 import { findPromptFullInfoById } from "@/api/prompt";
 import { AliPayIcon, WechatPayIcon } from "@/components/icons";
+import loadingIcon2 from "@/public/lottie/loading2.json";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { PromptFullInfo } from "@/types/api/prompt";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
@@ -12,6 +13,7 @@ import { Button } from "@nextui-org/button";
 import {
   Chip,
   Divider,
+  Image,
   Link,
   Modal,
   ModalBody,
@@ -23,8 +25,8 @@ import {
   Tooltip,
   cn,
   useDisclosure,
-  Image,
 } from "@nextui-org/react";
+import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiCube, HiEye, HiHeart, HiShieldCheck, HiTag } from "react-icons/hi";
@@ -108,8 +110,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   if (!promptFullInfo) {
     return (
       <div>
-        {/* TODO: loading component */}
-        <Typography variant="h1">loading...</Typography>
+        <Lottie animationData={loadingIcon2} className="h-48" />
       </div>
     );
   }
