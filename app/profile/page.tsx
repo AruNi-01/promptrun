@@ -337,7 +337,7 @@ export default function UserProfilePage() {
             floated={false}
             shadow={false}
             color="transparent"
-            className="absolute inset-0 m-0 h-full w-full rounded-none bg-[url('https://draft.dev/learn/assets/posts/golang.png')] bg-cover bg-center"
+            className="absolute inset-0 m-0 h-full w-full rounded-none bg-[url('/profile_bg.png')] bg-cover bg-center"
           >
             <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 via-black/50" />
           </CardHeader>

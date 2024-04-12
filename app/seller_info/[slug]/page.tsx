@@ -10,10 +10,10 @@ import { Prompt } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
 import { Seller } from "@/types/api/seller";
 import { User } from "@/types/api/user";
-import { formatStringDate, getDayDiffUtilNow } from "@/utils/common";
+import { getDayDiffUtilNow } from "@/utils/common";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { Avatar, Rating, Typography } from "@material-tailwind/react";
-import { Card, CardBody, CardFooter, Chip, Divider, Image, Link, Pagination } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Chip, Divider, Image, Link, Pagination, cn } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 
@@ -112,13 +112,17 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
   };
 
   if (!seller || !modelList || !promptList || !promptMasterImgList) {
-    return <Lottie animationData={loadingIcon2} className="h-48" />;
+    return <Lottie animationData={loadingIcon2} className="h-48 text-center" />;
   }
 
   return (
     <section className="flex flex-col gap-3 w-4/6 overflow-hidden">
-      <div className="relative bg-cover bg-[url('/seller_bg.png')] w-full h-[20rem] overflow-hidden text-center" />
-      <div className="absolute ml-8 mt-[280px] z-20 w-[64.6%]">
+      <div
+        className={cn(
+          "relative bg-cover bg-[url('/seller_bg.png')] w-full h-[18rem] overflow-hidden text-center rounded-md"
+        )}
+      />
+      <div className="absolute ml-8 mt-[250px] z-20 w-[64.6%]">
         <div className="flex items-center justify-between">
           <div>
             <Avatar size="xl" variant="rounded" alt="avatar" src={sellerUserInfo?.header_url} />

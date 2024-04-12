@@ -1,5 +1,5 @@
 "use client";
-import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react";
+import { Button, Image, Link, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import Login from "./login/Login";
 
@@ -13,10 +13,7 @@ export default function App() {
     <Navbar height={"80px"} isBordered>
       <NavbarBrand>
         <Link href="/" color="foreground">
-          <p className="font-bold text-2xl">
-            Prompt
-            <span className="text-primary">Run</span>
-          </p>
+          <Image src="/nav_logo.png" width="120px" height="120px" alt="logo" className="mt-4" />
         </Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4 bg-default-50 rounded-full h-12 " justify="center">

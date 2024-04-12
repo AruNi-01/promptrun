@@ -112,7 +112,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   if (!promptFullInfo) {
     return (
       <div>
-        <Lottie animationData={loadingIcon2} className="h-48" />
+        <Lottie animationData={loadingIcon2} className="h-48 items-center" />
       </div>
     );
   }
