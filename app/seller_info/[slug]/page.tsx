@@ -10,6 +10,7 @@ import { Prompt } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
 import { Seller } from "@/types/api/seller";
 import { User } from "@/types/api/user";
+import { formatStringDate, getDayDiffUtilNow } from "@/utils/common";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { Avatar, Rating, Typography } from "@material-tailwind/react";
 import { Card, CardBody, CardFooter, Chip, Divider, Image, Link, Pagination } from "@nextui-org/react";
@@ -117,11 +118,18 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
   return (
     <section className="flex flex-col gap-3 w-4/6 overflow-hidden">
       <div className="relative bg-cover bg-[url('/seller_bg.png')] w-full h-[20rem] overflow-hidden text-center" />
-      <div className="absolute ml-8 mt-[280px] z-20">
-        <Avatar size="xl" variant="rounded" alt="avatar" src={sellerUserInfo?.header_url} />
-        <Typography variant="h3" className="text-white ">
-          {sellerUserInfo?.nickname}
-        </Typography>
+      <div className="absolute ml-8 mt-[280px] z-20 w-[64.6%]">
+        <div className="flex items-center justify-between">
+          <div>
+            <Avatar size="xl" variant="rounded" alt="avatar" src={sellerUserInfo?.header_url} />
+            <Typography variant="h3" className="text-white ">
+              {sellerUserInfo?.nickname}
+            </Typography>
+          </div>
+          <Chip variant="dot" color="success" radius="sm" size="sm" className="mt-5">
+            已成为卖家 <p className="text-success inline-block">{getDayDiffUtilNow(new Date(seller.create_time))}</p> 天
+          </Chip>
+        </div>
       </div>
       <div className="flex gap-2 text-white/80 items-center mt-[74px]">
         <p>评分：{seller?.rating}</p>
@@ -133,6 +141,12 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
           readonly
           ratedColor="blue"
         />
+        <Chip variant="shadow" color="danger" radius="lg" size="sm">
+          获得喜欢：{seller?.like_amount}
+        </Chip>
+        <Chip variant="shadow" color="secondary" radius="lg" size="sm">
+          售出 Prompt：{seller?.sell_amount}
+        </Chip>
       </div>
       <Typography variant="h6" className="text-gray-300 text-start font-medium leading-[1.5] whitespace-normal">
         {seller.intro}

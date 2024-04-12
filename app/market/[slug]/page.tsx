@@ -84,7 +84,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       return;
     }
 
-    like({ promptId: Number(promptId), userId: loginUser.id, sellerUserId: promptFullInfo?.seller.id || 0 })
+    like({ promptId: Number(promptId), userId: loginUser.id, sellerId: promptFullInfo?.seller.id || 0 })
       .then((res) => {
         if (!checkIsLogin(res.errCode)) {
           removeLoginUser;
