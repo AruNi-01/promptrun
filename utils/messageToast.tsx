@@ -7,3 +7,7 @@ export const toastSuccessMsg = (message: string, duration?: number) => {
 export const toastErrorMsg = (message: string, duration?: number) => {
   toast.error(message);
 };
+
+export const toastInfoMsg = (message: string, duration?: number) => {
+  toast.info(message);
+};

@@ -1,5 +1,5 @@
 "use client";
-import { isLike, like } from "@/api/likes";
+import { LikeErrCode, isLike, like } from "@/api/likes";
 import { findPromptFullInfoById } from "@/api/prompt";
 import { AliPayIcon, WechatPayIcon } from "@/components/icons";
 import loadingIcon2 from "@/public/lottie/loading2.json";
@@ -7,7 +7,7 @@ import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { PromptFullInfo } from "@/types/api/prompt";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
 import { categoryTypeMap } from "@/utils/constant";
-import { toastErrorMsg } from "@/utils/messageToast";
+import { toastErrorMsg, toastInfoMsg } from "@/utils/messageToast";
 import { Avatar, Card, CardBody, CardHeader, Carousel, Rating, Typography } from "@material-tailwind/react";
 import { Button } from "@nextui-org/button";
 import {
@@ -92,7 +92,9 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
           toastErrorMsg("请先登录后再点赞！");
           return;
         }
-        if (res.errCode !== 0) {
+        if (res.errCode === LikeErrCode.LikeIntervalTooShort) {
+          toastInfoMsg("您点赞太频繁了，休息会儿再试试吧！");
+        } else if (res.errCode !== 0) {
           toastErrorMsg("点赞或取消点赞失败，请稍后重试！");
         } else {
           setLikeAmount((prev) => (likeState ? prev - 1 : prev + 1));

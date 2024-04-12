@@ -3,6 +3,10 @@ import { baseFetch, httpMethod } from "./base";
 import API from "@/config/apiConfig.";
 import { LikeReq } from "@/types/api/likes";
 
+export const LikeErrCode = {
+  LikeIntervalTooShort: 40007,
+};
+
 export const isLike = async (queryParamsObj: {}): Promise<Result<boolean>> => {
   try {
     return await baseFetch(API.likes.isLike, httpMethod.GET, undefined, queryParamsObj);
