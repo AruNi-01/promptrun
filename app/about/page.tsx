@@ -9,8 +9,8 @@ export default function AboutPage() {
               欢迎来到 Prompt<span className="text-primary">Run</span>
             </h1>
             <p className="mb-3 text-medium font-normal lg:text-lg sm:px-14 lg:px-42 text-gray-200">
-              我们是一个AIGC（Artificial Intelligence Generated Content）提示词交易平台。在这里，你可以买入
-              和售出优质的提示词，为你的创作、写作和其他AI生成内容的任务提供灵感和指导。
+              我们是一个AIGC（Artificial Intelligence Generated
+              Content）提示词交易平台。在这里，你可以买入和售出优质的提示词，为你的创作、写作和其他AI生成内容的任务提供灵感和指导。
             </p>
             <p className="text-medium font-normal lg:text-lg sm:px-14 lg:px-42 text-gray-200">
               无论你是想寻找灵感、提高写作效率，还是想将自己的优质提示词与他人共享并获得收益，PromptRun

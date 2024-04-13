@@ -41,7 +41,7 @@ Open http://your-server-ip:3000 with your browser to see the result.
 
 <h2>Tech Stack</h2>
 
-This project using below tech:
+Front end tech:
 
 - [React](https://react.dev/) - The library for web and native user interfaces
 - [Next.js](https://nextjs.org/) - The React Framework for the Web
@@ -52,6 +52,17 @@ This project using below tech:
 - [Recharts](https://recharts.org/en-US/) - A composable charting library built on React components.
 - [Sonner](https://sonner.emilkowal.ski/) - An opinionated toast component for React.
 - [Zustand](https://awesomedevin.github.io/zustand-vue/en/) - A more Lightweight and Convenient state management.
+
+Back-end tech:
+
+- [Golang](https://go.dev/) - Build simple, secure, scalable systems with Go.
+- [Gin](https://gin-gonic.com/) - The fastest full-featured web framework for Go. Crystal clear.
+- [Gorm](https://gorm.io/) - The fantastic ORM library for Golang.
+- [MySQL](https://www.mysql.com/) - MySQL is the world’s most popular open source database.
+- [Redis](https://redis.io/) - Redis is an in-memory data store used by millions of developers as a cache.
+
+
+> Back-end project: https://github.com/AruNi-01/promptrun-api
 
 
 <h2>License</h2>
