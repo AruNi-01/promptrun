@@ -6,6 +6,7 @@ const API = {
     register: API_URL + "/api/v1/passport/register",
     updatePassword: API_URL + "/api/v1/passport/updatePassword",
     logout: API_URL + "/api/v1/passport/logout",
+    checkIsLogin: API_URL + "/api/v1/passport/checkIsLogin",
   },
 
   prompt: {

@@ -35,3 +35,11 @@ export const logout = async (): Promise<Result> => {
     throw new Error("An error occurred during logout.");
   }
 };
+
+export const checkIsLogin = async (): Promise<Result> => {
+  try {
+    return await baseFetch(API.passport.checkIsLogin, httpMethod.GET);
+  } catch (error) {
+    throw new Error("An error occurred during check is login.");
+  }
+};

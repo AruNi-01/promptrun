@@ -1,15 +1,28 @@
 "use client";
+import { checkIsLogin } from "@/api/passport";
 import Accordion from "@/components/home-page/Accordion";
 import ImgGallery from "@/components/home-page/ImgGallery";
 import NavCard from "@/components/home-page/NavCard";
 import { UnderlineIcon } from "@/components/icons";
 import AnimateArrow from "@/components/ui/AnimateArrow";
 import Tip from "@/components/ui/Tip";
+import { useLoginUserStore } from "@/state_stores/loginUserStore";
+import { checkIsLogin as loginCheck } from "@/utils/common";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { Divider } from "@nextui-org/react";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { removeLoginUser } = useLoginUserStore();
+  useEffect(() => {
+    checkIsLogin().then((res) => {
+      if (!loginCheck(res.errCode)) {
+        removeLoginUser();
+      }
+    });
+  }, []);
+
   return (
     <section className="flex flex-col justify-around w-full items-center gap-10 relative z-10">
       <h1 className="text-7xl font-bold cursor-default">
