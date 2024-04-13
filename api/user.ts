@@ -1,5 +1,5 @@
 import { Result } from "@/types/api/result";
-import { UserUpdateReq } from "@/types/api/user";
+import { UserUpdateReq, userBecomeSellerReq } from "@/types/api/user";
 import { baseFetch, httpMethod } from "./base";
 import API from "@/config/apiConfig.";
 
@@ -16,5 +16,13 @@ export const userUpdate = async (formData: UserUpdateReq): Promise<Result> => {
     return await baseFetch(API.user.update, httpMethod.POST, formData);
   } catch (error) {
     throw new Error("An error occurred during update user profile.");
+  }
+};
+
+export const userBecomeSeller = async (reqData: userBecomeSellerReq): Promise<Result> => {
+  try {
+    return await baseFetch(API.user.becomeSeller, httpMethod.POST, reqData);
+  } catch (error) {
+    throw new Error("An error occurred during become seller.");
   }
 };

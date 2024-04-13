@@ -41,6 +41,7 @@ const API = {
       return API_URL + `/api/v1/user/findById/${id}`;
     },
     update: API_URL + "/api/v1/user/update",
+    becomeSeller: API_URL + "/api/v1/user/becomeSeller",
   },
 
   seller: {

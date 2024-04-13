@@ -14,3 +14,10 @@ export interface User {
   type: number;
   create_time: string;
 }
+
+export interface userBecomeSellerReq {
+  userId: number;
+  nickname: string;
+  email: string;
+  intro: string;
+}
