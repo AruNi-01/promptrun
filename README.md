@@ -16,7 +16,7 @@
 
 <h2>Getting Started</h2>
 
-<h4>Running Locally</h4>
+<h3>Running Locally</h3>
 
 <p>First, install dependency and run the development server:</p>
 
@@ -27,7 +27,7 @@ npm run dev
 
 Open http://localhost:3000 with your browser to see the result.
 
-<h4>Using Docker</h4>
+<h3>Using Docker</h3>
 
 <p>First, you need install Docker on your machine, then:</p>
 
