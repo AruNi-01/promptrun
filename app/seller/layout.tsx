@@ -44,17 +44,21 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const check = async () => {
-      const rsp = await checkIsLoginApi();
-      if (!checkIsLogin(rsp.errCode)) {
-        removeLoginUser();
-        toastInfoMsg("您未登录，请先登录后在操作！");
-        route.push("/");
-      } else if (rsp.errCode === Number(0)) {
-        if (loginUser?.type !== UserTypeIsSeller) {
-          toastInfoMsg("您还不是卖家，快去申请成为卖家吧！");
-          route.push("/seller_become");
+      try {
+        const rsp = await checkIsLoginApi();
+        if (!checkIsLogin(rsp.errCode)) {
+          removeLoginUser();
+          toastInfoMsg("您未登录，请先登录后在操作！");
+          route.push("/");
+        } else if (rsp.errCode === Number(0)) {
+          if (loginUser?.type !== UserTypeIsSeller) {
+            toastInfoMsg("您还不是卖家，快去申请成为卖家吧！");
+            route.push("/seller_become");
+          }
+        } else {
+          toastErrorMsg("服务器开小差了，请稍后重试！");
         }
-      } else {
+      } catch (e) {
         toastErrorMsg("服务器开小差了，请稍后重试！");
       }
     };
