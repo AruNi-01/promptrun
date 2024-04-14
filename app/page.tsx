@@ -8,6 +8,7 @@ import AnimateArrow from "@/components/ui/AnimateArrow";
 import Tip from "@/components/ui/Tip";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { checkIsLogin as loginCheck } from "@/utils/common";
+import { toastErrorMsg } from "@/utils/messageToast";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { Divider } from "@nextui-org/react";
@@ -16,11 +17,15 @@ import { useEffect } from "react";
 export default function Home() {
   const { removeLoginUser } = useLoginUserStore();
   useEffect(() => {
-    checkIsLogin().then((res) => {
-      if (!loginCheck(res.errCode)) {
-        removeLoginUser();
-      }
-    });
+    checkIsLogin()
+      .then((res) => {
+        if (!loginCheck(res.errCode)) {
+          removeLoginUser();
+        }
+      })
+      .catch(() => {
+        toastErrorMsg("服务器开小差了，请稍后重试！");
+      });
   }, []);
 
   return (
