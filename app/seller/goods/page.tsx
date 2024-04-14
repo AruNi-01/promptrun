@@ -18,6 +18,7 @@ import {
   ChipProps,
   Divider,
   Image,
+  Link,
   Pagination,
   Radio,
   RadioGroup,
@@ -25,6 +26,7 @@ import {
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import ghostMoveAnimation from "@/public/lottie/ghost-move.json";
+import { Button } from "@nextui-org/button";
 
 const auditStatusColorMap: Record<string, ChipProps["color"]> = {
   2: "success",
@@ -115,7 +117,12 @@ export default function SellerGoodsPage() {
 
   return (
     <section className="flex flex-col gap-4 overflow-hidden">
-      <h1 className="text-3xl self-start">我上架的 Prompts</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl">我上架的 Prompts</h1>
+        <Button as={Link} size="lg" color="primary" variant="shadow" href="/seller/goods/publish">
+          发布新的 Prompt
+        </Button>
+      </div>
       <Divider />
 
       <div className="flex">

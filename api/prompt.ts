@@ -1,7 +1,13 @@
 import API from "@/config/apiConfig.";
 import { baseFetch, httpMethod } from "./base";
 import { Result } from "@/types/api/result";
-import { PromptFullInfo, PromptListByBuyerIdReq, PromptListBySellerIdReq, PromptListReq } from "@/types/api/prompt";
+import {
+  PromptFullInfo,
+  PromptListByBuyerIdReq,
+  PromptListBySellerIdReq,
+  PromptListReq,
+  PromptPublishReq,
+} from "@/types/api/prompt";
 
 export const findPromptList = async (reqData: PromptListReq): Promise<Result> => {
   try {
@@ -64,5 +70,13 @@ export const findPromptListBySellerId = async (reqData: PromptListBySellerIdReq)
     return await baseFetch(API.prompt.listBySellerId, httpMethod.POST, reqData);
   } catch (error) {
     throw new Error("An error occurred while querying the prompt list by seller.");
+  }
+};
+
+export const promptPublish = async (reqData: PromptPublishReq): Promise<Result> => {
+  try {
+    return await baseFetch(API.prompt.publish, httpMethod.POST, reqData);
+  } catch (error) {
+    throw new Error("An error occurred while publishing the prompt.");
   }
 };

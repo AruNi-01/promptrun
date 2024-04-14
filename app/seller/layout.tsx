@@ -203,8 +203,8 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
             </Sidebar.Items>
             <Sidebar.CTA className="mt-[calc(100vh-38rem)]">
               <div className="mb-2 flex justify-between">
-                <HiFire className="h-[22px] w-[22px] text-green-300" />
-                <Badge color="success">卖家须知</Badge>
+                <HiFire className="h-[22px] w-[22px] text-[#FECACA]" />
+                <Badge color="red">卖家须知</Badge>
               </div>
               <div className="mb-2 text-sm text-cyan-900 dark:text-gray-400">
                 所有交易均需通过 PromptRun 平台完成，确保交易安全可靠。 遵守平台的交易

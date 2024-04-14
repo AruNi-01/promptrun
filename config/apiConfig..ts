@@ -27,6 +27,7 @@ const API = {
       return API_URL + `/api/v1/prompt/findMasterImgByPromptId/${promptId}`;
     },
     findMasterImgListByPromptIds: API_URL + "/api/v1/prompt/findMasterImgListByPromptIds",
+    publish: API_URL + "/api/v1/prompt/publish",
   },
 
   model: {

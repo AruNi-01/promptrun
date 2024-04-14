@@ -51,3 +51,18 @@ export interface PromptFullInfo {
   model: Model;
   promptImgList: PromptImg[];
 }
+
+export interface PromptPublishReq {
+  userId: number;
+  promptTitle: string;
+  promptModelId: number;
+  promptCategoryType: number;
+  promptIntro: string;
+  promptContent: string;
+  useSuggestion: string;
+  inputExample: string;
+  outputExample: string;
+  masterImgBase64: string | undefined;
+  imgBase64List: string[] | undefined;
+  promptPrice: number;
+}

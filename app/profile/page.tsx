@@ -221,7 +221,7 @@ export default function UserProfilePage() {
                   <input
                     id="dropzone-file"
                     type="file"
-                    accept="image/jpeg,image/jpg,image/png,image/svg"
+                    accept="image/jpeg,image/jpg,image/png,image/svg,image/WebP"
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];

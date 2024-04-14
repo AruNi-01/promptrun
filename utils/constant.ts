@@ -71,6 +71,12 @@ export const auditStatus = {
   AuditPass: 2,
 };
 
+export const modelMediaType = {
+  Text: 1,
+  Image: 2,
+  Video: 3,
+};
+
 export const categoryTypeMap = new Map<number, string>(
   categoryOptions.map((category) => [category.type, category.label])
 );
