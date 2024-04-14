@@ -51,6 +51,11 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
           toastInfoMsg("您未登录，请先登录后在操作！");
           route.push("/");
         } else if (rsp.errCode === Number(0)) {
+          if (!loginUser) {
+            // localStorage 还未加载，等待下一次 render
+            console.log("localStorage 还未加载，等待下一次 render. " + loginUser);
+            return;
+          }
           if (loginUser?.type !== UserTypeIsSeller) {
             toastInfoMsg("您还不是卖家，快去申请成为卖家吧！");
             route.push("/seller_become");
@@ -201,16 +206,16 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                 <HiFire className="h-[22px] w-[22px] text-green-300" />
                 <Badge color="success">卖家须知</Badge>
               </div>
-              <div className="mb-3 text-sm text-cyan-900 dark:text-gray-400">
-                Preview the new Flowbite dashboard navigation! You can turn the new navigation off for a limited time in
-                your profile.
+              <div className="mb-2 text-sm text-cyan-900 dark:text-gray-400">
+                所有交易均需通过 PromptRun 平台完成，确保交易安全可靠。 遵守平台的交易
+                <a
+                  className="text-sm text-cyan-900 underline hover:text-cyan-800 dark:text-gray-400 dark:hover:text-gray-300"
+                  href="#"
+                >
+                  规则与政策
+                </a>
+                ，不得从事任何违规行为，包括欺诈、虚假宣传或误导消费者等。
               </div>
-              <a
-                className="text-sm text-cyan-900 underline hover:text-cyan-800 dark:text-gray-400 dark:hover:text-gray-300"
-                href="#"
-              >
-                Turn new navigation off
-              </a>
             </Sidebar.CTA>
           </Sidebar>
           <div className="w-[75%]">{children}</div>
