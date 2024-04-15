@@ -173,6 +173,9 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       </Card>
       <div className="flex gap-4 h-[400px]">
         <Carousel
+          autoplay
+          autoplayDelay={7000}
+          loop
           className="rounded-xl w-2/3 h-auto"
           navigation={({ setActiveIndex, activeIndex, length }) => (
             <div className="absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2">
@@ -211,9 +214,18 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                 <Chip variant="flat" color="secondary" size="sm" radius="full" startContent={<HiTag />}>
                   {categoryTypeMap.get(promptFullInfo.prompt.category_type)}
                 </Chip>
-                <Chip variant="flat" color="success" size="sm" radius="full" endContent={<HiShieldCheck />}>
-                  官方审核
-                </Chip>
+                <Tooltip placement="top" showArrow content="该 Prompt 已通过官方审核，请放心购买">
+                  <Chip
+                    variant="flat"
+                    color="success"
+                    size="sm"
+                    radius="full"
+                    endContent={<HiShieldCheck />}
+                    className="cursor-pointer"
+                  >
+                    官审
+                  </Chip>
+                </Tooltip>
               </div>
             </div>
             <div className="flex flex-col gap-2 justify-end">

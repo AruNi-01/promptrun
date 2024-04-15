@@ -9,17 +9,11 @@ import { categoryOptions, modelMediaType } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Stepper, Step, Typography, Carousel } from "@material-tailwind/react";
 import { Button, Chip, Divider, Input, Select, SelectItem, Selection, Textarea, cn } from "@nextui-org/react";
+import { set } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-  HiCurrencyYen,
-  HiDocumentText,
-  HiPencilAlt,
-  HiChevronLeft,
-  HiLightningBolt,
-  HiCheckCircle,
-} from "react-icons/hi";
+import { ChangeEvent, useEffect, useState } from "react";
+import { HiTrash, HiDocumentText, HiPencilAlt, HiChevronLeft, HiLightningBolt, HiCheckCircle } from "react-icons/hi";
 
 export default function GoodsPublishPage() {
   const { loginUser, removeLoginUser } = useLoginUserStore();
@@ -70,7 +64,7 @@ export default function GoodsPublishPage() {
   const [outputExample, setOutputExample] = useState<string>("");
   // 图片类 Prompt
   const [masterImg, setMasterImg] = useState<string>();
-  const [imgList, setImgList] = useState<string[]>();
+  const [imgList, setImgList] = useState<string[]>([]);
 
   const checkFormItem = (): boolean => {
     if (
@@ -91,8 +85,11 @@ export default function GoodsPublishPage() {
           return false;
         }
       } else if (modelMediaTypeSelected === modelMediaType.Image) {
-        if (!masterImg || !imgList) {
-          toastInfoMsg("请上传图片，再进行下一步操作！");
+        if (!masterImg) {
+          toastInfoMsg("请上传 Banner 图片，再进行下一步操作！");
+          return false;
+        } else if (imgList.length < 2 || imgList.length > 6) {
+          toastInfoMsg("请上传 2-6 张效果图，再进行下一步操作！");
           return false;
         }
       } else {
@@ -103,12 +100,18 @@ export default function GoodsPublishPage() {
     return true;
   };
 
+  const [submitting, setSubmitting] = useState(false);
+
   const handlePublish = () => {
     if (price < 0 || price >= 1000) {
       toastInfoMsg("请填写正确的出售价格再提交发布！");
       return;
+    } else if (!masterImg) {
+      toastInfoMsg("请上传 Banner 图片再提交发布！");
+      return;
     }
 
+    setSubmitting(true);
     promptPublish({
       userId: loginUser?.id || 0,
       promptTitle: title,
@@ -135,13 +138,67 @@ export default function GoodsPublishPage() {
           return;
         }
         toastSuccessMsg("发布 Prompt 成功，即将跳转到上架商品页面！");
+        clearForm();
         setTimeout(() => {
           router.push("/seller/goods");
         }, 2000);
       })
       .catch(() => {
         toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
+  };
+
+  const clearForm = () => {
+    setTitle("");
+    setModelSelected("");
+    setCategorySelected("");
+    setModelMediaTypeSelected(undefined);
+    setIntro("");
+    setPromptContent("");
+    setPrice(0);
+    setUseSuggestion("");
+    setInputExample("");
+    setOutputExample("");
+    setMasterImg("");
+    setImgList([]);
+  };
+
+  const handleImgListChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const files = event.target.files;
+    if (!files) return;
+
+    const promises: Promise<string>[] = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      promises.push(readFileAsDataURL(file));
+    }
+
+    Promise.all(promises)
+      .then((base64Images) => {
+        setImgList((prevImages) => [...prevImages, ...base64Images]);
+      })
+      .catch((error) => {
+        console.error("Error reading files:", error);
+      });
+  };
+  const readFileAsDataURL = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+        } else {
+          reject(new Error("Failed to read file as data URL"));
+        }
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   return (
@@ -381,8 +438,136 @@ export default function GoodsPublishPage() {
           ) : modelMediaTypeSelected === modelMediaType.Image ? (
             <>
               <h2 className="text-3xl self-center mb-3">图片类 Prompt 详细</h2>
-              <p>图片内容：</p>
-              <Input type="file" />
+              <p>Prompt 内容：</p>
+              <Textarea
+                variant="bordered"
+                color="success"
+                isRequired
+                isInvalid={promptContent.length <= 0}
+                errorMessage={promptContent.length <= 0 ? "Prompt 内容不能为空" : ""}
+                classNames={{
+                  errorMessage: `${promptContent.length === 0 ? "hidden" : ""}`,
+                }}
+                minRows={3}
+                value={promptContent}
+                onChange={(e) => setPromptContent(e.target.value)}
+                placeholder="请输入 Prompt 具体内容，买家购买后才会展示"
+                className="max-h-52 text-start max-w-xl"
+              />
+              <p>使用建议：</p>
+              <Textarea
+                variant="bordered"
+                color="success"
+                isRequired
+                isInvalid={useSuggestion.length <= 0}
+                errorMessage={useSuggestion.length <= 0 ? "使用建议不能为空" : ""}
+                classNames={{
+                  errorMessage: `${useSuggestion.length === 0 ? "hidden" : ""}`,
+                }}
+                minRows={3}
+                value={useSuggestion}
+                onChange={(e) => setUseSuggestion(e.target.value)}
+                placeholder="请填写一条使用建议，让买家更好的使用该 Prompt"
+                className="max-h-52 text-start max-w-xl"
+              />
+              <p>上传一张 Banner 图片：</p>
+              <p className="text-sm text-default-400 -mt-1">*Banner 图片用于展示在商品卡片和详情页的 Banner 处</p>
+              <div className="flex flex-col gap-4 items-center justify-center h-[220px] w-[600px]">
+                <label
+                  htmlFor="dropzone-file"
+                  className={cn(
+                    "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                  )}
+                >
+                  <div className="relative inline-block">
+                    <img
+                      className={cn("h-[220px] w-[600px] opacity-30", { hidden: !masterImg })}
+                      src={`${masterImg ? masterImg : ""}`}
+                      alt="banner_img"
+                    />
+                    <div className={cn("absolute -top-10 -right-20 w-44", { hidden: masterImg })}>
+                      <div className="flex flex-col gap-1 items-center">
+                        <UploadIcon className="w-8 h-8 text-gray-500" />
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold">点击上传</span>
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG, JPEG, WebP</p>
+                      </div>
+                    </div>
+                  </div>
+                  <input
+                    id="dropzone-file"
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/svg,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = (e) => {
+                          setMasterImg(e.target?.result as string);
+                        };
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+              <p className="mt-2">上传效果图：</p>
+              <p className="text-sm text-default-400 -mt-1">*可上传 2-6 张效果图，严谨 PS，图片将直接展示给用户</p>
+              <div className="flex gap-2 justify-start items-start">
+                <div className="grid grid-cols-3 gap-4">
+                  {imgList.map((image, index) => (
+                    <div className="relative" key={index}>
+                      <img src={image} alt={`Preview ${index}`} className="h-[150px] w-[220px] rounded-md" />
+                      <Button
+                        isIconOnly
+                        variant="flat"
+                        size="sm"
+                        onClick={() => {
+                          const newImgList = [...imgList];
+                          newImgList.splice(index, 1);
+                          setImgList(newImgList);
+                        }}
+                        className="absolute top-1 right-1 dark:hover:bg-red-500/80"
+                      >
+                        <HiTrash className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <div className="flex flex-col gap-4 items-center justify-center h-[150px] w-[202px]">
+                    <label
+                      htmlFor="img-list-file"
+                      className={cn(
+                        "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                      )}
+                    >
+                      <div className="relative inline-block">
+                        <div className={cn("absolute -top-10 -right-[87px] w-44")}>
+                          <div className="flex flex-col gap-1 items-center">
+                            <UploadIcon className="w-8 h-8 text-gray-500" />
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              <span className="font-semibold">点击上传</span>
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG, JPEG, WebP</p>
+                          </div>
+                        </div>
+                      </div>
+                      <input
+                        id="img-list-file"
+                        type="file"
+                        className="hidden"
+                        multiple
+                        accept="image/jpeg,image/jpg,image/png,image/svg,image/webp"
+                        onChange={handleImgListChange}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <p className={cn("text-sm text-red-900", { hidden: imgList.length >= 2 && imgList.length <= 6 })}>
+                请上传 2-6 张效果图，当前已上传 {imgList.length} 张
+              </p>
             </>
           ) : (
             <>
@@ -393,50 +578,51 @@ export default function GoodsPublishPage() {
           )}
         </div>
         {/* Step 3 */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 w-4/6">
           <h2 className="text-3xl self-center mb-3">发布 Prompt</h2>
-
-          <div className="flex flex-col gap-4 items-center justify-center self-center h-[260px] w-[600px]">
-            <p className="mt-2 self-start">上传一张具有辨识度的 Banner 图片，用于展示在商品卡片和详情页中：</p>
-            <label
-              htmlFor="dropzone-file"
-              className={cn(
-                "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-              )}
-            >
-              <div className="relative inline-block">
-                <img
-                  className={cn("h-[240px] w-[600px] opacity-30", { hidden: !masterImg })}
-                  src={`${masterImg ? masterImg : ""}`}
-                  alt="banner_img"
-                />
-                <div className={cn("absolute -top-10 -right-20 w-44", { hidden: masterImg })}>
-                  <div className="flex flex-col gap-1 items-center">
-                    <UploadIcon className="w-8 h-8 text-gray-500" />
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      <span className="font-semibold">点击上传</span>
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG, JPEG, WebP</p>
+          <div className={cn("flex flex-col gap-2 w-full", { hidden: modelMediaTypeSelected !== modelMediaType.Text })}>
+            <p className="">上传一张具有辨识度的 Banner 图片，用于展示在商品卡片和详情页中</p>
+            <div className="flex flex-col gap-4 items-center justify-center self-center h-[260px] w-[600px]">
+              <label
+                htmlFor="dropzone-file"
+                className={cn(
+                  "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                )}
+              >
+                <div className="relative inline-block">
+                  <img
+                    className={cn("h-[260px] w-[600px] opacity-40", { hidden: !masterImg })}
+                    src={`${masterImg ? masterImg : ""}`}
+                    alt="banner_img"
+                  />
+                  <div className={cn("absolute -top-10 -right-20 w-44", { hidden: masterImg })}>
+                    <div className="flex flex-col gap-1 items-center">
+                      <UploadIcon className="w-8 h-8 text-gray-500" />
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <span className="font-semibold">点击上传</span>
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG, JPEG, WebP</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <input
-                id="dropzone-file"
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/svg,image/webp"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = (e) => {
-                      setMasterImg(e.target?.result as string);
-                    };
-                  }
-                }}
-              />
-            </label>
+                <input
+                  id="dropzone-file"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/svg,image/webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.readAsDataURL(file);
+                      reader.onload = (e) => {
+                        setMasterImg(e.target?.result as string);
+                      };
+                    }
+                  }}
+                />
+              </label>
+            </div>
           </div>
           <div className="flex justify-center mt-2">
             <p className="mt-2">出售价格：</p>
@@ -457,7 +643,13 @@ export default function GoodsPublishPage() {
               className="max-w-xs text-start"
             />
           </div>
-          <Button onClick={handlePublish} variant="flat" color="primary" className="w-40 h-14 self-center text-xl">
+          <Button
+            onClick={handlePublish}
+            isLoading={submitting}
+            variant="flat"
+            color="primary"
+            className="w-40 h-14 self-center text-xl"
+          >
             提交发布
           </Button>
           <p className="text-medium text-default-500">发布后，请耐心等待审核，可到 “上架商品” 一栏中查看审核情况</p>
