@@ -1,13 +1,15 @@
 "use client";
 import { findModelList } from "@/api/model";
-import { findPromptList, findPromptMasterImgListByPromptIds } from "@/api/prompt";
+import { findPromptList, findPromptMasterImgListByPromptIds, updatePromptPublishStatusById } from "@/api/prompt";
+import ghostMoveAnimation from "@/public/lottie/ghost-move.json";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Model } from "@/types/api/model";
 import { Paginate } from "@/types/api/paginate";
 import { Prompt } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
-import { auditStatusOptions, publishStatusOptions } from "@/utils/constant";
-import { toastErrorMsg } from "@/utils/messageToast";
+import { auditStatusOptions, publishStatus as publishStatusConstants, publishStatusOptions } from "@/utils/constant";
+import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
+import { Button } from "@nextui-org/button";
 import {
   Card,
   CardBody,
@@ -17,16 +19,22 @@ import {
   Chip,
   ChipProps,
   Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Image,
   Link,
   Pagination,
   Radio,
   RadioGroup,
+  cn,
 } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
-import ghostMoveAnimation from "@/public/lottie/ghost-move.json";
-import { Button } from "@nextui-org/button";
+import { HiEye, HiPencilAlt, HiTrash } from "react-icons/hi";
+import GoodsPublishPage from "./publish/page";
+import { checkIsLogin } from "@/utils/common";
 
 const auditStatusColorMap: Record<string, ChipProps["color"]> = {
   2: "success",
@@ -115,6 +123,31 @@ export default function SellerGoodsPage() {
     }
   };
 
+  const handlePublishStatusChange = async (promptId: number, publishStatus: number) => {
+    const newPublishStatus =
+      publishStatus === publishStatusConstants.PublishOn
+        ? publishStatusConstants.PublishOff
+        : publishStatusConstants.PublishOn;
+    try {
+      const rsp = await updatePromptPublishStatusById({
+        promptId,
+        newPublishStatus,
+      });
+      if (!checkIsLogin(rsp.errCode)) {
+        toastInfoMsg("请先登录后再操作！");
+        return;
+      }
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("更新 Prompt 发布状态失败，请稍后重试！");
+        return;
+      }
+      toastSuccessMsg(`Prompt ${newPublishStatus === publishStatusConstants.PublishOn ? "上架" : "下架"}成功！`);
+      fetchPromptData();
+    } catch (error) {
+      toastErrorMsg("更新 Prompt 发布状态失败，请稍后重试！");
+    }
+  };
+
   return (
     <section className="flex flex-col gap-4 overflow-hidden">
       <div className="flex justify-between items-center">
@@ -167,48 +200,101 @@ export default function SellerGoodsPage() {
         <>
           <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
             {promptList?.map((prompt) => (
-              <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
-                <CardBody className="overflow-visible p-0">
-                  <div className="relative">
-                    <Image
-                      shadow="sm"
-                      radius="lg"
-                      width="100%"
-                      alt={prompt.title}
-                      className="w-full object-cover h-[150px]"
-                      src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === prompt.id)?.img_url}
-                    />
-                    <Chip
-                      variant="flat"
-                      radius="sm"
-                      size="md"
-                      className="absolute top-0 right-0 m-1 z-10"
-                      classNames={{
-                        base: "bg-black/80 text-white",
-                      }}
-                    >
-                      {modelList.find((model) => model.id === prompt.model_id)?.name}
-                    </Chip>
-                    <div className="absolute h-8 bottom-0 left-0 right-0 p-1 rounded-b-xl bg-black bg-opacity-50 z-10">
-                      <div className="flex justify-between">
-                        <Chip color={auditStatusColorMap[prompt.audit_status]} size="sm" variant="flat">
-                          {auditStatusOptions.find((option) => parseInt(option.type) === prompt.audit_status)?.label}
+              <Dropdown>
+                <DropdownTrigger>
+                  <Card key={prompt.id} isPressable isHoverable shadow="sm">
+                    <CardBody className="overflow-visible p-0">
+                      <div className="relative">
+                        <Image
+                          shadow="sm"
+                          radius="lg"
+                          width="100%"
+                          alt={prompt.title}
+                          className="w-full object-cover h-[150px]"
+                          src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === prompt.id)?.img_url}
+                        />
+                        <Chip
+                          variant="flat"
+                          radius="sm"
+                          size="md"
+                          className="absolute top-0 right-0 m-1 z-10"
+                          classNames={{
+                            base: "bg-black/80 text-white",
+                          }}
+                        >
+                          {modelList.find((model) => model.id === prompt.model_id)?.name}
                         </Chip>
-                        <Chip color={publishStatusColorMap[prompt.publish_status]} size="sm" variant="dot">
-                          {
-                            publishStatusOptions.find((option) => parseInt(option.type) === prompt.publish_status)
-                              ?.label
-                          }
-                        </Chip>
+                        <div className="absolute h-8 bottom-0 left-0 right-0 p-1 rounded-b-xl bg-black bg-opacity-50 z-10">
+                          <div className="flex justify-between">
+                            <Chip color={auditStatusColorMap[prompt.audit_status]} size="sm" variant="flat">
+                              {
+                                auditStatusOptions.find((option) => parseInt(option.type) === prompt.audit_status)
+                                  ?.label
+                              }
+                            </Chip>
+                            <Chip color={publishStatusColorMap[prompt.publish_status]} size="sm" variant="dot">
+                              {
+                                publishStatusOptions.find((option) => parseInt(option.type) === prompt.publish_status)
+                                  ?.label
+                              }
+                            </Chip>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </CardBody>
-                <CardFooter className="justify-between">
-                  <b>{prompt.title}</b>
-                  <p className="text-default-500 text-lg">￥{prompt.price}</p>
-                </CardFooter>
-              </Card>
+                    </CardBody>
+                    <CardFooter className="justify-between">
+                      <b>{prompt.title}</b>
+                      <p className="text-default-500 text-lg">￥{prompt.price}</p>
+                    </CardFooter>
+                  </Card>
+                </DropdownTrigger>
+                <DropdownMenu variant="flat" aria-label="Dropdown menu with icons">
+                  <DropdownItem
+                    key="view"
+                    startContent={<HiEye className="text-xl text-default-500 pointer-events-none flex-shrink-0" />}
+                    onClick={(e) => {
+                      window.open(`/market/${prompt.id}`, "_blank");
+                    }}
+                  >
+                    查看
+                  </DropdownItem>
+                  <DropdownItem
+                    key="edit"
+                    onClick={(e) => {
+                      toastInfoMsg("Sorry，我正努力实现中 ......");
+                    }}
+                    startContent={
+                      <HiPencilAlt className="text-xl text-default-500 pointer-events-none flex-shrink-0" />
+                    }
+                  >
+                    编辑
+                  </DropdownItem>
+                  <DropdownItem
+                    key="publish"
+                    onClick={() => {
+                      handlePublishStatusChange(prompt.id, prompt.publish_status);
+                    }}
+                    startContent={
+                      <HiTrash
+                        className={cn(
+                          "text-xl pointer-events-none flex-shrink-0",
+                          `${
+                            prompt.publish_status === publishStatusConstants.PublishOn
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`
+                        )}
+                      />
+                    }
+                    className={`${
+                      prompt.publish_status === publishStatusConstants.PublishOn ? "text-red-500" : "text-green-500"
+                    }`}
+                    color={`${prompt.publish_status === publishStatusConstants.PublishOn ? "danger" : "success"}`}
+                  >
+                    {`${prompt.publish_status === publishStatusConstants.PublishOn ? "下架" : "上架"}`}
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             ))}
           </div>
         </>

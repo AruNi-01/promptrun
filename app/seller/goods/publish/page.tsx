@@ -7,15 +7,13 @@ import { Model } from "@/types/api/model";
 import { checkIsLogin } from "@/utils/common";
 import { categoryOptions, modelMediaType } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
-import { Stepper, Step, Typography, Carousel } from "@material-tailwind/react";
-import { Button, Chip, Divider, Input, Select, SelectItem, Selection, Textarea, cn } from "@nextui-org/react";
-import { set } from "date-fns";
-import Image from "next/image";
+import { Carousel, Step, Stepper, Typography } from "@material-tailwind/react";
+import { Button, Chip, Divider, Input, Select, SelectItem, Textarea, cn } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import { HiTrash, HiDocumentText, HiPencilAlt, HiChevronLeft, HiLightningBolt, HiCheckCircle } from "react-icons/hi";
+import { HiCheckCircle, HiChevronLeft, HiDocumentText, HiLightningBolt, HiPencilAlt, HiTrash } from "react-icons/hi";
 
-export default function GoodsPublishPage() {
+export default function GoodsPublishPage({ isEdit = false }: { isEdit: boolean }) {
   const { loginUser, removeLoginUser } = useLoginUserStore();
   const router = useRouter();
 

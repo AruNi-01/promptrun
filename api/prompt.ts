@@ -80,3 +80,11 @@ export const promptPublish = async (reqData: PromptPublishReq): Promise<Result> 
     throw new Error("An error occurred while publishing the prompt.");
   }
 };
+
+export const updatePromptPublishStatusById = async (queryParamsObj: {}): Promise<Result> => {
+  try {
+    return await baseFetch(API.prompt.updatePublishStatusById, httpMethod.POST, undefined, queryParamsObj);
+  } catch (error) {
+    throw new Error("An error occurred while updating the prompt publish status.");
+  }
+};

@@ -28,6 +28,7 @@ const API = {
     },
     findMasterImgListByPromptIds: API_URL + "/api/v1/prompt/findMasterImgListByPromptIds",
     publish: API_URL + "/api/v1/prompt/publish",
+    updatePublishStatusById: API_URL + "/api/v1/prompt/updatePublishStatusById",
   },
 
   model: {
