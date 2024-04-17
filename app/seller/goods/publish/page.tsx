@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { HiCheckCircle, HiChevronLeft, HiDocumentText, HiLightningBolt, HiPencilAlt, HiTrash } from "react-icons/hi";
 
-export default function GoodsPublishPage({ isEdit = false }: { isEdit: boolean }) {
+export default function GoodsPublishPage() {
   const { loginUser, removeLoginUser } = useLoginUserStore();
   const router = useRouter();
 
