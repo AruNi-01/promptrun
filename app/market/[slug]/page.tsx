@@ -6,7 +6,7 @@ import loadingIcon2 from "@/public/lottie/loading2.json";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { PromptFullInfo } from "@/types/api/prompt";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
-import { categoryTypeMap } from "@/utils/constant";
+import { categoryTypeMap, modelMediaType } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg } from "@/utils/messageToast";
 import { Avatar, Card, CardBody, CardHeader, Carousel, Rating, Typography } from "@material-tailwind/react";
 import { Button } from "@nextui-org/button";
@@ -30,6 +30,7 @@ import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiCube, HiEye, HiHeart, HiShieldCheck, HiTag } from "react-icons/hi";
+import Markdown from "react-markdown";
 
 export default function PromptDetailPage({ params }: { params: { slug: number } }) {
   const { slug: promptId } = params;
@@ -172,29 +173,50 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         </CardBody>
       </Card>
       <div className="flex gap-4 h-[400px]">
-        <Carousel
-          autoplay
-          autoplayDelay={7000}
-          loop
-          className="rounded-xl w-2/3 h-auto"
-          navigation={({ setActiveIndex, activeIndex, length }) => (
-            <div className="absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2">
-              {new Array(length).fill("").map((_, i) => (
-                <span
-                  key={i}
-                  className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
-                    activeIndex === i ? "w-8 bg-white" : "w-4 bg-white/50"
-                  }`}
-                  onClick={() => setActiveIndex(i)}
-                />
-              ))}
-            </div>
-          )}
-        >
-          {promptFullInfo?.promptImgList.map((img) => (
-            <img key={img.id} src={img.img_url} className="h-full w-full object-cover" />
-          ))}
-        </Carousel>
+        {promptFullInfo.model.media_type === modelMediaType.Image ? (
+          <Carousel
+            autoplay
+            autoplayDelay={7000}
+            loop
+            className="rounded-xl w-2/3 h-auto"
+            navigation={({ setActiveIndex, activeIndex, length }) => (
+              <div className="absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2">
+                {new Array(length).fill("").map((_, i) => (
+                  <span
+                    key={i}
+                    className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
+                      activeIndex === i ? "w-8 bg-white" : "w-4 bg-white/50"
+                    }`}
+                    onClick={() => setActiveIndex(i)}
+                  />
+                ))}
+              </div>
+            )}
+          >
+            {promptFullInfo?.promptImgList.map((img) => (
+              <img key={img.id} src={img.img_url} className="h-full w-full object-cover" />
+            ))}
+          </Carousel>
+        ) : promptFullInfo.model.media_type === modelMediaType.Text ? (
+          <div className="w-2/3 flex flex-col gap-3 p-4 items-start text-start border-small border-default-50 rounded-lg bg-default-50 overflow-y-scroll">
+            <h1 className="text-3xl -mb-1">Prompt 效果细节</h1>
+            <Divider />
+            <h2 className="text-2xl">输入样例：</h2>
+            <p className="text-medium text-gray-400">
+              <Markdown>{promptFullInfo.prompt.input_example}</Markdown>
+            </p>
+            <h2 className="text-2xl">输出样例：</h2>
+            <p className="text-medium text-gray-400">
+              <Markdown>{promptFullInfo.prompt.output_example}</Markdown>
+            </p>
+          </div>
+        ) : (
+          <div className="w-2/3 h-full flex items-center justify-center">
+            <Typography variant="h1" className="text-gray-300">
+              暂不支持该模型展示......
+            </Typography>
+          </div>
+        )}
         <div className="w-1/3 flex flex-col gap-3 items-start">
           <Typography variant="h1">{promptFullInfo.prompt.title}</Typography>
           <div className="flex justify-between w-full">

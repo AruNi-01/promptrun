@@ -33,6 +33,8 @@ export interface Prompt {
   category_type: number;
   title: string;
   intro: string;
+  input_example: string;
+  output_example: string;
   price: number;
   rating: number;
   score: number;
