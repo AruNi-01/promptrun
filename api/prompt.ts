@@ -2,6 +2,7 @@ import API from "@/config/apiConfig.";
 import { baseFetch, httpMethod } from "./base";
 import { Result } from "@/types/api/result";
 import {
+  PromptAttachOrderIdListResp,
   PromptFullInfo,
   PromptListByBuyerIdReq,
   PromptListBySellerIdReq,
@@ -17,7 +18,7 @@ export const findPromptList = async (reqData: PromptListReq): Promise<Result> =>
   }
 };
 
-export const findPromptListByBuyerId = async (reqData: PromptListByBuyerIdReq): Promise<Result> => {
+export const findPromptListByBuyerId = async (reqData: PromptListByBuyerIdReq): Promise<Result<PromptAttachOrderIdListResp>> => {
   try {
     return await baseFetch(API.prompt.listByBuyerId, httpMethod.POST, reqData);
   } catch (error) {

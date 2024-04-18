@@ -54,6 +54,15 @@ export interface PromptFullInfo {
   promptImgList: PromptImg[];
 }
 
+export interface PromptAttachOrderIdListResp {
+  promptAttachOrderIdList: PromptAttachOrderId[];
+  rows: number;
+}
+export interface PromptAttachOrderId {
+  prompt: Prompt;
+  orderId: number;
+}
+
 export interface PromptPublishReq {
   userId: number;
   promptTitle: string;

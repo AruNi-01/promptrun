@@ -20,6 +20,7 @@ import {
   Tab,
   Tabs,
   User,
+  cn,
   useDisclosure,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -28,7 +29,7 @@ import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, XIcon } from "
 import { checkIsLogin } from "@/utils/common";
 
 export default function Login() {
-  const iconClasses = "text-xl text-default-500 pointer-events-none flex-shrink-0";
+  const iconClasses = "text-xl pointer-events-none flex-shrink-0";
 
   const router = useRouter();
 

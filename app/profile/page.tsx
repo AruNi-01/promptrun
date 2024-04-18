@@ -6,7 +6,7 @@ import { UploadIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Model } from "@/types/api/model";
 import { Paginate } from "@/types/api/paginate";
-import { Prompt } from "@/types/api/prompt";
+import { PromptAttachOrderId } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
 import { UserUpdateReq } from "@/types/api/user";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
@@ -93,7 +93,7 @@ export default function UserProfilePage() {
     setIsEdit(false);
   };
 
-  const [promptList, setPromptList] = useState<Prompt[]>([]);
+  const [promptAttachOrderIdList, setPromptAttachOrderIdList] = useState<PromptAttachOrderId[]>([]);
   const [promptMasterImgList, setPromptMasterImgList] = useState<PromptImg[]>([]);
   const [modelList, setModelList] = useState<Model[]>([]);
   const [paginate, setPaginate] = useState<Paginate>({
@@ -103,6 +103,8 @@ export default function UserProfilePage() {
   const [rows, setRows] = useState<number>(0);
 
   useEffect(() => {
+    if (!loginUser) return;
+
     fetchModelList();
     fetchBuyerPromptData();
 
@@ -134,7 +136,7 @@ export default function UserProfilePage() {
   const fetchBuyerPromptData = async () => {
     try {
       // fetch prompt list
-      var rsp = await findPromptListByBuyerId({
+      const rsp = await findPromptListByBuyerId({
         paginate: paginate,
         buyerId: loginUser?.id,
       });
@@ -142,20 +144,29 @@ export default function UserProfilePage() {
         toastErrorMsg("查询 Prompt 列表失败，请稍后刷新重试！");
         return;
       }
-      setPromptList(rsp.data.prompts);
+      setPromptAttachOrderIdList(rsp.data.promptAttachOrderIdList);
       setRows(rsp.data.rows);
-
-      // fetch prompt master_img list
-      rsp = await findPromptMasterImgListByPromptIds(rsp.data.prompts.map((prompt: { id: number }) => prompt.id));
-      if (rsp.errCode !== 0) {
-        toastErrorMsg("查询 Prompt 主图列表失败，请稍后刷新重试！");
-        return;
-      }
-      setPromptMasterImgList(rsp.data);
     } catch (error) {
       toastErrorMsg("获取提示词列表失败，请稍后刷新重试！");
     }
   };
+
+  useEffect(() => {
+    const fetchPromptMasterImgList = async () => {
+      try {
+        // fetch prompt master_img list
+        const rsp = await findPromptMasterImgListByPromptIds(promptAttachOrderIdList.map((item) => item.prompt.id));
+        if (rsp.errCode !== 0) {
+          toastErrorMsg("查询 Prompt 主图列表失败，请稍后刷新重试！");
+          return;
+        }
+        setPromptMasterImgList(rsp.data);
+      } catch (error) {
+        toastErrorMsg("获取 Prompt 主图列表失败，请稍后刷新重试！");
+      }
+    };
+    fetchPromptMasterImgList();
+  }, [JSON.stringify(promptAttachOrderIdList)]);
 
   return (
     <section className="flex flex-col gap-5 w-4/6 mt-8">
@@ -271,17 +282,26 @@ export default function UserProfilePage() {
         </div>
         <Divider />
         <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
-          {promptList?.map((prompt) => (
-            <Card shadow="sm" key={prompt.id} isPressable onPress={() => console.log("item pressed")} className="">
+          {promptAttachOrderIdList?.map((item) => (
+            <Card
+              shadow="sm"
+              key={item.prompt.id}
+              isPressable
+              isHoverable
+              as={Link}
+              href={`/order/${item.orderId}`}
+              target="_blank"
+              className=""
+            >
               <CardBody className="overflow-visible p-0">
                 <div className="relative">
                   <Image
                     shadow="sm"
                     radius="lg"
                     width="100%"
-                    alt={prompt.title}
+                    alt={item.prompt.title}
                     className="w-full object-cover h-[150px]"
-                    src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === prompt.id)?.img_url}
+                    src={promptMasterImgList.find((promptImg) => promptImg.prompt_id === item.prompt.id)?.img_url}
                   />
                   <Chip
                     variant="flat"
@@ -292,13 +312,13 @@ export default function UserProfilePage() {
                       base: "bg-black/80 text-white",
                     }}
                   >
-                    {modelList.find((model) => model.id === prompt.model_id)?.name}
+                    {modelList.find((model) => model.id === item.prompt.model_id)?.name}
                   </Chip>
                   <div className="absolute h-8 bottom-0 left-0 right-0 p-1 rounded-b-xl bg-black bg-opacity-50 z-10">
                     <Rating
                       value={
                         // 四舍五入计算评分
-                        Math.round(prompt.rating)
+                        Math.round(item.prompt.rating)
                       }
                       readonly
                       ratedColor="blue"
@@ -307,8 +327,8 @@ export default function UserProfilePage() {
                 </div>
               </CardBody>
               <CardFooter className="justify-between">
-                <b>{prompt.title}</b>
-                <p className="text-default-500 text-lg">￥{prompt.price}</p>
+                <b>{item.prompt.title}</b>
+                <p className="text-default-500 text-lg">￥{item.prompt.price}</p>
               </CardFooter>
             </Card>
           ))}
@@ -346,7 +366,7 @@ export default function UserProfilePage() {
               去出售 Prompts 页面，查看您发售的 Prompts
             </Typography>
             <Typography variant="h5" className="mb-6 text-gray-300">
-              {loginUser?.nickname}
+              @{loginUser?.nickname}
             </Typography>
             <MaterialAvatar
               size="xl"

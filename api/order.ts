@@ -1,5 +1,5 @@
 import API from "@/config/apiConfig.";
-import { ChartsRsp, OrderListAttachFullInfoBySellerUserIdReq, OrderListAttachFullInfoRsp } from "@/types/api/order";
+import { ChartsRsp, OrderListAttachFullInfoBySellerUserIdReq, OrderListAttachFullInfoRsp, OrderListAttachPromptDetailRsp } from "@/types/api/order";
 import { Result } from "@/types/api/result";
 import { baseFetch, httpMethod } from "./base";
 
@@ -18,5 +18,15 @@ export const findChartsFullInfoBySellerUserId = async (sellerUserId: number): Pr
     return await baseFetch(API.order.findChartsFullInfoBySellerUserId(sellerUserId), httpMethod.GET);
   } catch (error) {
     throw new Error("An error occurred while querying the charts full info.");
+  }
+};
+
+export const findOrderListAttachPromptDetailById = async (
+  orderId: number
+): Promise<Result<OrderListAttachPromptDetailRsp>> => {
+  try {
+    return await baseFetch(API.order.listAttachPromptDetailById(orderId), httpMethod.GET);
+  } catch (error) {
+    throw new Error("An error occurred while querying the order list.");
   }
 };

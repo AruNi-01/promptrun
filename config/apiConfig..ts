@@ -61,6 +61,9 @@ const API = {
     findChartsFullInfoBySellerUserId: (sellerUserId: number): string => {
       return API_URL + `/api/v1/order/findChartsFullInfoBySellerUserId/${sellerUserId}`;
     },
+    listAttachPromptDetailById: (orderId: number): string => {
+      return API_URL + `/api/v1/order/listAttachPromptDetailById/${orderId}`;
+    },
   },
 
   likes: {

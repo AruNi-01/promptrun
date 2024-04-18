@@ -1,6 +1,7 @@
 import { Model } from "./model";
 import { Paginate } from "./paginate";
 import { Prompt } from "./prompt";
+import { PromptDetail } from "./prompt_detail";
 import { PromptImg } from "./prompt_img";
 import { User } from "./user";
 
@@ -54,4 +55,10 @@ export interface Order {
   is_rating: number;
   rating: number;
   create_time: string;
+}
+
+export interface OrderListAttachPromptDetailRsp {
+  order: Order;
+  prompt: Prompt;
+  promptDetail: PromptDetail;
 }
