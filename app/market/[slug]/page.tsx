@@ -107,10 +107,16 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       });
   };
 
-  var masterImgUrl = promptFullInfo?.promptImgList.find((img) => img.is_master)?.img_url;
-  masterImgUrl = "bg-[url('" + masterImgUrl + "')]";
+  const [masterImgUrl, setMasterImgUrl] = useState<string>("");
 
-  if (!promptFullInfo) {
+  useEffect(() => {
+    if (promptFullInfo && !masterImgUrl) {
+      const url = promptFullInfo?.promptImgList.find((img) => img.is_master)?.img_url || "";
+      setMasterImgUrl("!bg-[url('" + url + "')]");
+    }
+  }, [JSON.stringify(promptFullInfo)]);
+
+  if (!promptFullInfo || masterImgUrl === "") {
     return (
       <div>
         <Lottie animationData={loadingIcon2} className="h-48 items-center" />
@@ -198,7 +204,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             ))}
           </Carousel>
         ) : promptFullInfo.model.media_type === modelMediaType.Text ? (
-          <div className="w-2/3 flex flex-col gap-3 p-4 items-start text-start border-small border-default-50 rounded-lg bg-default-50 overflow-y-scroll">
+          <div className="w-2/3 flex flex-col gap-3 p-4 items-start text-start border-1 rounded-xl border-slate-800 bg-slate-800/50 shadow-slate-900 shadow-md overflow-y-scroll">
             <h1 className="text-3xl -mb-1">Prompt 效果细节</h1>
             <Divider />
             <h2 className="text-2xl">输入样例：</h2>
