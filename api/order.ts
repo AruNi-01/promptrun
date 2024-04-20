@@ -1,6 +1,7 @@
 import API from "@/config/apiConfig.";
 import {
   ChartsRsp,
+  Order,
   OrderListAttachFullInfoBySellerUserIdReq,
   OrderListAttachFullInfoRsp,
   OrderListAttachPromptDetailRsp,
@@ -41,5 +42,13 @@ export const orderRatingById = async (queryParamObj: { orderId: number; rating: 
     return await baseFetch(API.order.ratingById, httpMethod.POST, undefined, queryParamObj);
   } catch (error) {
     throw new Error("An error occurred while rating the order.");
+  }
+};
+
+export const findOrderById = async (orderId: number): Promise<Result<Order>> => {
+  try {
+    return await baseFetch(API.order.findById(orderId), httpMethod.GET);
+  } catch (error) {
+    throw new Error("An error occurred while querying the order.");
   }
 };

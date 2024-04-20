@@ -93,6 +93,7 @@ export default function SellerOrderPage() {
   };
 
   const sortedItems = useMemo(() => {
+    if (!orderListAttachFullInfo) return [];
     return [...orderListAttachFullInfo].sort((a: OrderListAttachFullInfo, b: OrderListAttachFullInfo) => {
       var first = 0,
         second = 0;

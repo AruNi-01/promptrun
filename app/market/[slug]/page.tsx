@@ -1,13 +1,16 @@
 "use client";
 import { LikeErrCode, isLike, like } from "@/api/likes";
+import { findOrderById } from "@/api/order";
+import { lantuWxPay } from "@/api/pay";
 import { findPromptFullInfoById } from "@/api/prompt";
 import { AliPayIcon, WechatPayIcon } from "@/components/icons";
 import loadingIcon2 from "@/public/lottie/loading2.json";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
+import { LantuWxPayRsp } from "@/types/api/pay";
 import { PromptFullInfo } from "@/types/api/prompt";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
 import { categoryTypeMap, modelMediaType } from "@/utils/constant";
-import { toastErrorMsg, toastInfoMsg } from "@/utils/messageToast";
+import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Avatar, Card, CardBody, CardHeader, Carousel, Rating, Typography } from "@material-tailwind/react";
 import { Button } from "@nextui-org/button";
 import {
@@ -26,10 +29,11 @@ import {
   cn,
   useDisclosure,
 } from "@nextui-org/react";
+import { set } from "date-fns";
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { HiCube, HiEye, HiHeart, HiShieldCheck, HiTag } from "react-icons/hi";
+import { HiCube, HiEye, HiHeart, HiShieldCheck, HiTag, HiBell } from "react-icons/hi";
 import Markdown from "react-markdown";
 
 export default function PromptDetailPage({ params }: { params: { slug: number } }) {
@@ -104,6 +108,71 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       })
       .catch(() => {
         toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+      });
+  };
+
+  const [lantuPayRsp, setLantuPayRsp] = useState<LantuWxPayRsp>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handlePurchase = () => {
+    if (!loginUser || !promptFullInfo) {
+      toastErrorMsg("您未登录，请先登录后再购买！");
+      return;
+    }
+
+    if (loginUser.id === promptFullInfo.sellerUser.id) {
+      toastInfoMsg("请勿购买自己的 Prompt！");
+      return;
+    }
+
+    setLoading(true);
+
+    lantuWxPay({
+      promptId: promptFullInfo?.prompt.id,
+      promptTitle: promptFullInfo?.prompt.title,
+      sellerId: promptFullInfo?.seller.id,
+      buyerId: loginUser.id,
+      price: promptFullInfo?.prompt.price,
+    })
+      .then((res) => {
+        if (!checkIsLogin(res.errCode)) {
+          removeLoginUser();
+          router.refresh();
+          toastErrorMsg("您未登录，或登录状态已失效，请登录后再操作！");
+          return;
+        }
+        if (res.errCode !== 0) {
+          toastErrorMsg("获取支付二维码失败，请稍后重试！");
+        } else {
+          setLantuPayRsp(res.data);
+          onModalOpen();
+
+          if (lantuPayRsp?.orderId) {
+            // 轮询支付状态，3s 轮询一次，支付完成后会创建订单
+            const interval = setInterval(() => {
+              findOrderById(lantuPayRsp?.orderId)
+                .then((res) => {
+                  if (res.errCode === 0) {
+                    clearInterval(interval);
+                    toastSuccessMsg("支付成功，即将跳转到订单页面！");
+                    setTimeout(() => {
+                      router.push(`/order/${lantuPayRsp?.orderId}`);
+                    }, 3000);
+                  } else {
+                  }
+                })
+                .catch(() => {
+                  toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+                });
+            }, 5000);
+          }
+        }
+      })
+      .catch(() => {
+        toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -287,7 +356,15 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             <Typography variant="h2">{promptFullInfo.prompt.price}</Typography>
           </div>
           <Tooltip placement="right-end" showArrow content="请确保您有该模型的访问权，否则无法使用">
-            <Button onPress={onModalOpen} color="primary" variant="ghost" className="w-44 h-16 text-xl">
+            <Button
+              onClick={() => {
+                handlePurchase();
+              }}
+              isLoading={loading}
+              color="primary"
+              variant="ghost"
+              className="w-44 h-16 text-xl"
+            >
               购买 Prompt
             </Button>
           </Tooltip>
@@ -313,8 +390,22 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                         </div>
                       }
                     >
-                      <div className="flex flex-col gap-3 items-startx">
-                        <Image width="300px" src="/gallery/9.png" alt="wechat_pay_qr_code" />
+                      <div className="flex flex-col gap-3 items-start">
+                        <Chip variant="faded" color="success" startContent={<HiBell />} className="">
+                          使用手机微信描下面二维码即可进行支付!
+                        </Chip>
+                        <Image width="290px" src={lantuPayRsp?.qrCodeUrl} alt="wechat_pay_qr_code" />
+                        <Button
+                          onClick={() => {
+                            handlePurchase();
+                          }}
+                          color="primary"
+                          variant="light"
+                          size="sm"
+                          className="self-start"
+                        >
+                          二维码已失效？点击此重新生成支付二维码
+                        </Button>
                       </div>
                     </Tab>
                     <Tab
@@ -327,12 +418,18 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                       }
                     >
                       <div className="flex flex-col gap-3 items-start">
-                        <Image width="300px" src="/gallery/9.png" alt="wechat_pay_qr_code" />
+                        {/* <Image width="300px" src="/gallery/9.png" alt="wechat_pay_qr_code" /> */}
+                        <Typography variant="paragraph" className="text-lg text-default-500 h-[374px] pt-6">
+                          支付宝支付暂不支持，请使用微信支付。
+                        </Typography>
                       </div>
                     </Tab>
                   </Tabs>
-                  <Typography variant="paragraph" className="text-sm text-gray-300">
-                    支付后，您将拥有此 Prompt 的访问权，可到对应大模型中使用！
+                  <Typography variant="paragraph" className="text-sm text-default-500 mt-3">
+                    支付后请等待支付结果，成功后您将拥有此 Prompt 的访问权，可到对应大模型中使用。
+                  </Typography>
+                  <Typography variant="paragraph" className="text-sm text-default-500 mt-3">
+                    订单将在 2 分钟后失效，请尽快支付，失效后请点击 “重新生成支付二维码” 按钮以生成新订单。
                   </Typography>
                 </div>
               </ModalBody>

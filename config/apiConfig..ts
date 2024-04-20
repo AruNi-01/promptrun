@@ -65,11 +65,18 @@ const API = {
       return API_URL + `/api/v1/order/listAttachPromptDetailById/${orderId}`;
     },
     ratingById: API_URL + "/api/v1/order/ratingById",
+    findById: (orderId: number): string => {
+      return API_URL + `/api/v1/order/findById/${orderId}`;
+    },
   },
 
   likes: {
     isLike: API_URL + "/api/v1/likes/isLike",
     like: API_URL + "/api/v1/likes/like",
+  },
+
+  pay: {
+    lantuWxPay: API_URL + "/api/v1/pay/lantuWxPay",
   },
 };
 
