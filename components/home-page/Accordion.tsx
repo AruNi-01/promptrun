@@ -4,7 +4,7 @@ import { QuestionIcon } from "../icons";
 
 export default function Accordion({ className }: { className?: string }) {
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn("w-full text-start", className)}>
       <AccordionUI
         itemClasses={{
           base: "py-0 w-full",

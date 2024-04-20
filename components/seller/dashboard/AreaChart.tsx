@@ -42,7 +42,7 @@ export default function AreaChart({
             <Area
               type="monotone"
               dataKey={areaDataKey}
-              dot={{ strokeWidth: 1 }}
+              // dot={{ strokeWidth: 1 }}
               stroke={areaColor}
               fillOpacity={1}
               fill={`url(#${gradientColorId})`}
