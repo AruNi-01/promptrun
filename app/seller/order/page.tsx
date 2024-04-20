@@ -136,7 +136,7 @@ export default function SellerOrderPage() {
           </div>
         );
       case SellerOrderTableColumnsEnum.rating:
-        return <p>{data.order.rating === 0 ? "暂未评分" : data.order.rating}</p>;
+        return <p>{data.order.rating === 0 ? "暂未评分" : data.order.rating + ".0"}</p>;
       case SellerOrderTableColumnsEnum.price:
         return <p>{"￥" + data.order.price}</p>;
       case SellerOrderTableColumnsEnum.create_time:

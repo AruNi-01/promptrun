@@ -1,6 +1,6 @@
 "use client";
 import { findModelById } from "@/api/model";
-import { findOrderListAttachPromptDetailById } from "@/api/order";
+import { findOrderListAttachPromptDetailById, orderRatingById } from "@/api/order";
 import { findSellerById } from "@/api/seller";
 import { findUserById } from "@/api/user";
 import AnimateLink from "@/components/ui/AnimateLink";
@@ -14,14 +14,14 @@ import { Seller } from "@/types/api/seller";
 import { User } from "@/types/api/user";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
 import { categoryTypeMap } from "@/utils/constant";
-import { toastErrorMsg } from "@/utils/messageToast";
+import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Avatar, Rating, Typography } from "@material-tailwind/react";
 import { Button } from "@nextui-org/button";
-import { Chip, Divider, Link, Tooltip } from "@nextui-org/react";
+import { Chip, Divider, Link, Popover, PopoverContent, PopoverTrigger, Tooltip } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { HiCube, HiShieldCheck, HiTag } from "react-icons/hi";
+import { HiCube, HiShieldCheck, HiTag, HiCheck } from "react-icons/hi";
 
 export default function OrderPage({ params }: { params: { slug: number } }) {
   const { slug: orderId } = params;
@@ -103,6 +103,24 @@ export default function OrderPage({ params }: { params: { slug: number } }) {
     }
   }, [JSON.stringify(order), JSON.stringify(seller), JSON.stringify(prompt)]);
 
+  const [rating, setRating] = useState<number>(0);
+  const handleRating = () => {
+    orderRatingById({ orderId, rating }).then((res) => {
+      if (!checkIsLogin(res.errCode)) {
+        removeLoginUser();
+        router.push("/");
+        toastErrorMsg("您的登录状态已失效，请先登录后再评分！");
+        return;
+      }
+      if (res.errCode !== 0) {
+        toastErrorMsg("评分失败，请稍后重试！");
+        return;
+      }
+      setOrder(res.data);
+      toastSuccessMsg("评分成功，感谢您的评分！");
+    });
+  };
+
   if (!order || !prompt || !promptDetail) {
     return (
       <div>
@@ -150,7 +168,7 @@ export default function OrderPage({ params }: { params: { slug: number } }) {
             <h2 className="text-xl text-default-500">我的评分</h2>
             {order.is_rating ? (
               <div className="flex gap-2 text-white/80">
-                <p>{order?.rating}</p>
+                <p>{order?.rating}.0</p>
                 <Rating
                   value={
                     // 四舍五入计算评分
@@ -163,9 +181,23 @@ export default function OrderPage({ params }: { params: { slug: number } }) {
             ) : (
               <div className="flex gap-2">
                 <p>暂未评分</p>
-                <Chip color="danger" size="sm" variant="shadow" as={Button} onClick={() => {}}>
-                  点击评分
-                </Chip>
+                <Popover showArrow placement="bottom">
+                  <PopoverTrigger>
+                    <Chip color="danger" size="sm" variant="shadow" as={Button}>
+                      点击评分
+                    </Chip>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-2">
+                    <div className="flex gap-2 items-center">
+                      <p className={`font-medium text-lg ${rating <= 2 ? "text-red-500" : ""}`}>{rating}.0</p>
+                      <Rating value={rating} onChange={(value) => setRating(value)} ratedColor="blue" />
+                      <Button color="primary" size="sm" variant="ghost" isIconOnly onClick={handleRating}>
+                        <HiCheck className="w-6 h-6" />
+                      </Button>
+                    </div>
+                    <p className="text-default-500 mt-3">注：评分后将无法修改，评分对卖家很重要，请谨慎操作哦！</p>
+                  </PopoverContent>
+                </Popover>
               </div>
             )}
           </div>
