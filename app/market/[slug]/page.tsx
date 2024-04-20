@@ -107,16 +107,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       });
   };
 
-  const [masterImgUrl, setMasterImgUrl] = useState<string>("");
-
-  useEffect(() => {
-    if (promptFullInfo && !masterImgUrl) {
-      const url = promptFullInfo?.promptImgList.find((img) => img.is_master)?.img_url || "";
-      setMasterImgUrl("!bg-[url('" + url + "')]");
-    }
-  }, [JSON.stringify(promptFullInfo)]);
-
-  if (!promptFullInfo || masterImgUrl === "") {
+  if (!promptFullInfo) {
     return (
       <div>
         <Lottie animationData={loadingIcon2} className="h-48 items-center" />
@@ -133,12 +124,11 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         <CardHeader
           floated={false}
           shadow={false}
-          color="transparent"
-          className={cn("absolute inset-0 m-0 h-full w-full rounded-none bg-cover bg-center", masterImgUrl)}
+          className={cn("absolute bg-black inset-0 m-0 h-full w-full rounded-none")}
         >
-          <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 via-black/50" />
+          <Image className="w-full h-full" src={promptFullInfo?.promptImgList.find((img) => img.is_master)?.img_url} />
         </CardHeader>
-        <CardBody className="relative my-auto">
+        <CardBody className="relative my-auto z-10">
           <div className="flex flex-col gap-3 rounded-xl bg-black bg-opacity-50 z-10 p-5 backdrop-blur-sm">
             <Tooltip placement="top-start" showArrow content="点击查看卖家信息">
               <Link
