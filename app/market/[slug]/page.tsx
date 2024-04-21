@@ -148,11 +148,6 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         } else {
           setLantuPayRsp(res.data);
           onModalOpen();
-
-          setTimeout(() => {
-            onModalClose();
-            toastInfoMsg("由于您太久没有进行支付操作，已自动关闭支付窗口");
-          }, 1000 * 60 * 2);
         }
       })
       .catch(() => {
@@ -190,7 +185,9 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   }, [JSON.stringify(lantuPayRsp)]);
 
   useEffect(() => {
-    loopPayResult();
+    setTimeout(() => {
+      loopPayResult();
+    }, 5000);
 
     return () => {
       if (payInterval) {
