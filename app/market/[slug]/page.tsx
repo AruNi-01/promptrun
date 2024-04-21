@@ -114,6 +114,8 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   const [lantuPayRsp, setLantuPayRsp] = useState<LantuWxPayRsp>();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [payInterval, setPayInterval] = useState<NodeJS.Timeout>();
+
   const handlePurchase = () => {
     if (!loginUser || !promptFullInfo) {
       toastErrorMsg("您未登录，请先登录后再购买！");
@@ -146,26 +148,6 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         } else {
           setLantuPayRsp(res.data);
           onModalOpen();
-
-          if (lantuPayRsp?.orderId) {
-            // 轮询支付状态，3s 轮询一次，支付完成后会创建订单
-            const interval = setInterval(() => {
-              findOrderById(lantuPayRsp?.orderId)
-                .then((res) => {
-                  if (res.errCode === 0) {
-                    clearInterval(interval);
-                    toastSuccessMsg("支付成功，即将跳转到订单页面！");
-                    setTimeout(() => {
-                      router.push(`/order/${lantuPayRsp?.orderId}`);
-                    }, 3000);
-                  } else {
-                  }
-                })
-                .catch(() => {
-                  toastErrorMsg("服务器开了会儿小差，请稍后重试！");
-                });
-            }, 5000);
-          }
         }
       })
       .catch(() => {
@@ -175,6 +157,34 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         setLoading(false);
       });
   };
+
+  const loopPayResult = () => {
+    if (lantuPayRsp?.orderId) {
+      // 轮询支付状态，5s 轮询一次，支付完成后会创建订单
+      setPayInterval(
+        setInterval(() => {
+          findOrderById(lantuPayRsp?.orderId)
+            .then((res) => {
+              if (res.errCode === 0) {
+                clearInterval(payInterval);
+                toastSuccessMsg("支付成功，即将跳转到订单页面！");
+                setTimeout(() => {
+                  router.push(`/order/${lantuPayRsp?.orderId}`);
+                }, 3000);
+              } else {
+              }
+            })
+            .catch(() => {
+              toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+            });
+        }, 5000)
+      );
+    }
+  };
+
+  useEffect(() => {
+    loopPayResult();
+  }, [lantuPayRsp?.orderId]);
 
   if (!promptFullInfo) {
     return (
@@ -371,7 +381,15 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         </div>
       </div>
 
-      <Modal size="2xl" isDismissable={false} isOpen={isModalOpen} onOpenChange={onModalOpenChange}>
+      <Modal
+        size="2xl"
+        isDismissable={false}
+        isOpen={isModalOpen}
+        onOpenChange={onModalOpenChange}
+        onClose={() => {
+          clearInterval(payInterval);
+        }}
+      >
         <ModalContent>
           {(onClose) => (
             <>
