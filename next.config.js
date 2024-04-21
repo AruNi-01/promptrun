@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",   // docker support
-}
+  env: {
+    API_URL: process.env.API_URL,
+  },
+  output: "standalone", // docker support
+};
 
-module.exports = nextConfig
-
+module.exports = nextConfig;
