@@ -1,3 +1,8 @@
+/*
+ * @Descripttion: 
+ * @Author: AruNi_Lu
+ * @Date: 2024-04-04 16:02:35
+ */
 import API from "@/config/apiConfig.";
 import {
   ChartsRsp,
@@ -28,7 +33,7 @@ export const findChartsFullInfoBySellerUserId = async (sellerUserId: number): Pr
 };
 
 export const findOrderListAttachPromptDetailById = async (
-  orderId: number
+  orderId: bigint
 ): Promise<Result<OrderListAttachPromptDetailRsp>> => {
   try {
     return await baseFetch(API.order.listAttachPromptDetailById(orderId), httpMethod.GET);
@@ -37,7 +42,7 @@ export const findOrderListAttachPromptDetailById = async (
   }
 };
 
-export const orderRatingById = async (queryParamObj: { orderId: number; rating: number }): Promise<Result> => {
+export const orderRatingById = async (queryParamObj: { orderId: bigint; rating: number }): Promise<Result> => {
   try {
     return await baseFetch(API.order.ratingById, httpMethod.POST, undefined, queryParamObj);
   } catch (error) {
@@ -45,7 +50,7 @@ export const orderRatingById = async (queryParamObj: { orderId: number; rating: 
   }
 };
 
-export const findOrderById = async (orderId: number): Promise<Result<Order>> => {
+export const findOrderById = async (orderId: bigint): Promise<Result<Order>> => {
   try {
     return await baseFetch(API.order.findById(orderId), httpMethod.GET);
   } catch (error) {

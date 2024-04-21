@@ -1,7 +1,7 @@
 "use client";
 import { LikeErrCode, isLike, like } from "@/api/likes";
 import { findOrderById } from "@/api/order";
-import { lantuWxPay } from "@/api/pay";
+import { lantuWxPay, lantuWxPayQueryOrder } from "@/api/pay";
 import { findPromptFullInfoById } from "@/api/prompt";
 import { AliPayIcon, WechatPayIcon } from "@/components/icons";
 import loadingIcon2 from "@/public/lottie/loading2.json";
@@ -32,7 +32,7 @@ import {
 import { set } from "date-fns";
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { HiCube, HiEye, HiHeart, HiShieldCheck, HiTag, HiBell } from "react-icons/hi";
 import Markdown from "react-markdown";
 
@@ -148,6 +148,11 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         } else {
           setLantuPayRsp(res.data);
           onModalOpen();
+
+          setTimeout(() => {
+            onModalClose();
+            toastInfoMsg("由于您太久没有进行支付操作，已自动关闭支付窗口");
+          }, 1000 * 60 * 2);
         }
       })
       .catch(() => {
@@ -158,33 +163,41 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       });
   };
 
-  const loopPayResult = () => {
+  const loopPayResult = useCallback(() => {
     if (lantuPayRsp?.orderId) {
-      // 轮询支付状态，5s 轮询一次，支付完成后会创建订单
-      setPayInterval(
-        setInterval(() => {
-          findOrderById(lantuPayRsp?.orderId)
-            .then((res) => {
-              if (res.errCode === 0) {
-                clearInterval(payInterval);
+      const intervalId = setInterval(() => {
+        lantuWxPayQueryOrder({ orderId: lantuPayRsp?.orderId })
+          .then((res) => {
+            if (res.errCode === 0) {
+              if (res.data.isPay) {
+                clearInterval(intervalId);
                 toastSuccessMsg("支付成功，即将跳转到订单页面！");
                 setTimeout(() => {
-                  router.push(`/order/${lantuPayRsp?.orderId}`);
+                  router.push(`/order/${res.data.orderId}`);
                 }, 3000);
-              } else {
               }
-            })
-            .catch(() => {
-              toastErrorMsg("服务器开了会儿小差，请稍后重试！");
-            });
-        }, 5000)
-      );
+            } else {
+              // 处理支付失败情况
+            }
+          })
+          .catch(() => {
+            toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+          });
+      }, 6000);
+
+      setPayInterval(intervalId);
     }
-  };
+  }, [JSON.stringify(lantuPayRsp)]);
 
   useEffect(() => {
     loopPayResult();
-  }, [lantuPayRsp?.orderId]);
+
+    return () => {
+      if (payInterval) {
+        clearInterval(payInterval);
+      }
+    };
+  }, [JSON.stringify(lantuPayRsp)]);
 
   if (!promptFullInfo) {
     return (
@@ -387,7 +400,9 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         isOpen={isModalOpen}
         onOpenChange={onModalOpenChange}
         onClose={() => {
-          clearInterval(payInterval);
+          if (payInterval) {
+            clearInterval(payInterval);
+          }
         }}
       >
         <ModalContent>

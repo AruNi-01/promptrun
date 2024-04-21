@@ -1,3 +1,8 @@
+/*
+ * @Descripttion: 
+ * @Author: AruNi_Lu
+ * @Date: 2024-03-14 11:22:06
+ */
 const API_URL = process.env.API_URL || "http://localhost:8080";
 
 const API = {
@@ -61,11 +66,11 @@ const API = {
     findChartsFullInfoBySellerUserId: (sellerUserId: number): string => {
       return API_URL + `/api/v1/order/findChartsFullInfoBySellerUserId/${sellerUserId}`;
     },
-    listAttachPromptDetailById: (orderId: number): string => {
+    listAttachPromptDetailById: (orderId: bigint): string => {
       return API_URL + `/api/v1/order/listAttachPromptDetailById/${orderId}`;
     },
     ratingById: API_URL + "/api/v1/order/ratingById",
-    findById: (orderId: number): string => {
+    findById: (orderId: bigint): string => {
       return API_URL + `/api/v1/order/findById/${orderId}`;
     },
   },
@@ -77,6 +82,7 @@ const API = {
 
   pay: {
     lantuWxPay: API_URL + "/api/v1/pay/lantuWxPay",
+    lantuWxPayQueryOrder: API_URL + "/api/v1/pay/lantuWxPayQueryOrder",
   },
 };
 

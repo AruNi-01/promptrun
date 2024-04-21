@@ -1,3 +1,8 @@
+/*
+ * @Descripttion: 
+ * @Author: AruNi_Lu
+ * @Date: 2024-03-24 10:53:05
+ */
 import API from "@/config/apiConfig.";
 import { baseFetch, httpMethod } from "./base";
 import { Result } from "@/types/api/result";

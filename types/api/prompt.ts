@@ -60,7 +60,7 @@ export interface PromptAttachOrderIdListResp {
 }
 export interface PromptAttachOrderId {
   prompt: Prompt;
-  orderId: number;
+  orderId: bigint;
 }
 
 export interface PromptPublishReq {
