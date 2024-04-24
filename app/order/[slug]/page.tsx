@@ -131,6 +131,7 @@ export default function OrderPage({ params }: { params: { slug: bigint } }) {
 
   return (
     <section className="flex flex-col gap-14 w-4/6 mt-8">
+      <title>订单页 | PromptRun</title>
       <div className="flex flex-col gap-5">
         <h1 className="text-3xl">订单详情</h1>
         <Divider />

@@ -6,7 +6,7 @@ import Tip from "@/components/ui/Tip";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { ChartsRsp } from "@/types/api/order";
 import { checkIsLogin } from "@/utils/common";
-import { toastErrorMsg } from "@/utils/messageToast";
+import { toastErrorMsg, toastInfoMsg } from "@/utils/messageToast";
 import { useEffect, useState } from "react";
 
 export default function SellerDashboardPage() {
@@ -20,7 +20,7 @@ export default function SellerDashboardPage() {
       .then((res) => {
         if (!checkIsLogin(res.errCode)) {
           removeLoginUser();
-          toastErrorMsg("您还未登录，请先登录在操作！");
+          toastInfoMsg("您还未登录，请先登录在操作！");
         } else if (res.errCode !== 0) {
           toastErrorMsg(res.errMsg);
         } else {

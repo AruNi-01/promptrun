@@ -101,6 +101,7 @@ export default function MarketPage() {
 
   return (
     <section className="flex flex-col gap-5 w-4/6 mt-8 overflow-hidden">
+      <title>Prompt 商店 | PromptRun</title>
       <h1 className="text-4xl self-start">所有 Prompts</h1>
       <Divider />
       <div className="flex justify-between">

@@ -41,6 +41,7 @@ export default function BecomeSellerPage() {
 
   return (
     <section className="flex gap-20 w-4/6 mt-10 text-start">
+      <title>成为卖家 | PromptRun</title>
       <div className="flex flex-col gap-7 w-1/2 items-start">
         <Card className="overflow-hidden bg-default-50">
           <CardHeader floated={false} shadow={true} color="transparent" className="m-0 rounded-xl">

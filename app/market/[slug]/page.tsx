@@ -206,6 +206,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
 
   return (
     <section className="flex flex-col gap-5 w-4/6 mt-4">
+      <title>Prompt 详情 | PromptRun</title>
       <Card
         shadow={false}
         className="relative w-full h-[20rem] grid items-end justify-center overflow-hidden text-center"

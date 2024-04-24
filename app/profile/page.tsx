@@ -170,6 +170,7 @@ export default function UserProfilePage() {
 
   return (
     <section className="flex flex-col gap-5 w-4/6 mt-8">
+      <title>个人主页 | PromptRun</title>
       <div key="profile" className="flex flex-col gap-5">
         <div className="flex justify-between">
           <h2 className="text-4xl">个人信息</h2>

@@ -87,7 +87,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
       if (!checkIsLogin(rsp.errCode)) {
         removeLoginUser();
         route.refresh();
-        toastErrorMsg("您未登录，请登录后再操作！");
+        toastInfoMsg("您未登录，请登录后再操作！");
       } else if (rsp.errCode !== Number(0)) {
         console.error("Error:", rsp.errMsg);
         toastErrorMsg("退出登录失败，服务器开小差了，请稍后重试！");
@@ -108,6 +108,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
     <>
       {loginUser?.type === UserTypeIsSeller && pathname !== "/seller/become" && (
         <section className="flex gap-10 w-9/12 mt-8">
+          <title>商家页 | PromptRun</title>
           <Sidebar className="w-[25%] h-screen flex text-start rounded-2xl">
             <User
               as="button"

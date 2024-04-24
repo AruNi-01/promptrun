@@ -117,6 +117,7 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
 
   return (
     <section className="flex flex-col gap-3 w-4/6 overflow-hidden">
+      <title>卖家信息 | PromptRun</title>
       <div
         className={cn(
           "relative bg-cover bg-[url('/seller_bg.png')] w-full h-[18rem] overflow-hidden text-center rounded-md"
