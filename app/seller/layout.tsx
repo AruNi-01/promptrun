@@ -1,6 +1,5 @@
 "use client";
-import { logout } from "@/api/passport";
-import BecomeSeller from "@/components/seller/BecomeSeller";
+import { checkIsLogin as checkIsLoginApi, logout } from "@/api/passport";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { checkIsLogin } from "@/utils/common";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
@@ -12,23 +11,23 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  User,
   useDisclosure,
+  User
 } from "@nextui-org/react";
 import { Badge, Sidebar } from "flowbite-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import {
   HiChartPie,
+  HiCurrencyYen,
   HiFire,
   HiLockClosed,
+  HiLogin,
   HiShoppingBag,
   HiSpeakerphone,
   HiUserCircle,
-  HiViewBoards,
-  HiLogin,
+  HiViewBoards
 } from "react-icons/hi";
-import { checkIsLogin as checkIsLoginApi } from "@/api/passport";
 
 const UserTypeIsSeller = 1;
 
@@ -171,6 +170,17 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                   >
                     消息通知
                   </Sidebar.Item>
+                  <Sidebar.Item
+                    onClick={() => {
+                      route.push("/seller/wallet");
+                    }}
+                    icon={HiCurrencyYen}
+                    className={sideItemActiveCN("/seller/wallet")}
+                    label={"账单"}
+                    labelColor="purple"
+                  >
+                    我的钱包
+                  </Sidebar.Item>
                   <Divider />
                   <Sidebar.Item
                     onClick={() => {
@@ -202,7 +212,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                 </div>
               </Sidebar.ItemGroup>
             </Sidebar.Items>
-            <Sidebar.CTA className="mt-[calc(100vh-38rem)]">
+            <Sidebar.CTA className="mt-[calc(100vh-40rem)]">
               <div className="mb-2 flex justify-between">
                 <HiFire className="h-[22px] w-[22px] text-[#FECACA]" />
                 <Badge color="red">卖家须知</Badge>

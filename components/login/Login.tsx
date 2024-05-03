@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { Key, useEffect, useState } from "react";
 import { LockIcon, LogoutIcon, MailIcon, SellerIcon, SettingIcon, XIcon } from "../icons";
 import { checkIsLogin } from "@/utils/common";
+import { HiCurrencyYen } from "react-icons/hi";
 
 export default function Login() {
   const iconClasses = "text-xl pointer-events-none flex-shrink-0";
@@ -196,6 +197,8 @@ export default function Login() {
       router.push("/profile");
     } else if (key === "update_password") {
       onUpdatePasswordModalOpen();
+    } else if (key === "wallet") {
+      router.push("/wallet")
     }
   };
 
@@ -398,6 +401,9 @@ export default function Login() {
         >
           <DropdownItem key="profile" startContent={<SettingIcon className={iconClasses} />}>
             个人主页
+          </DropdownItem>
+          <DropdownItem key="wallet" startContent={<HiCurrencyYen className={iconClasses} />}>
+            我的钱包
           </DropdownItem>
           <DropdownItem key="seller" showDivider startContent={<SellerIcon className={iconClasses} />}>
             卖家页面

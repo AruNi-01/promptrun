@@ -2,6 +2,7 @@
 import { findModelList } from "@/api/model";
 import { findPromptListByBuyerId, findPromptMasterImgListByPromptIds } from "@/api/prompt";
 import { findUserById, userUpdate } from "@/api/user";
+import { findWaletByUserId } from "@/api/wallet";
 import { UploadIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { Model } from "@/types/api/model";
@@ -9,6 +10,7 @@ import { Paginate } from "@/types/api/paginate";
 import { PromptAttachOrderId } from "@/types/api/prompt";
 import { PromptImg } from "@/types/api/prompt_img";
 import { UserUpdateReq } from "@/types/api/user";
+import { Wallet } from "@/types/api/wallet";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import {
   CardHeader,
@@ -28,12 +30,13 @@ import {
   Divider,
   Image,
   Input,
-  Link,
   Pagination,
   cn,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { HiCurrencyYen } from "react-icons/hi";
+import Link from "@/components/ui/Link";
 
 export default function UserProfilePage() {
   const { loginUser, setLoginUser } = useLoginUserStore((state) => ({
@@ -101,10 +104,12 @@ export default function UserProfilePage() {
     pageSize: 4,
   });
   const [rows, setRows] = useState<number>(0);
+  const [wallet, setWallet] = useState<Wallet>();
 
   useEffect(() => {
     if (!loginUser) return;
 
+    fetchWallet();
     fetchModelList();
     fetchBuyerPromptData();
 
@@ -119,6 +124,20 @@ export default function UserProfilePage() {
     // 注意：React 默认通过比较对象的引用来判断是否发生变化，而对象每次重新渲染后引用都会改变。
     // 所以对象的比较需要通过 JSON.stringify 转换为字符串再比较，否则会导致死循环。
   }, [JSON.stringify(paginate), JSON.stringify(loginUser)]);
+
+  const fetchWallet = async () => {
+    if (!loginUser) return;
+    try {
+      const rsp = await findWaletByUserId(loginUser?.id);
+      if (rsp.errCode !== 0) {
+        toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
+        return;
+      }
+      setWallet(rsp.data);
+    } catch (error) {
+      toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
+    }
+  };
 
   const fetchModelList = async () => {
     try {
@@ -153,6 +172,7 @@ export default function UserProfilePage() {
 
   useEffect(() => {
     const fetchPromptMasterImgList = async () => {
+      if (!promptAttachOrderIdList) return;
       try {
         // fetch prompt master_img list
         const rsp = await findPromptMasterImgListByPromptIds(promptAttachOrderIdList.map((item) => item.prompt.id));
@@ -277,10 +297,24 @@ export default function UserProfilePage() {
         </form>
       </div>
 
-      <div key="bought_prompts" className="flex flex-col gap-5 mt-10">
-        <div className="flex justify-between">
-          <h2 className="text-4xl">买入的 Prompts</h2>
+      <div className="flex flex-col gap-5 mt-10">
+        <div className="self-start flex gap-2">
+          <h2 className="text-4xl">我的钱包</h2>
+          <Link href={"/wallet"} className="self-end">查看交易记录</Link>
         </div>
+        <Divider />
+        <div className="flex gap-1 mt-4">
+          <span className="self-center">余额：</span>
+          <Chip variant={"flat"} startContent={<HiCurrencyYen className="h-[18px] w-[18px]" />} size={"md"}
+                color={"success"}>
+            {wallet?.balance.toFixed(2)}
+          </Chip>
+          <span className="text-default-400 text-sm ml-5 self-center">余额可用于在交易市场购买 Prompt</span>
+        </div>
+      </div>
+
+      <div key="bought_prompts" className="flex flex-col gap-5 mt-10">
+        <h2 className="text-4xl self-start">买入的 Prompts</h2>
         <Divider />
         <div className="gap-4 grid grid-cols-2 lg:grid-cols-4 mt-2">
           {promptAttachOrderIdList?.map((item) => (

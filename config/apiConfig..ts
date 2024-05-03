@@ -84,6 +84,12 @@ const API = {
     lantuWxPay: API_URL + "/api/v1/pay/lantuWxPay",
     lantuWxPayQueryOrder: API_URL + "/api/v1/pay/lantuWxPayQueryOrder",
   },
+
+  wallet: {
+    findByUserId: (userId: number): string => {
+      return API_URL + `/api/v1/wallet/findByUserId/${userId}`
+    }
+  }
 };
 
 export default API;
