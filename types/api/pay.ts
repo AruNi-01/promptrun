@@ -7,6 +7,7 @@ export interface LantuWxPayReq {
   promptId: number;
   promptTitle: string;
   sellerId: number;
+  sellerUserId: number;
   buyerId: number;
   price: number;
 }

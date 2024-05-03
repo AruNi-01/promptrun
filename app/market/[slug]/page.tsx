@@ -133,6 +133,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       promptId: promptFullInfo?.prompt.id,
       promptTitle: promptFullInfo?.prompt.title,
       sellerId: promptFullInfo?.seller.id,
+      sellerUserId: promptFullInfo?.seller.user_id,
       buyerId: loginUser.id,
       price: promptFullInfo?.prompt.price,
     })
