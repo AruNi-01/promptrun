@@ -325,7 +325,6 @@ export default function UserProfilePage() {
               isHoverable
               as={Link}
               href={`/order/${item.orderId}`}
-              target="_blank"
               className=""
             >
               <CardBody className="overflow-visible p-0">
