@@ -142,7 +142,7 @@ export default function OrderPage({ params }: { params: { slug: bigint } }) {
           </div>
           <div className="flex flex-col gap-1 items-center">
             <h2 className="text-xl text-default-500">价格</h2>
-            <p>￥{order?.price}</p>
+            <p>￥{order?.price.toFixed(2)}</p>
           </div>
           <div className="flex flex-col gap-1 items-center">
             <h2 className="text-xl text-default-500">下单时间</h2>

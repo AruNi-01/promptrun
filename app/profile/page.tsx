@@ -362,7 +362,7 @@ export default function UserProfilePage() {
               </CardBody>
               <CardFooter className="justify-between">
                 <b>{item.prompt.title}</b>
-                <p className="text-default-500 text-lg">￥{item.prompt.price}</p>
+                <p className="text-default-500 text-lg">￥{item.prompt.price.toFixed(2)}</p>
               </CardFooter>
             </Card>
           ))}

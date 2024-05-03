@@ -374,7 +374,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             <Typography variant="paragraph" className="self-end mb-1">
               ￥
             </Typography>
-            <Typography variant="h2">{promptFullInfo.prompt.price}</Typography>
+            <Typography variant="h2">{promptFullInfo.prompt.price.toFixed(2)}</Typography>
           </div>
           <Tooltip placement="right-end" showArrow content="请确保您有该模型的访问权，否则无法使用">
             <Button

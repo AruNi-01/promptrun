@@ -210,7 +210,7 @@ export default function MarketPage() {
             </CardBody>
             <CardFooter className="justify-between">
               <b>{prompt.title}</b>
-              <p className="text-default-500 text-lg">￥{prompt.price}</p>
+              <p className="text-default-500 text-lg">￥{prompt.price.toFixed(2)}</p>
             </CardFooter>
           </Card>
         ))}
