@@ -300,7 +300,7 @@ export default function UserProfilePage() {
       <div className="flex flex-col gap-5 mt-10">
         <div className="self-start flex gap-2">
           <h2 className="text-4xl">我的钱包</h2>
-          <Link href={"/wallet"} className="self-end">查看交易记录</Link>
+          <Link href={"/wallet"} isExternal={false} className="self-end">查看交易记录</Link>
         </div>
         <Divider />
         <div className="flex gap-1 mt-4">

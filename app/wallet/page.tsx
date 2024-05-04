@@ -35,8 +35,8 @@ export default function WalletPage() {
   return (
     <section className="mt-8 flex w-4/6 flex-col gap-5">
       <title>我的钱包 | PromptRun</title>
-      <div className="mt-10 flex flex-col items-start gap-5">
-        <h2 className="text-3xl">我的钱包</h2>
+      <div className="flex flex-col items-start gap-5">
+        <h2 className="text-4xl">我的钱包</h2>
         <Divider className="-mt-2" />
         <div className="flex gap-1">
           <span className="self-center">余额：</span>
@@ -66,7 +66,7 @@ export default function WalletPage() {
         </div>
       </div>
       <div className="mt-10 flex flex-col items-start gap-1">
-        <h2 className="text-3xl">交易账单</h2>
+        <h2 className="text-4xl">交易账单</h2>
         <BillTable />
       </div>
     </section>
