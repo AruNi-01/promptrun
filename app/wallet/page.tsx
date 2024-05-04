@@ -2,14 +2,15 @@
 import { useLoginUserStore, UserTypes } from "@/state_stores/loginUserStore";
 import { Wallet } from "@/types/api/wallet";
 import { Chip, Divider } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { findWaletByUserId } from "@/api/wallet";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { HiCurrencyYen } from "react-icons/hi";
 import Link from "@/components/ui/Link";
+import BillTable from "@/components/bill/BillTable";
 
 export default function WalletPage() {
-  const { loginUser } = useLoginUserStore();
+  const { loginUser, removeLoginUser } = useLoginUserStore();
   const [wallet, setWallet] = useState<Wallet>();
 
   useEffect(() => {
@@ -64,10 +65,9 @@ export default function WalletPage() {
           </Chip>
         </div>
       </div>
-      <div className="mt-10 flex flex-col items-start gap-5">
+      <div className="mt-10 flex flex-col items-start gap-1">
         <h2 className="text-3xl">交易账单</h2>
-        <Divider className="-mt-2" />
-
+        <BillTable />
       </div>
     </section>
   );

@@ -100,3 +100,69 @@ export const SellerOrderTableColumnsEnum = {
   price: "price",
   create_time: "create_time",
 };
+
+export const billTableColumns = [
+  { key: "type", label: "账单类型" },
+  { key: "channel", label: "渠道" },
+  { key: "amount", label: "金额", sortable: true  },
+  { key: "remark", label: "说明" },
+  { key: "create_time", label: "时间", sortable: true  },
+];
+
+export const BillTableColumnsEnum = {
+  type: "type",
+  channel: "channel",
+  amount: "amount",
+  remark: "remark",
+  create_time: "create_time",
+};
+
+export const billTypeOptions = [
+  {
+    type: 0,
+    label: "支出",
+  },
+  {
+    type: 1,
+    label: "收入",
+  },
+];
+export const billTypeMap = new Map<number, string>(
+  billTypeOptions.map((billType) => [billType.type, billType.label])
+);
+export const billTypeColorMap = new Map<number, 
+  "default" | "danger" | "success" | "primary" | "secondary" | "warning" | undefined>
+(
+  billTypeOptions.map((billType) => [billType.type, billType.type === 0 ? "danger" : "success"])
+);
+
+export const billChannelOptions = [
+  {
+    type: 0,
+    label: "微信",
+  },
+  {
+    type: 1,
+    label: "支付宝",
+  },
+  {
+    type: 2,
+    label: "余额",
+  },
+  {
+    type: 3,
+    label: "活动",
+  },
+];
+export const billChannelMap = new Map<number, string>(
+  billChannelOptions.map((billChannel) => [billChannel.type, billChannel.label])
+);
+export const billChannelColorMap = new Map<number,
+  "default" | "danger" | "success" | "primary" | "secondary" | "warning" | undefined>
+(
+  billChannelOptions.map((billChannel) => [billChannel.type,
+    billChannel.type === 0 ? "success" :
+      billChannel.type === 1 ? "primary" :
+        billChannel.type === 2 ? "secondary" : 
+          "default"])
+);

@@ -89,6 +89,10 @@ const API = {
     findByUserId: (userId: number): string => {
       return API_URL + `/api/v1/wallet/findByUserId/${userId}`
     }
+  },
+
+  bill: {
+    listByUserId: API_URL + "/api/v1/bill/listByUserId",
   }
 };
 

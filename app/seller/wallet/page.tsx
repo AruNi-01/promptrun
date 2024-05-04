@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { findWaletByUserId } from "@/api/wallet";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { HiCurrencyYen } from "react-icons/hi";
+import BillTable from "@/components/bill/BillTable";
 
 export default function SellerWalletPage() {
   const { loginUser } = useLoginUserStore();
@@ -30,7 +31,7 @@ export default function SellerWalletPage() {
 
   return (
     <section className="flex flex-col gap-5">
-      <div className="flex flex-col gap-5 mt-10 items-start">
+      <div className="flex flex-col items-start gap-5">
         <h2 className="text-3xl">我的钱包</h2>
         <Divider className="-mt-2" />
         <div className="flex gap-1">
@@ -39,7 +40,7 @@ export default function SellerWalletPage() {
                 color={"primary"}>
             {wallet?.balance.toFixed(2)}
           </Chip>
-          <span className="text-default-400 text-sm ml-5 self-center">余额可用于在交易市场购买 Prompt</span>
+          <span className="ml-5 self-center text-sm text-default-400">余额可用于在交易市场购买 Prompt</span>
         </div>
         <div className="flex gap-1">
           <span>在 PromptRun 上的总收入：</span>
@@ -56,10 +57,9 @@ export default function SellerWalletPage() {
           </Chip>
         </div>
       </div>
-      <div className="flex flex-col gap-5 mt-10 items-start">
+      <div className="mt-5 flex flex-col items-start gap-1">
         <h2 className="text-3xl">交易账单</h2>
-        <Divider className="-mt-2" />
-
+        <BillTable />
       </div>
     </section>
   );
