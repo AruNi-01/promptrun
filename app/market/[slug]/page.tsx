@@ -1,7 +1,6 @@
 "use client";
-import { LikeErrCode, isLike, like } from "@/api/likes";
-import { findOrderById } from "@/api/order";
-import { lantuWxPay, lantuWxPayQueryOrder } from "@/api/pay";
+import { isLike, like, LikeErrCode } from "@/api/likes";
+import { balancePay, lantuWxPay, lantuWxPayQueryOrder } from "@/api/pay";
 import { findPromptFullInfoById } from "@/api/prompt";
 import { AliPayIcon, WechatPayIcon } from "@/components/icons";
 import loadingIcon2 from "@/public/lottie/loading2.json";
@@ -15,6 +14,7 @@ import { Avatar, Card, CardBody, CardHeader, Carousel, Rating, Typography } from
 import { Button } from "@nextui-org/button";
 import {
   Chip,
+  cn,
   Divider,
   Image,
   Link,
@@ -26,15 +26,15 @@ import {
   Tab,
   Tabs,
   Tooltip,
-  cn,
-  useDisclosure,
+  useDisclosure
 } from "@nextui-org/react";
-import { set } from "date-fns";
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
-import { HiCube, HiEye, HiHeart, HiShieldCheck, HiTag, HiBell } from "react-icons/hi";
+import React, { useCallback, useEffect, useState } from "react";
+import { HiBell, HiCube, HiCurrencyYen, HiEye, HiHeart, HiShieldCheck, HiTag } from "react-icons/hi";
 import Markdown from "react-markdown";
+import { findWaletByUserId } from "@/api/wallet";
+import { Wallet } from "@/types/api/wallet";
 
 export default function PromptDetailPage({ params }: { params: { slug: number } }) {
   const { slug: promptId } = params;
@@ -116,6 +116,8 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
 
   const [payInterval, setPayInterval] = useState<NodeJS.Timeout>();
 
+  const [wallet, setWallet] = useState<Wallet>();
+
   const handlePurchase = () => {
     if (!loginUser || !promptFullInfo) {
       toastErrorMsg("您未登录，请先登录后再购买！");
@@ -128,6 +130,16 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
     }
 
     setLoading(true);
+
+    findWaletByUserId(loginUser?.id).then((res) => {
+      if (res.errCode !== 0) {
+        toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
+        return;
+      }
+      setWallet(res.data);
+    }).catch(() => {
+      toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
+    });
 
     lantuWxPay({
       promptId: promptFullInfo?.prompt.id,
@@ -160,6 +172,8 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   };
 
   const loopPayResult = useCallback(() => {
+    if (payInterval) return;
+
     if (lantuPayRsp?.orderId) {
       const intervalId = setInterval(() => {
         lantuWxPayQueryOrder({ orderId: lantuPayRsp?.orderId })
@@ -167,10 +181,11 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             if (res.errCode === 0) {
               if (res.data.isPay) {
                 clearInterval(intervalId);
+                setPayInterval(undefined);
                 toastSuccessMsg("支付成功，即将跳转到订单页面！");
                 setTimeout(() => {
                   router.push(`/order/${res.data.orderId}`);
-                }, 3000);
+                }, 2000);
               }
             } else {
               // 处理支付失败情况
@@ -186,16 +201,72 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   }, [JSON.stringify(lantuPayRsp)]);
 
   useEffect(() => {
-    setTimeout(() => {
-      loopPayResult();
-    }, 5000);
+    if (!lantuPayRsp) return;
+
+    loopPayResult();
 
     return () => {
       if (payInterval) {
         clearInterval(payInterval);
+        setPayInterval(undefined);
       }
     };
   }, [JSON.stringify(lantuPayRsp)]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      clearInterval(payInterval);
+      setPayInterval(undefined);
+    }, 1000 * 60 * 2);
+  }, [JSON.stringify(payInterval)]);
+
+  const handleBalancePay = () => {
+    if (!loginUser || !promptFullInfo || !wallet) {
+      toastErrorMsg("您未登录，请先登录后再购买！");
+      return;
+    }
+    
+    if (wallet?.balance < promptFullInfo.prompt.price) {
+      toastInfoMsg("您的余额不足，请切换到微信支付购买！");
+      return;
+    }
+
+    setLoading(true);
+
+    balancePay({
+      promptId: promptFullInfo?.prompt.id,
+      promptTitle: promptFullInfo?.prompt.title,
+      sellerId: promptFullInfo?.seller.id,
+      sellerUserId: promptFullInfo?.seller.user_id,
+      buyerId: loginUser.id,
+      price: promptFullInfo?.prompt.price,
+      wallet: wallet,
+    })
+      .then((res) => {
+        if (!checkIsLogin(res.errCode)) {
+          removeLoginUser();
+          router.refresh();
+          toastErrorMsg("您未登录，或登录状态已失效，请登录后再操作！");
+          return;
+        }
+        if (res.errCode !== 0) {
+          toastErrorMsg("余额支付失败，请稍后重试或切换到微信支付！");
+        } else {
+          toastSuccessMsg("支付成功，即将跳转到订单页面！");
+          clearInterval(payInterval);
+          setPayInterval(undefined);
+          setTimeout(() => {
+            router.push(`/order/${res.data.orderId}`);
+          }, 2000);
+        }
+      })
+      .catch(() => {
+        toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
 
   if (!promptFullInfo) {
     return (
@@ -206,24 +277,24 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   }
 
   return (
-    <section className="flex flex-col gap-5 w-4/6 mt-4">
+    <section className="mt-4 flex w-4/6 flex-col gap-5">
       <title>Prompt 详情 | PromptRun</title>
       <Card
         shadow={false}
-        className="relative w-full h-[20rem] grid items-end justify-center overflow-hidden text-center"
+        className="relative grid w-full items-end justify-center overflow-hidden text-center h-[20rem]"
       >
         <CardHeader
           floated={false}
           shadow={false}
           className={cn("absolute bg-black inset-0 m-0 h-full w-full rounded-none")}
         >
-          <Image className="w-full h-full" src={promptFullInfo?.promptImgList.find((img) => img.is_master)?.img_url} />
+          <Image className="h-full w-full" src={promptFullInfo?.promptImgList.find((img) => img.is_master)?.img_url} />
         </CardHeader>
-        <CardBody className="relative my-auto z-10">
-          <div className="flex flex-col gap-3 rounded-xl bg-black bg-opacity-50 z-10 p-5 backdrop-blur-sm">
+        <CardBody className="relative z-10 my-auto">
+          <div className="z-10 flex flex-col gap-3 rounded-xl bg-black bg-opacity-50 p-5 backdrop-blur-sm">
             <Tooltip placement="top-start" showArrow content="点击查看卖家信息">
               <Link
-                className="flex gap-4 items-center"
+                className="flex items-center gap-4"
                 href={`/seller_info/${promptFullInfo.seller.id}`}
                 target="_blank"
               >
@@ -239,7 +310,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                 </Typography>
               </Link>
             </Tooltip>
-            <div className="flex gap-2 text-white/80 items-center">
+            <div className="flex items-center gap-2 text-white/80">
               <p>{promptFullInfo?.seller.rating}</p>
               <Rating
                 value={
@@ -252,7 +323,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             </div>
             <Typography
               variant="h6"
-              className="text-gray-300 text-start w-[300px] font-medium leading-[1.5] whitespace-normal"
+              className="whitespace-normal text-start font-medium text-gray-300 w-[300px] leading-[1.5]"
             >
               {promptFullInfo?.seller.intro}
             </Typography>
@@ -265,7 +336,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             autoplay
             autoplayDelay={7000}
             loop
-            className="rounded-xl w-2/3 h-auto"
+            className="h-auto w-2/3 rounded-xl"
             navigation={({ setActiveIndex, activeIndex, length }) => (
               <div className="absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2">
                 {new Array(length).fill("").map((_, i) => (
@@ -285,28 +356,28 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             ))}
           </Carousel>
         ) : promptFullInfo.model.media_type === modelMediaType.Text ? (
-          <div className="w-2/3 flex flex-col gap-3 p-4 items-start text-start border-1 rounded-xl border-slate-800 bg-slate-800/50 shadow-slate-900 shadow-md overflow-y-scroll">
-            <h1 className="text-3xl -mb-1">Prompt 效果细节</h1>
+          <div className="flex w-2/3 flex-col items-start gap-3 overflow-y-scroll rounded-xl border-slate-800 bg-slate-800/50 p-4 text-start shadow-md shadow-slate-900 border-1">
+            <h1 className="-mb-1 text-3xl">Prompt 效果细节</h1>
             <Divider />
             <h2 className="text-2xl">输入样例：</h2>
-            <p className="text-medium text-gray-400">
+            <p className="text-gray-400 text-medium">
               <Markdown>{promptFullInfo.prompt.input_example}</Markdown>
             </p>
             <h2 className="text-2xl">输出样例：</h2>
-            <p className="text-medium text-gray-400">
+            <p className="text-gray-400 text-medium">
               <Markdown>{promptFullInfo.prompt.output_example}</Markdown>
             </p>
           </div>
         ) : (
-          <div className="w-2/3 h-full flex items-center justify-center">
+          <div className="flex h-full w-2/3 items-center justify-center">
             <Typography variant="h1" className="text-gray-300">
               暂不支持该模型展示......
             </Typography>
           </div>
         )}
-        <div className="w-1/3 flex flex-col gap-3 items-start">
+        <div className="flex w-1/3 flex-col items-start gap-3">
           <Typography variant="h1">{promptFullInfo.prompt.title}</Typography>
-          <div className="flex justify-between w-full">
+          <div className="flex w-full justify-between">
             <div className="flex flex-col gap-2">
               <Rating
                 value={
@@ -337,8 +408,8 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                 </Tooltip>
               </div>
             </div>
-            <div className="flex flex-col gap-2 justify-end">
-              <div className="flex gap-2 justify-end">
+            <div className="flex flex-col justify-end gap-2">
+              <div className="flex justify-end gap-2">
                 <Chip variant="flat" color="default" size="sm" radius="sm" startContent={<HiEye />}>
                   {promptFullInfo.prompt.browse_amount}
                 </Chip>
@@ -372,7 +443,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             {promptFullInfo.prompt.intro}
           </Typography>
           <div className="flex">
-            <Typography variant="paragraph" className="self-end mb-1">
+            <Typography variant="paragraph" className="mb-1 self-end">
               ￥
             </Typography>
             <Typography variant="h2">{promptFullInfo.prompt.price.toFixed(2)}</Typography>
@@ -385,7 +456,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
               isLoading={loading}
               color="primary"
               variant="ghost"
-              className="w-44 h-16 text-xl"
+              className="h-16 w-44 text-xl"
             >
               购买 Prompt
             </Button>
@@ -401,14 +472,15 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         onClose={() => {
           if (payInterval) {
             clearInterval(payInterval);
+            setPayInterval(undefined);
           }
         }}
       >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex gap-1 text-2xl ">Prompt 名称：{promptFullInfo.prompt.title}</ModalHeader>
-              <ModalBody className="flex flex-col gap-3 items-start">
+              <ModalHeader className="flex gap-1 text-2xl">Prompt 名称：{promptFullInfo.prompt.title}</ModalHeader>
+              <ModalBody className="flex flex-col items-start gap-3">
                 <div className="text-xl">支付金额：￥{promptFullInfo.prompt.price}</div>
                 <Divider />
                 <div className="flex w-full flex-col">
@@ -416,13 +488,13 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                     <Tab
                       key="wechatPay"
                       title={
-                        <div className="flex items-center space-x-2 text-green-500">
+                        <div className="flex items-center text-green-500 space-x-2">
                           <WechatPayIcon />
                           <span>微信支付</span>
                         </div>
                       }
                     >
-                      <div className="flex flex-col gap-3 items-start">
+                      <div className="flex flex-col items-start gap-3">
                         <Chip variant="faded" color="success" startContent={<HiBell />} className="">
                           使用手机微信描下面二维码即可进行支付!
                         </Chip>
@@ -439,29 +511,62 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                           二维码已失效？点击此重新生成支付二维码
                         </Button>
                       </div>
+                      <Typography variant="paragraph" className="mt-3 text-sm text-default-500">
+                        订单将在 2 分钟后失效，请尽快支付，失效后请点击 “重新生成支付二维码” 按钮以生成新订单。
+                      </Typography>
                     </Tab>
                     <Tab
                       key="aliPay"
                       title={
-                        <div className="flex items-center space-x-2 text-blue-500">
+                        <div className="flex items-center text-blue-500 space-x-2">
                           <AliPayIcon />
                           <span>支付宝支付</span>
                         </div>
                       }
                     >
-                      <div className="flex flex-col gap-3 items-start">
+                      <div className="flex flex-col items-start gap-3">
                         {/* <Image width="300px" src="/gallery/9.png" alt="wechat_pay_qr_code" /> */}
-                        <Typography variant="paragraph" className="text-lg text-default-500 h-[374px] pt-6">
+                        <Typography variant="paragraph" className="pt-6 text-lg text-default-500 h-[374px]">
                           支付宝支付暂不支持，请使用微信支付。
                         </Typography>
                       </div>
+                      <Typography variant="paragraph" className="mt-3 text-sm text-default-500">
+                        订单将在 2 分钟后失效，请尽快支付，失效后请点击 “重新生成支付二维码” 按钮以生成新订单。
+                      </Typography>
+                    </Tab>
+                    <Tab
+                      key="balancePay"
+                      title={
+                        <div className="flex items-center text-purple-500 space-x-2">
+                          <HiCurrencyYen className="h-6 w-6" />
+                          <span>余额支付</span>
+                        </div>
+                      }
+                    >
+                      <div className="flex flex-col items-start gap-3 pt-6 h-[406px]">
+                        <div className="flex gap-1">
+                          <span className="self-center">您的账户所剩余额：</span>
+                          <Chip variant={"faded"} startContent={<HiCurrencyYen className="h-[18px] w-[18px]" />}
+                                size={"md"} color={"secondary"}>
+                            {wallet?.balance.toFixed(2)}
+                          </Chip>
+                        </div>
+                        <Button
+                          onClick={() => {
+                            handleBalancePay();
+                          }}
+                          isLoading={loading}
+                          color="secondary"
+                          variant="ghost"
+                          size="md"
+                          className="mt-3 self-start"
+                        >立即支付
+                        </Button>
+                      </div>
                     </Tab>
                   </Tabs>
-                  <Typography variant="paragraph" className="text-sm text-default-500 mt-3">
+                  <Typography variant="paragraph" className="mt-3 text-sm text-default-500">
                     支付后请等待支付结果，成功后您将拥有此 Prompt 的访问权，可到对应大模型中使用。
-                  </Typography>
-                  <Typography variant="paragraph" className="text-sm text-default-500 mt-3">
-                    订单将在 2 分钟后失效，请尽快支付，失效后请点击 “重新生成支付二维码” 按钮以生成新订单。
                   </Typography>
                 </div>
               </ModalBody>

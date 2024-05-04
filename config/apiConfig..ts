@@ -83,6 +83,7 @@ const API = {
   pay: {
     lantuWxPay: API_URL + "/api/v1/pay/lantuWxPay",
     lantuWxPayQueryOrder: API_URL + "/api/v1/pay/lantuWxPayQueryOrder",
+    balancePay: API_URL + "/api/v1/pay/balancePay",
   },
 
   wallet: {
