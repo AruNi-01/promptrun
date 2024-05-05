@@ -1,7 +1,7 @@
 "use client";
 import { findMessageNotReadCountByUserId } from "@/api/message";
 import { checkIsLogin as checkIsLoginApi, logout } from "@/api/passport";
-import { UserTypes, useLoginUserStore } from "@/state_stores/loginUserStore";
+import { useLoginUserStore, UserTypes } from "@/state_stores/loginUserStore";
 import { useMessageNotReadCountState } from "@/state_stores/messageStore";
 import { checkIsLogin } from "@/utils/common";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
@@ -15,11 +15,11 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  User,
+  User
 } from "@nextui-org/react";
 import { Badge, Sidebar } from "flowbite-react";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import {
   HiChartPie,
   HiCurrencyYen,
@@ -29,7 +29,7 @@ import {
   HiShoppingBag,
   HiSpeakerphone,
   HiUserCircle,
-  HiViewBoards,
+  HiViewBoards
 } from "react-icons/hi";
 
 export default function SellerLayout({ children }: { children: ReactNode }) {
@@ -39,7 +39,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
   const { loginUser, setLoginUser, removeLoginUser } = useLoginUserStore((state) => ({
     loginUser: state.loginUser,
     setLoginUser: state.setLoginUser,
-    removeLoginUser: state.removeLoginUser,
+    removeLoginUser: state.removeLoginUser
   }));
 
   const { messageNotReadCount, setMessageNotReadCount } = useMessageNotReadCountState();
@@ -67,6 +67,8 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
               } else {
                 setMessageNotReadCount(rsp.data);
               }
+            }).catch(() => {
+              toastInfoMsg("获取未读消息失败，请稍后重试！");
             });
           }
         } else {
@@ -87,7 +89,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
     isOpen: isLogoutModalOpen,
     onOpen: onLogoutModalOpen,
     onClose: onLogoutModalClose,
-    onOpenChange: onLogoutModalOpenChange,
+    onOpenChange: onLogoutModalOpenChange
   } = useDisclosure();
 
   const handleLogout = async () => {
@@ -122,12 +124,12 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
             <User
               as="button"
               avatarProps={{
-                src: loginUser?.headerUrl,
+                src: loginUser?.headerUrl
               }}
               name={"Hello, " + loginUser?.nickname}
               classNames={{
                 name: "ml-1 text-xl text-default-800 font-bold",
-                base: "ml-2 mb-3",
+                base: "ml-2 mb-3"
               }}
               onClick={() => {
                 route.push("/seller/dashboard");
