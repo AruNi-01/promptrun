@@ -1,5 +1,5 @@
 /*
- * @Descripttion: 
+ * @Descripttion:
  * @Author: AruNi_Lu
  * @Date: 2024-03-14 11:22:06
  */
@@ -88,13 +88,25 @@ const API = {
 
   wallet: {
     findByUserId: (userId: number): string => {
-      return API_URL + `/api/v1/wallet/findByUserId/${userId}`
-    }
+      return API_URL + `/api/v1/wallet/findByUserId/${userId}`;
+    },
   },
 
   bill: {
     listByUserId: API_URL + "/api/v1/bill/listByUserId",
-  }
+  },
+
+  message: {
+    listByUserId: (userId: number): string => {
+      return API_URL + `/api/v1/message/listByUserId/${userId}`;
+    },
+    readAll: (userId: number): string => {
+      return API_URL + `/api/v1/message/readAll/${userId}`;
+    },
+    notReadCountByUserId: (userId: number): string => {
+      return API_URL + `/api/v1/message/notReadCountByUserId/${userId}`;
+    },
+  },
 };
 
 export default API;

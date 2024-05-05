@@ -27,6 +27,7 @@ module.exports = {
         "slide-in-from-right-1000": "slideInRight 1s ease-in",
         "slide-out-to-up-500": "slideOutUp 0.5s ease-out forwards",
         "scale-5000": "scale 5s ease-in-out infinite",
+        "scale-small-7000": "scaleSmall 7s ease-in-out infinite",
 
         // 首页光影背景 animation
         "blob-tr-7000": "blobTopRight 7s infinite",
@@ -135,6 +136,20 @@ module.exports = {
           },
           "75%": {
             transform: "scale(1.2)",
+          },
+        },
+        scaleSmall: {
+          "0%": {
+            transform: "scale(1)",
+          },
+          "25%": {
+            transform: "scale(1.03)",
+          },
+          "50%": {
+            transform: "scale(1)",
+          },
+          "75%": {
+            transform: "scale(1.03)",
           },
         },
       },

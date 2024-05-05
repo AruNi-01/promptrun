@@ -1,10 +1,13 @@
 "use client";
+import { findMessageNotReadCountByUserId } from "@/api/message";
 import { checkIsLogin as checkIsLoginApi, logout } from "@/api/passport";
-import { useLoginUserStore } from "@/state_stores/loginUserStore";
+import { UserTypes, useLoginUserStore } from "@/state_stores/loginUserStore";
+import { useMessageNotReadCountState } from "@/state_stores/messageStore";
 import { checkIsLogin } from "@/utils/common";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import {
   Button,
+  cn,
   Divider,
   Modal,
   ModalBody,
@@ -12,11 +15,11 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  User
+  User,
 } from "@nextui-org/react";
 import { Badge, Sidebar } from "flowbite-react";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   HiChartPie,
   HiCurrencyYen,
@@ -26,10 +29,8 @@ import {
   HiShoppingBag,
   HiSpeakerphone,
   HiUserCircle,
-  HiViewBoards
+  HiViewBoards,
 } from "react-icons/hi";
-
-const UserTypeIsSeller = 1;
 
 export default function SellerLayout({ children }: { children: ReactNode }) {
   const route = useRouter();
@@ -40,6 +41,8 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
     setLoginUser: state.setLoginUser,
     removeLoginUser: state.removeLoginUser,
   }));
+
+  const { messageNotReadCount, setMessageNotReadCount } = useMessageNotReadCountState();
 
   useEffect(() => {
     const check = async () => {
@@ -52,12 +55,19 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
         } else if (rsp.errCode === Number(0)) {
           if (!loginUser) {
             // localStorage 还未加载，等待下一次 render
-            console.log("localStorage 还未加载，等待下一次 render. " + loginUser);
             return;
           }
-          if (loginUser?.type !== UserTypeIsSeller) {
+          if (loginUser?.type !== UserTypes.SELLER_USER) {
             toastInfoMsg("您还不是卖家，快去申请成为卖家吧！");
             route.push("/seller_become");
+          } else {
+            findMessageNotReadCountByUserId(loginUser.id).then((rsp) => {
+              if (rsp.errCode !== 0) {
+                toastInfoMsg("获取未读消息失败，请稍后重试！");
+              } else {
+                setMessageNotReadCount(rsp.data);
+              }
+            });
           }
         } else {
           toastErrorMsg("服务器开小差了，请稍后重试！");
@@ -105,7 +115,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {loginUser?.type === UserTypeIsSeller && pathname !== "/seller/become" && (
+      {loginUser?.type === UserTypes.SELLER_USER && pathname !== "/seller/become" && (
         <section className="flex gap-10 w-9/12 mt-8">
           <title>商家页 | PromptRun</title>
           <Sidebar className="w-[25%] h-screen flex text-start rounded-2xl">
@@ -132,8 +142,8 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                     }}
                     icon={HiChartPie}
                     className={sideItemActiveCN("/seller/dashboard")}
-                    label="图表"
-                    labelColor="blue"
+                    // label="图表"
+                    // labelColor="blue"
                   >
                     整体看板
                   </Sidebar.Item>
@@ -144,7 +154,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                     icon={HiViewBoards}
                     className={sideItemActiveCN("/seller/goods")}
                     label="发布"
-                    labelColor="dark"
+                    labelColor="green"
                   >
                     上架商品
                   </Sidebar.Item>
@@ -154,8 +164,8 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                     }}
                     icon={HiShoppingBag}
                     className={sideItemActiveCN("/seller/order")}
-                    label="卖出"
-                    labelColor="dark"
+                    // label="卖出"
+                    // labelColor="dark"
                   >
                     我的订单
                   </Sidebar.Item>
@@ -164,9 +174,12 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                       route.push("/seller/notice");
                     }}
                     icon={HiSpeakerphone}
-                    className={sideItemActiveCN("/seller/notice")}
-                    label={"10 未读"}
-                    labelColor="green"
+                    className={cn(
+                      sideItemActiveCN("/seller/notice"),
+                      `${messageNotReadCount !== 0 ? "animate-scale-small-7000" : ""}`
+                    )}
+                    label={messageNotReadCount !== 0 ? `${messageNotReadCount} 未读` : ""}
+                    labelColor="blue"
                   >
                     消息通知
                   </Sidebar.Item>

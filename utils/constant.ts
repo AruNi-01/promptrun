@@ -104,9 +104,9 @@ export const SellerOrderTableColumnsEnum = {
 export const billTableColumns = [
   { key: "type", label: "账单类型" },
   { key: "channel", label: "渠道" },
-  { key: "amount", label: "金额", sortable: true  },
+  { key: "amount", label: "金额", sortable: true },
   { key: "remark", label: "说明" },
-  { key: "create_time", label: "时间", sortable: true  },
+  { key: "create_time", label: "时间", sortable: true },
 ];
 
 export const BillTableColumnsEnum = {
@@ -127,14 +127,11 @@ export const billTypeOptions = [
     label: "收入",
   },
 ];
-export const billTypeMap = new Map<number, string>(
-  billTypeOptions.map((billType) => [billType.type, billType.label])
-);
-export const billTypeColorMap = new Map<number, 
-  "default" | "danger" | "success" | "primary" | "secondary" | "warning" | undefined>
-(
-  billTypeOptions.map((billType) => [billType.type, billType.type === 0 ? "danger" : "success"])
-);
+export const billTypeMap = new Map<number, string>(billTypeOptions.map((billType) => [billType.type, billType.label]));
+export const billTypeColorMap = new Map<
+  number,
+  "default" | "danger" | "success" | "primary" | "secondary" | "warning" | undefined
+>(billTypeOptions.map((billType) => [billType.type, billType.type === 0 ? "danger" : "success"]));
 
 export const billChannelOptions = [
   {
@@ -157,12 +154,23 @@ export const billChannelOptions = [
 export const billChannelMap = new Map<number, string>(
   billChannelOptions.map((billChannel) => [billChannel.type, billChannel.label])
 );
-export const billChannelColorMap = new Map<number,
-  "default" | "danger" | "success" | "primary" | "secondary" | "warning" | undefined>
-(
-  billChannelOptions.map((billChannel) => [billChannel.type,
-    billChannel.type === 0 ? "success" :
-      billChannel.type === 1 ? "primary" :
-        billChannel.type === 2 ? "secondary" : 
-          "default"])
+export const billChannelColorMap = new Map<
+  number,
+  "default" | "danger" | "success" | "primary" | "secondary" | "warning" | undefined
+>(
+  billChannelOptions.map((billChannel) => [
+    billChannel.type,
+    billChannel.type === 0
+      ? "success"
+      : billChannel.type === 1
+      ? "primary"
+      : billChannel.type === 2
+      ? "secondary"
+      : "default",
+  ])
 );
+
+export const messageReadStatus = {
+  NotRead: 0,
+  Readed: 1,
+};
