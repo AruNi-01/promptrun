@@ -13,6 +13,8 @@ import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { Divider } from "@nextui-org/react";
 import { useEffect } from "react";
+import TopPrompts from "@/components/prompt/TopPrompts";
+import { SortByOptionsEnum } from "@/utils/constant";
 
 export default function Home() {
   const { removeLoginUser } = useLoginUserStore();
@@ -72,6 +74,16 @@ export default function Home() {
         </div>
         <Divider className="mb-4 mt-1" />
         <ImgGallery />
+      </div>
+      <div className="flex flex-col w-4/6">
+        <p className="text-2xl cursor-default text-default-600 self-start">最热 Prompts</p>
+        <Divider className="mb-2 mt-1" />
+        <TopPrompts sortBy={SortByOptionsEnum.Sell_Amount} limit={8} />
+      </div>
+      <div className="flex flex-col w-4/6">
+        <p className="text-2xl cursor-default text-default-600 self-start">最新 Prompts</p>
+        <Divider className="mb-2 mt-1" />
+        <TopPrompts sortBy={SortByOptionsEnum.Time} limit={8} />
       </div>
       <div className="flex gap-16 w-4/6 mt-8">
         <div className="flex flex-col gap-2 w-5/12 my-auto">

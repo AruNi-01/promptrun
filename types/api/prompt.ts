@@ -9,6 +9,7 @@ export interface PromptListReq {
   modelId?: number;
   categoryTypes?: number[];
   sortBy?: string;
+  limit?: number;
 
   publishStatus?: number[];
   AuditStatus?: number[];
@@ -58,6 +59,7 @@ export interface PromptAttachOrderIdListResp {
   promptAttachOrderIdList: PromptAttachOrderId[];
   rows: number;
 }
+
 export interface PromptAttachOrderId {
   prompt: Prompt;
   orderId: bigint;

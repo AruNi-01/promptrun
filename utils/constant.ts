@@ -16,6 +16,12 @@ export const sortByOptions = [
   },
 ];
 
+export const SortByOptionsEnum = {
+  Time: "time",
+  Hot: "hot",
+  Sell_Amount: "sell_amount",
+};
+
 export const categoryOptions = [
   {
     type: 1,
@@ -78,7 +84,7 @@ export const modelMediaType = {
 };
 
 export const categoryTypeMap = new Map<number, string>(
-  categoryOptions.map((category) => [category.type, category.label])
+  categoryOptions.map((category) => [category.type, category.label]),
 );
 
 export const sellerOrderTableColumns = [
@@ -152,7 +158,7 @@ export const billChannelOptions = [
   },
 ];
 export const billChannelMap = new Map<number, string>(
-  billChannelOptions.map((billChannel) => [billChannel.type, billChannel.label])
+  billChannelOptions.map((billChannel) => [billChannel.type, billChannel.label]),
 );
 export const billChannelColorMap = new Map<
   number,
@@ -163,11 +169,11 @@ export const billChannelColorMap = new Map<
     billChannel.type === 0
       ? "success"
       : billChannel.type === 1
-      ? "primary"
-      : billChannel.type === 2
-      ? "secondary"
-      : "default",
-  ])
+        ? "primary"
+        : billChannel.type === 2
+          ? "secondary"
+          : "default",
+  ]),
 );
 
 export const messageReadStatus = {

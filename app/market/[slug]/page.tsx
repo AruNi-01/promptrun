@@ -8,7 +8,7 @@ import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { LantuWxPayRsp } from "@/types/api/pay";
 import { PromptFullInfo } from "@/types/api/prompt";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
-import { categoryTypeMap, modelMediaType } from "@/utils/constant";
+import { categoryTypeMap, modelMediaType, SortByOptionsEnum } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Avatar, Card, CardBody, CardHeader, Carousel, Rating, Typography } from "@material-tailwind/react";
 import { Button } from "@nextui-org/button";
@@ -26,15 +26,25 @@ import {
   Tab,
   Tabs,
   Tooltip,
-  useDisclosure
+  useDisclosure,
 } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
-import { HiBell, HiCube, HiCurrencyYen, HiEye, HiHeart, HiShieldCheck, HiTag } from "react-icons/hi";
+import {
+  HiBell,
+  HiCube,
+  HiCurrencyYen,
+  HiEye,
+  HiHeart,
+  HiOutlineTrendingUp,
+  HiShieldCheck,
+  HiTag,
+} from "react-icons/hi";
 import Markdown from "react-markdown";
 import { findWaletByUserId } from "@/api/wallet";
 import { Wallet } from "@/types/api/wallet";
+import TopPrompts from "@/components/prompt/TopPrompts";
 
 export default function PromptDetailPage({ params }: { params: { slug: number } }) {
   const { slug: promptId } = params;
@@ -131,15 +141,17 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
 
     setLoading(true);
 
-    findWaletByUserId(loginUser?.id).then((res) => {
-      if (res.errCode !== 0) {
+    findWaletByUserId(loginUser?.id)
+      .then((res) => {
+        if (res.errCode !== 0) {
+          toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
+          return;
+        }
+        setWallet(res.data);
+      })
+      .catch(() => {
         toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
-        return;
-      }
-      setWallet(res.data);
-    }).catch(() => {
-      toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
-    });
+      });
 
     lantuWxPay({
       promptId: promptFullInfo?.prompt.id,
@@ -214,10 +226,13 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
   }, [JSON.stringify(lantuPayRsp)]);
 
   useEffect(() => {
-    setTimeout(() => {
-      clearInterval(payInterval);
-      setPayInterval(undefined);
-    }, 1000 * 60 * 2);
+    setTimeout(
+      () => {
+        clearInterval(payInterval);
+        setPayInterval(undefined);
+      },
+      1000 * 60 * 2,
+    );
   }, [JSON.stringify(payInterval)]);
 
   const handleBalancePay = () => {
@@ -225,7 +240,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       toastErrorMsg("您未登录，请先登录后再购买！");
       return;
     }
-    
+
     if (wallet?.balance < promptFullInfo.prompt.price) {
       toastInfoMsg("您的余额不足，请切换到微信支付购买！");
       return;
@@ -266,7 +281,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
       .finally(() => {
         setLoading(false);
       });
-  }
+  };
 
   if (!promptFullInfo) {
     return (
@@ -413,6 +428,18 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                 <Chip variant="flat" color="default" size="sm" radius="sm" startContent={<HiEye />}>
                   {promptFullInfo.prompt.browse_amount}
                 </Chip>
+                <Tooltip placement="top" showArrow content={"Prompt 销售量"} color={"default"} size="sm">
+                  <Chip
+                    variant="flat"
+                    color={"default"}
+                    size="sm"
+                    radius="sm"
+                    startContent={<HiOutlineTrendingUp />}
+                    className="cursor-pointer"
+                  >
+                    {likeAmount}
+                  </Chip>
+                </Tooltip>
                 <Tooltip
                   placement="top"
                   showArrow
@@ -442,7 +469,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
           <Typography variant="paragraph" className="text-start">
             {promptFullInfo.prompt.intro}
           </Typography>
-          <div className="flex">
+          <div className="flex mt-4">
             <Typography variant="paragraph" className="mb-1 self-end">
               ￥
             </Typography>
@@ -462,6 +489,16 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
             </Button>
           </Tooltip>
         </div>
+      </div>
+      <div className="flex flex-col mt-5">
+        <p className="text-2xl cursor-default text-default-600 self-start">最热 Prompts</p>
+        <Divider className="mb-2 mt-1" />
+        <TopPrompts sortBy={SortByOptionsEnum.Sell_Amount} limit={8} />
+      </div>
+      <div className="flex flex-col">
+        <p className="text-2xl cursor-default text-default-600 self-start">最新 Prompts</p>
+        <Divider className="mb-2 mt-1" />
+        <TopPrompts sortBy={SortByOptionsEnum.Time} limit={8} />
       </div>
 
       <Modal
@@ -546,8 +583,12 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                       <div className="flex flex-col items-start gap-3 pt-6 h-[406px]">
                         <div className="flex gap-1">
                           <span className="self-center">您的账户所剩余额：</span>
-                          <Chip variant={"faded"} startContent={<HiCurrencyYen className="h-[18px] w-[18px]" />}
-                                size={"md"} color={"secondary"}>
+                          <Chip
+                            variant={"faded"}
+                            startContent={<HiCurrencyYen className="h-[18px] w-[18px]" />}
+                            size={"md"}
+                            color={"secondary"}
+                          >
                             {wallet?.balance.toFixed(2)}
                           </Chip>
                         </div>
@@ -560,7 +601,8 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                           variant="ghost"
                           size="md"
                           className="mt-3 self-start"
-                        >立即支付
+                        >
+                          立即支付
                         </Button>
                       </div>
                     </Tab>
