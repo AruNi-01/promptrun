@@ -1,8 +1,7 @@
 import API from "@/config/apiConfig.";
-import { LoginReq, RegisterReq } from "@/types/api/passport";
-import { Result } from "@/types/api/result";
+import { LoginReq, RegisterReq, UpdatePasswordReq } from "@/types/_api/passport";
+import { Result } from "@/types/_api/result";
 import { baseFetch, httpMethod } from "./base";
-import { UpdatePasswordReq } from "@/types/api/passport";
 
 export const login = async (formData: LoginReq): Promise<Result> => {
   try {

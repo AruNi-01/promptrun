@@ -1,22 +1,22 @@
 "use client";
-import { findModelList } from "@/api/model";
-import { findPromptListByBuyerId, findPromptMasterImgListByPromptIds } from "@/api/prompt";
-import { findUserById, userUpdate } from "@/api/user";
-import { findWaletByUserId } from "@/api/wallet";
+import { findModelList } from "@/_api/model";
+import { findPromptListByBuyerId, findPromptMasterImgListByPromptIds } from "@/_api/prompt";
+import { findUserById, userUpdate } from "@/_api/user";
+import { findWaletByUserId } from "@/_api/wallet";
 import { UploadIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Model } from "@/types/api/model";
-import { Paginate } from "@/types/api/paginate";
-import { PromptAttachOrderId } from "@/types/api/prompt";
-import { PromptImg } from "@/types/api/prompt_img";
-import { UserUpdateReq } from "@/types/api/user";
-import { Wallet } from "@/types/api/wallet";
+import { Model } from "@/types/_api/model";
+import { Paginate } from "@/types/_api/paginate";
+import { PromptAttachOrderId } from "@/types/_api/prompt";
+import { PromptImg } from "@/types/_api/prompt_img";
+import { UserUpdateReq } from "@/types/_api/user";
+import { Wallet } from "@/types/_api/wallet";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import {
-  CardHeader,
   Avatar as MaterialAvatar,
   Card as MaterialCard,
   CardBody as MaterialCardBody,
+  CardHeader,
   Rating,
   Typography,
 } from "@material-tailwind/react";
@@ -27,11 +27,11 @@ import {
   CardBody,
   CardFooter,
   Chip,
+  cn,
   Divider,
   Image,
   Input,
   Pagination,
-  cn,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -240,7 +240,7 @@ export default function UserProfilePage() {
                   htmlFor="dropzone-file"
                   className={cn(
                     `${!isEdit ? "hidden" : ""}`,
-                    "flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                    "flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600",
                   )}
                 >
                   <div className="relative inline-block">
@@ -300,13 +300,19 @@ export default function UserProfilePage() {
       <div className="flex flex-col gap-5 mt-10">
         <div className="self-start flex gap-2">
           <h2 className="text-4xl">我的钱包</h2>
-          <Link href={"/wallet"} isExternal={false} className="self-end">查看交易记录</Link>
+          <Link href={"/wallet"} isExternal={false} className="self-end">
+            查看交易记录
+          </Link>
         </div>
         <Divider />
         <div className="flex gap-1 mt-4">
           <span className="self-center">余额：</span>
-          <Chip variant={"flat"} startContent={<HiCurrencyYen className="h-[18px] w-[18px]" />} size={"md"}
-                color={"success"}>
+          <Chip
+            variant={"flat"}
+            startContent={<HiCurrencyYen className="h-[18px] w-[18px]" />}
+            size={"md"}
+            color={"success"}
+          >
             {wallet?.balance.toFixed(2)}
           </Chip>
           <span className="text-default-400 text-sm ml-5 self-center">余额可用于在交易市场购买 Prompt</span>

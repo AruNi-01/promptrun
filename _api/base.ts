@@ -1,4 +1,4 @@
-import { Result } from "@/types/api/result";
+import { Result } from "@/types/_api/result";
 
 export const httpMethod = {
   GET: "GET",

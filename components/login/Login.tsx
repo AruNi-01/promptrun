@@ -1,6 +1,6 @@
-import { login, logout, register, updatePassword } from "@/api/passport";
+import { login, logout, register, updatePassword } from "@/_api/passport";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { LoginReq, RegisterReq, UpdatePasswordReq } from "@/types/api/passport";
+import { LoginReq, RegisterReq, UpdatePasswordReq } from "@/types/_api/passport";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Button } from "@nextui-org/button";
 import {
@@ -19,9 +19,8 @@ import {
   ModalHeader,
   Tab,
   Tabs,
-  User,
-  cn,
   useDisclosure,
+  User,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { Key, useEffect, useState } from "react";
@@ -198,7 +197,7 @@ export default function Login() {
     } else if (key === "update_password") {
       onUpdatePasswordModalOpen();
     } else if (key === "wallet") {
-      router.push("/wallet")
+      router.push("/wallet");
     }
   };
 

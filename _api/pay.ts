@@ -1,7 +1,7 @@
-import { Result } from "@/types/api/result";
+import { Result } from "@/types/_api/result";
 import { baseFetch, httpMethod } from "./base";
 import API from "@/config/apiConfig.";
-import { BalancePayReq, BalancePayRsp, LantuWxPayQueryOrderResp, LantuWxPayReq, LantuWxPayRsp } from "@/types/api/pay";
+import { BalancePayReq, BalancePayRsp, LantuWxPayQueryOrderResp, LantuWxPayReq, LantuWxPayRsp } from "@/types/_api/pay";
 
 export const lantuWxPay = async (reqData: LantuWxPayReq): Promise<Result<LantuWxPayRsp>> => {
   try {

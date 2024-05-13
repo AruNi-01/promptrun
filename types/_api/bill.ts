@@ -1,4 +1,4 @@
-import { Paginate } from "@/types/api/paginate";
+import { Paginate } from "@/types/_api/paginate";
 
 export interface Bill {
   id: number;
@@ -14,6 +14,7 @@ export interface BillListByUserIdReq {
   paginate: Paginate;
   userId: number | undefined;
 }
+
 export interface BillListRsp {
   billList: Bill[];
   rows: number;

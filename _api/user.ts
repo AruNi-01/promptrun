@@ -1,5 +1,5 @@
-import { Result } from "@/types/api/result";
-import { UserUpdateReq, userBecomeSellerReq } from "@/types/api/user";
+import { Result } from "@/types/_api/result";
+import { userBecomeSellerReq, UserUpdateReq } from "@/types/_api/user";
 import { baseFetch, httpMethod } from "./base";
 import API from "@/config/apiConfig.";
 

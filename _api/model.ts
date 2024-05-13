@@ -1,4 +1,4 @@
-import { Result } from "@/types/api/result";
+import { Result } from "@/types/_api/result";
 import { baseFetch, httpMethod } from "./base";
 import API from "@/config/apiConfig.";
 

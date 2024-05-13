@@ -1,17 +1,16 @@
 "use client";
-import { findModelById } from "@/api/model";
-import { findOrderListAttachPromptDetailById, orderRatingById } from "@/api/order";
-import { findSellerById } from "@/api/seller";
-import { findUserById } from "@/api/user";
-import AnimateLink from "@/components/ui/AnimateLink";
+import { findModelById } from "@/_api/model";
+import { findOrderListAttachPromptDetailById, orderRatingById } from "@/_api/order";
+import { findSellerById } from "@/_api/seller";
+import { findUserById } from "@/_api/user";
 import loadingIcon2 from "@/public/lottie/loading2.json";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Model } from "@/types/api/model";
-import { Order } from "@/types/api/order";
-import { Prompt } from "@/types/api/prompt";
-import { PromptDetail } from "@/types/api/prompt_detail";
-import { Seller } from "@/types/api/seller";
-import { User } from "@/types/api/user";
+import { Model } from "@/types/_api/model";
+import { Order } from "@/types/_api/order";
+import { Prompt } from "@/types/_api/prompt";
+import { PromptDetail } from "@/types/_api/prompt_detail";
+import { Seller } from "@/types/_api/seller";
+import { User } from "@/types/_api/user";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
 import { categoryTypeMap } from "@/utils/constant";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
@@ -21,7 +20,7 @@ import { Chip, Divider, Link, Popover, PopoverContent, PopoverTrigger, Tooltip }
 import Lottie from "lottie-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { HiCube, HiShieldCheck, HiTag, HiCheck } from "react-icons/hi";
+import { HiCheck, HiCube, HiShieldCheck, HiTag } from "react-icons/hi";
 
 export default function OrderPage({ params }: { params: { slug: bigint } }) {
   const { slug: orderId } = params;

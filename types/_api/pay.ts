@@ -3,7 +3,7 @@
  * @Author: AruNi_Lu
  * @Date: 2024-04-21 00:11:13
  */
-import { Wallet } from "@/types/api/wallet";
+import { Wallet } from "@/types/_api/wallet";
 
 interface BasePayReq {
   promptId: number;
@@ -14,8 +14,7 @@ interface BasePayReq {
   price: number;
 }
 
-export interface LantuWxPayReq extends BasePayReq {
-}
+export interface LantuWxPayReq extends BasePayReq {}
 
 export interface LantuWxPayRsp {
   orderId: bigint;

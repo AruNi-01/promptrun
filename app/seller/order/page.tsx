@@ -1,10 +1,10 @@
 "use client";
-import { findOrderListAttachFullInfoBySellerUserId } from "@/api/order";
+import { findOrderListAttachFullInfoBySellerUserId } from "@/_api/order";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { OrderListAttachFullInfo } from "@/types/api/order";
-import { Paginate } from "@/types/api/paginate";
+import { OrderListAttachFullInfo } from "@/types/_api/order";
+import { Paginate } from "@/types/_api/paginate";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
-import { SellerOrderTableColumnsEnum, categoryTypeMap, sellerOrderTableColumns } from "@/utils/constant";
+import { categoryTypeMap, sellerOrderTableColumns, SellerOrderTableColumnsEnum } from "@/utils/constant";
 import { toastErrorMsg } from "@/utils/messageToast";
 import {
   Avatar,
@@ -12,9 +12,9 @@ import {
   Divider,
   Pagination,
   Select,
-  SelectItem,
   SelectedItems,
   Selection,
+  SelectItem,
   SortDescriptor,
   Table,
   TableBody,
@@ -43,7 +43,7 @@ export default function SellerOrderPage() {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>();
 
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
-    new Set(sellerOrderTableColumns.filter((column) => column.defaultVisible).map((column) => column.key))
+    new Set(sellerOrderTableColumns.filter((column) => column.defaultVisible).map((column) => column.key)),
   );
   const headerColumns = useMemo(() => {
     return sellerOrderTableColumns.filter((column) => Array.from(visibleColumns).includes(column.key));

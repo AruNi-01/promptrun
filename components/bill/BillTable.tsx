@@ -8,7 +8,7 @@ import {
   TableCell,
   TableColumn,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import ghostMoveAnimation from "@/public/lottie/ghost-move.json";
@@ -19,11 +19,11 @@ import {
   billTableColumns,
   BillTableColumnsEnum,
   billTypeColorMap,
-  billTypeMap
+  billTypeMap,
 } from "@/utils/constant";
-import { Paginate } from "@/types/api/paginate";
-import { Bill } from "@/types/api/bill";
-import { findBillListByUserId } from "@/api/bill";
+import { Paginate } from "@/types/_api/paginate";
+import { Bill } from "@/types/_api/bill";
+import { findBillListByUserId } from "@/_api/bill";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { useRouter } from "next/navigation";
@@ -32,12 +32,12 @@ import { useLoginUserStore } from "@/state_stores/loginUserStore";
 export default function BillTable() {
   const { loginUser, removeLoginUser } = useLoginUserStore();
   const router = useRouter();
-  
+
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>();
 
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
-    new Set(billTableColumns.map((column) => column.key))
+    new Set(billTableColumns.map((column) => column.key)),
   );
   const headerColumns = useMemo(() => {
     return billTableColumns.filter((column) => Array.from(visibleColumns).includes(column.key));
@@ -85,7 +85,8 @@ export default function BillTable() {
   const sortedItems = useMemo(() => {
     if (!bill) return [];
     return [...bill].sort((a: Bill, b: Bill) => {
-      let first = 0, second = 0;
+      let first = 0,
+        second = 0;
       if (sortDescriptor?.column === BillTableColumnsEnum.create_time) {
         const dateA = new Date(a.create_time);
         const dateB = new Date(b.create_time);
@@ -109,7 +110,7 @@ export default function BillTable() {
           <Chip variant="shadow" color={billTypeColorMap.get(data.type)} size="sm" radius="sm">
             {billTypeMap.get(data.type)}
           </Chip>
-        )
+        );
       case BillTableColumnsEnum.channel:
         return (
           <Chip variant="dot" color={billChannelColorMap.get(data.channel)} size="sm" radius="sm">
@@ -117,20 +118,16 @@ export default function BillTable() {
           </Chip>
         );
       case BillTableColumnsEnum.amount:
-        return (
-          <p>￥{data.amount.toFixed(2)}</p>
-        );
+        return <p>￥{data.amount.toFixed(2)}</p>;
       case BillTableColumnsEnum.remark:
-        return (
-          <p className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">{data.remark}</p>
-        );
+        return <p className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">{data.remark}</p>;
       case BillTableColumnsEnum.create_time:
         return <p>{formatStringDate(data.create_time)}</p>;
       default:
         return "-";
     }
   }, []);
-  
+
   return (
     <Table
       aria-label="Table"
@@ -167,11 +164,7 @@ export default function BillTable() {
       selectedKeys={selectedKeys}
       selectionMode="single"
       sortDescriptor={sortDescriptor}
-      topContent={
-        <div className="flex flex-col gap-4">
-
-        </div>
-      }
+      topContent={<div className="flex flex-col gap-4"></div>}
       topContentPlacement="outside"
       onSelectionChange={setSelectedKeys}
       onSortChange={setSortDescriptor}
@@ -202,5 +195,5 @@ export default function BillTable() {
         )}
       </TableBody>
     </Table>
-  )
+  );
 }

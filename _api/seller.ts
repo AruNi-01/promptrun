@@ -1,7 +1,7 @@
-import { Seller, SellerUpdateReq } from "@/types/api/seller";
+import { Seller, SellerUpdateReq } from "@/types/_api/seller";
 import { baseFetch, httpMethod } from "./base";
 import API from "@/config/apiConfig.";
-import { Result } from "@/types/api/result";
+import { Result } from "@/types/_api/result";
 
 export const findSellerByUserId = async (userId: number): Promise<Result<Seller>> => {
   try {

@@ -1,7 +1,7 @@
 import API from "@/config/apiConfig.";
 import { baseFetch, httpMethod } from "./base";
-import { Result } from "@/types/api/result";
-import { Wallet } from "@/types/api/wallet";
+import { Result } from "@/types/_api/result";
+import { Wallet } from "@/types/_api/wallet";
 
 export const findWaletByUserId = async (userId: number): Promise<Result<Wallet>> => {
   try {

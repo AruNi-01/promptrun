@@ -1,10 +1,10 @@
 "use client";
-import { findChartsFullInfoBySellerUserId } from "@/api/order";
+import { findChartsFullInfoBySellerUserId } from "@/_api/order";
 import AreaChart from "@/components/seller/dashboard/AreaChart";
 import PieChart from "@/components/seller/dashboard/PieChart";
 import Tip from "@/components/ui/Tip";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { ChartsRsp } from "@/types/api/order";
+import { ChartsRsp } from "@/types/_api/order";
 import { checkIsLogin } from "@/utils/common";
 import { toastErrorMsg, toastInfoMsg } from "@/utils/messageToast";
 import { useEffect, useState } from "react";

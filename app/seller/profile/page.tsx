@@ -1,13 +1,13 @@
 "use client";
-import { findSellerByUserId, sellerUpdate } from "@/api/seller";
-import { findUserById } from "@/api/user";
+import { findSellerByUserId, sellerUpdate } from "@/_api/seller";
+import { findUserById } from "@/_api/user";
 import { UploadIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Seller, SellerUpdateReq } from "@/types/api/seller";
+import { Seller, SellerUpdateReq } from "@/types/_api/seller";
 import { checkIsLogin, getDayDiffUtilNow } from "@/utils/common";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Rating } from "@material-tailwind/react";
-import { Avatar, Button, Chip, Divider, Input, Textarea, cn } from "@nextui-org/react";
+import { Avatar, Button, Chip, cn, Divider, Input, Textarea } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -163,7 +163,7 @@ export default function SellerProfilePage() {
                 htmlFor="dropzone-file"
                 className={cn(
                   `${!isEdit ? "hidden" : ""}`,
-                  "flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                  "flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-full cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600",
                 )}
               >
                 <div className="relative inline-block">

@@ -1,11 +1,11 @@
 "use client";
-import { findModelList } from "@/api/model";
-import { findPromptList, findPromptMasterImgListByPromptIds } from "@/api/prompt";
+import { findModelList } from "@/_api/model";
+import { findPromptList, findPromptMasterImgListByPromptIds } from "@/_api/prompt";
 import { CustomCheckbox } from "@/components/market-page/CustomCheckBox";
-import { Model } from "@/types/api/model";
-import { Paginate } from "@/types/api/paginate";
-import { Prompt } from "@/types/api/prompt";
-import { PromptImg } from "@/types/api/prompt_img";
+import { Model } from "@/types/_api/model";
+import { Paginate } from "@/types/_api/paginate";
+import { Prompt } from "@/types/_api/prompt";
+import { PromptImg } from "@/types/_api/prompt_img";
 import { auditStatus, categoryOptions, publishStatus, sortByOptions } from "@/utils/constant";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { Rating } from "@material-tailwind/react";
@@ -153,7 +153,7 @@ export default function MarketPage() {
             setCategorySelected(
               categoryOptions
                 .filter((category) => selectedValues.includes(category.value))
-                .map((category) => category.type)
+                .map((category) => category.type),
             );
           }}
         >

@@ -1,14 +1,14 @@
 "use client";
-import { findModelList } from "@/api/model";
-import { promptPublish } from "@/api/prompt";
+import { findModelList } from "@/_api/model";
+import { promptPublish } from "@/_api/prompt";
 import { UploadIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Model } from "@/types/api/model";
+import { Model } from "@/types/_api/model";
 import { checkIsLogin } from "@/utils/common";
 import { categoryOptions, modelMediaType } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Carousel, Step, Stepper, Typography } from "@material-tailwind/react";
-import { Button, Chip, Divider, Input, Select, SelectItem, Textarea, cn } from "@nextui-org/react";
+import { Button, Chip, cn, Divider, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { HiCheckCircle, HiChevronLeft, HiDocumentText, HiLightningBolt, HiPencilAlt, HiTrash } from "react-icons/hi";
@@ -474,7 +474,7 @@ export default function GoodsPublishPage() {
                 <label
                   htmlFor="dropzone-file"
                   className={cn(
-                    "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                    "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600",
                   )}
                 >
                   <div className="relative inline-block">
@@ -537,7 +537,7 @@ export default function GoodsPublishPage() {
                     <label
                       htmlFor="img-list-file"
                       className={cn(
-                        "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                        "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600",
                       )}
                     >
                       <div className="relative inline-block">
@@ -584,7 +584,7 @@ export default function GoodsPublishPage() {
               <label
                 htmlFor="dropzone-file"
                 className={cn(
-                  "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                  "flex flex-col gap-2 w-full h-full items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600",
                 )}
               >
                 <div className="relative inline-block">

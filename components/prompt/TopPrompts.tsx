@@ -2,13 +2,13 @@ import { Card, CardBody, CardFooter, Chip, cn, Image, Pagination } from "@nextui
 import Link from "next/link";
 import { Rating } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { Prompt } from "@/types/api/prompt";
-import { PromptImg } from "@/types/api/prompt_img";
-import { Paginate } from "@/types/api/paginate";
-import { Model } from "@/types/api/model";
-import { findModelList } from "@/api/model";
+import { Prompt } from "@/types/_api/prompt";
+import { PromptImg } from "@/types/_api/prompt_img";
+import { Paginate } from "@/types/_api/paginate";
+import { Model } from "@/types/_api/model";
+import { findModelList } from "@/_api/model";
 import { toastErrorMsg } from "@/utils/messageToast";
-import { findPromptList, findPromptMasterImgListByPromptIds } from "@/api/prompt";
+import { findPromptList, findPromptMasterImgListByPromptIds } from "@/_api/prompt";
 import { auditStatus, publishStatus } from "@/utils/constant";
 
 export default function TopPrompts({

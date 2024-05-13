@@ -1,5 +1,5 @@
 /*
- * @Descripttion: 
+ * @Descripttion:
  * @Author: AruNi_Lu
  * @Date: 2024-04-04 16:02:35
  */
@@ -9,13 +9,13 @@ import {
   Order,
   OrderListAttachFullInfoBySellerUserIdReq,
   OrderListAttachFullInfoRsp,
-  OrderListAttachPromptDetailRsp,
-} from "@/types/api/order";
-import { Result } from "@/types/api/result";
+  OrderListAttachPromptDetailRsp
+} from "@/types/_api/order";
+import { Result } from "@/types/_api/result";
 import { baseFetch, httpMethod } from "./base";
 
 export const findOrderListAttachFullInfoBySellerUserId = async (
-  reqData: OrderListAttachFullInfoBySellerUserIdReq
+  reqData: OrderListAttachFullInfoBySellerUserIdReq,
 ): Promise<Result<OrderListAttachFullInfoRsp>> => {
   try {
     return await baseFetch(API.order.listAttachFullInfoBySellerUserId, httpMethod.POST, reqData);
@@ -33,7 +33,7 @@ export const findChartsFullInfoBySellerUserId = async (sellerUserId: number): Pr
 };
 
 export const findOrderListAttachPromptDetailById = async (
-  orderId: bigint
+  orderId: bigint,
 ): Promise<Result<OrderListAttachPromptDetailRsp>> => {
   try {
     return await baseFetch(API.order.listAttachPromptDetailById(orderId), httpMethod.GET);

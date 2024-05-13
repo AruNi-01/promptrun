@@ -1,12 +1,12 @@
 "use client";
-import { isLike, like, LikeErrCode } from "@/api/likes";
-import { balancePay, lantuWxPay, lantuWxPayQueryOrder } from "@/api/pay";
-import { findPromptFullInfoById } from "@/api/prompt";
+import { isLike, like, LikeErrCode } from "@/_api/likes";
+import { balancePay, lantuWxPay, lantuWxPayQueryOrder } from "@/_api/pay";
+import { findPromptFullInfoById } from "@/_api/prompt";
 import { AliPayIcon, WechatPayIcon } from "@/components/icons";
 import loadingIcon2 from "@/public/lottie/loading2.json";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { LantuWxPayRsp } from "@/types/api/pay";
-import { PromptFullInfo } from "@/types/api/prompt";
+import { LantuWxPayRsp } from "@/types/_api/pay";
+import { PromptFullInfo } from "@/types/_api/prompt";
 import { checkIsLogin, formatStringDate } from "@/utils/common";
 import { categoryTypeMap, modelMediaType, SortByOptionsEnum } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
@@ -42,8 +42,8 @@ import {
   HiTag,
 } from "react-icons/hi";
 import Markdown from "react-markdown";
-import { findWaletByUserId } from "@/api/wallet";
-import { Wallet } from "@/types/api/wallet";
+import { findWaletByUserId } from "@/_api/wallet";
+import { Wallet } from "@/types/_api/wallet";
 import TopPrompts from "@/components/prompt/TopPrompts";
 
 export default function PromptDetailPage({ params }: { params: { slug: number } }) {

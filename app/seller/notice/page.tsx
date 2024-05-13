@@ -1,8 +1,8 @@
 "use client";
-import { findMessageListByUserId, readAllMessage } from "@/api/message";
+import { findMessageListByUserId, readAllMessage } from "@/_api/message";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { useMessageNotReadCountState } from "@/state_stores/messageStore";
-import { Message } from "@/types/api/message";
+import { Message } from "@/types/_api/message";
 import { formatStringDate } from "@/utils/common";
 import { messageReadStatus } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";

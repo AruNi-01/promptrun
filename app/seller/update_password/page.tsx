@@ -1,8 +1,8 @@
 "use client";
-import { logout, updatePassword } from "@/api/passport";
+import { logout, updatePassword } from "@/_api/passport";
 import { LockIcon } from "@/components/icons";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { UpdatePasswordReq } from "@/types/api/passport";
+import { UpdatePasswordReq } from "@/types/_api/passport";
 import { toastErrorMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Button, Divider, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";

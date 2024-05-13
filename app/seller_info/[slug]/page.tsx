@@ -1,19 +1,19 @@
 "use client";
-import { findModelList } from "@/api/model";
-import { findPromptListBySellerId, findPromptMasterImgListByPromptIds } from "@/api/prompt";
-import { findSellerById } from "@/api/seller";
-import { findUserById } from "@/api/user";
+import { findModelList } from "@/_api/model";
+import { findPromptListBySellerId, findPromptMasterImgListByPromptIds } from "@/_api/prompt";
+import { findSellerById } from "@/_api/seller";
+import { findUserById } from "@/_api/user";
 import loadingIcon2 from "@/public/lottie/loading2.json";
-import { Model } from "@/types/api/model";
-import { Paginate } from "@/types/api/paginate";
-import { Prompt } from "@/types/api/prompt";
-import { PromptImg } from "@/types/api/prompt_img";
-import { Seller } from "@/types/api/seller";
-import { User } from "@/types/api/user";
+import { Model } from "@/types/_api/model";
+import { Paginate } from "@/types/_api/paginate";
+import { Prompt } from "@/types/_api/prompt";
+import { PromptImg } from "@/types/_api/prompt_img";
+import { Seller } from "@/types/_api/seller";
+import { User } from "@/types/_api/user";
 import { getDayDiffUtilNow } from "@/utils/common";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { Avatar, Rating, Typography } from "@material-tailwind/react";
-import { Card, CardBody, CardFooter, Chip, Divider, Image, Link, Pagination, cn } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Chip, cn, Divider, Image, Link, Pagination } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 
@@ -120,7 +120,7 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
       <title>卖家信息 | PromptRun</title>
       <div
         className={cn(
-          "relative bg-cover bg-[url('/seller_bg.png')] w-full h-[18rem] overflow-hidden text-center rounded-md"
+          "relative bg-cover bg-[url('/seller_bg.png')] w-full h-[18rem] overflow-hidden text-center rounded-md",
         )}
       />
       <div className="absolute ml-8 mt-[250px] z-20 w-[64.6%]">

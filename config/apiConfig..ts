@@ -1,8 +1,3 @@
-/*
- * @Descripttion:
- * @Author: AruNi_Lu
- * @Date: 2024-03-14 11:22:06
- */
 const API_URL = process.env.API_URL || "http://localhost:8080";
 
 const API = {

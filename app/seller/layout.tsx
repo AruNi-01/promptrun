@@ -1,6 +1,6 @@
 "use client";
-import { findMessageNotReadCountByUserId } from "@/api/message";
-import { checkIsLogin as checkIsLoginApi, logout } from "@/api/passport";
+import { findMessageNotReadCountByUserId } from "@/_api/message";
+import { checkIsLogin as checkIsLoginApi, logout } from "@/_api/passport";
 import { useLoginUserStore, UserTypes } from "@/state_stores/loginUserStore";
 import { useMessageNotReadCountState } from "@/state_stores/messageStore";
 import { checkIsLogin } from "@/utils/common";
@@ -15,7 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  User
+  User,
 } from "@nextui-org/react";
 import { Badge, Sidebar } from "flowbite-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ import {
   HiShoppingBag,
   HiSpeakerphone,
   HiUserCircle,
-  HiViewBoards
+  HiViewBoards,
 } from "react-icons/hi";
 
 export default function SellerLayout({ children }: { children: ReactNode }) {
@@ -39,7 +39,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
   const { loginUser, setLoginUser, removeLoginUser } = useLoginUserStore((state) => ({
     loginUser: state.loginUser,
     setLoginUser: state.setLoginUser,
-    removeLoginUser: state.removeLoginUser
+    removeLoginUser: state.removeLoginUser,
   }));
 
   const { messageNotReadCount, setMessageNotReadCount } = useMessageNotReadCountState();
@@ -61,15 +61,17 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
             toastInfoMsg("您还不是卖家，快去申请成为卖家吧！");
             route.push("/seller_become");
           } else {
-            findMessageNotReadCountByUserId(loginUser.id).then((rsp) => {
-              if (rsp.errCode !== 0) {
+            findMessageNotReadCountByUserId(loginUser.id)
+              .then((rsp) => {
+                if (rsp.errCode !== 0) {
+                  toastInfoMsg("获取未读消息失败，请稍后重试！");
+                } else {
+                  setMessageNotReadCount(rsp.data);
+                }
+              })
+              .catch(() => {
                 toastInfoMsg("获取未读消息失败，请稍后重试！");
-              } else {
-                setMessageNotReadCount(rsp.data);
-              }
-            }).catch(() => {
-              toastInfoMsg("获取未读消息失败，请稍后重试！");
-            });
+              });
           }
         } else {
           toastErrorMsg("服务器开小差了，请稍后重试！");
@@ -89,7 +91,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
     isOpen: isLogoutModalOpen,
     onOpen: onLogoutModalOpen,
     onClose: onLogoutModalClose,
-    onOpenChange: onLogoutModalOpenChange
+    onOpenChange: onLogoutModalOpenChange,
   } = useDisclosure();
 
   const handleLogout = async () => {
@@ -124,12 +126,12 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
             <User
               as="button"
               avatarProps={{
-                src: loginUser?.headerUrl
+                src: loginUser?.headerUrl,
               }}
               name={"Hello, " + loginUser?.nickname}
               classNames={{
                 name: "ml-1 text-xl text-default-800 font-bold",
-                base: "ml-2 mb-3"
+                base: "ml-2 mb-3",
               }}
               onClick={() => {
                 route.push("/seller/dashboard");
@@ -178,7 +180,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
                     icon={HiSpeakerphone}
                     className={cn(
                       sideItemActiveCN("/seller/notice"),
-                      `${messageNotReadCount !== 0 ? "animate-scale-small-7000" : ""}`
+                      `${messageNotReadCount !== 0 ? "animate-scale-small-7000" : ""}`,
                     )}
                     label={messageNotReadCount !== 0 ? `${messageNotReadCount} 未读` : ""}
                     labelColor="blue"

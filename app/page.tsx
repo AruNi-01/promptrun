@@ -1,5 +1,5 @@
 "use client";
-import { checkIsLogin } from "@/api/passport";
+import { checkIsLogin } from "@/_api/passport";
 import Accordion from "@/components/home-page/Accordion";
 import ImgGallery from "@/components/home-page/ImgGallery";
 import NavCard from "@/components/home-page/NavCard";

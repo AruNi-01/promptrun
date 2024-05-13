@@ -1,19 +1,19 @@
 /*
- * @Descripttion: 
+ * @Descripttion:
  * @Author: AruNi_Lu
  * @Date: 2024-03-24 10:53:05
  */
 import API from "@/config/apiConfig.";
 import { baseFetch, httpMethod } from "./base";
-import { Result } from "@/types/api/result";
+import { Result } from "@/types/_api/result";
 import {
   PromptAttachOrderIdListResp,
   PromptFullInfo,
   PromptListByBuyerIdReq,
   PromptListBySellerIdReq,
   PromptListReq,
-  PromptPublishReq,
-} from "@/types/api/prompt";
+  PromptPublishReq
+} from "@/types/_api/prompt";
 
 export const findPromptList = async (reqData: PromptListReq): Promise<Result> => {
   try {
@@ -23,7 +23,9 @@ export const findPromptList = async (reqData: PromptListReq): Promise<Result> =>
   }
 };
 
-export const findPromptListByBuyerId = async (reqData: PromptListByBuyerIdReq): Promise<Result<PromptAttachOrderIdListResp>> => {
+export const findPromptListByBuyerId = async (
+  reqData: PromptListByBuyerIdReq,
+): Promise<Result<PromptAttachOrderIdListResp>> => {
   try {
     return await baseFetch(API.prompt.listByBuyerId, httpMethod.POST, reqData);
   } catch (error) {

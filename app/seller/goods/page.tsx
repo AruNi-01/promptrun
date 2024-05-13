@@ -1,12 +1,12 @@
 "use client";
-import { findModelList } from "@/api/model";
-import { findPromptList, findPromptMasterImgListByPromptIds, updatePromptPublishStatusById } from "@/api/prompt";
+import { findModelList } from "@/_api/model";
+import { findPromptList, findPromptMasterImgListByPromptIds, updatePromptPublishStatusById } from "@/_api/prompt";
 import ghostMoveAnimation from "@/public/lottie/ghost-move.json";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
-import { Model } from "@/types/api/model";
-import { Paginate } from "@/types/api/paginate";
-import { Prompt } from "@/types/api/prompt";
-import { PromptImg } from "@/types/api/prompt_img";
+import { Model } from "@/types/_api/model";
+import { Paginate } from "@/types/_api/paginate";
+import { Prompt } from "@/types/_api/prompt";
+import { PromptImg } from "@/types/_api/prompt_img";
 import { auditStatusOptions, publishStatus as publishStatusConstants, publishStatusOptions } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Button } from "@nextui-org/button";
@@ -18,6 +18,7 @@ import {
   CheckboxGroup,
   Chip,
   ChipProps,
+  cn,
   Divider,
   Dropdown,
   DropdownItem,
@@ -28,12 +29,10 @@ import {
   Pagination,
   Radio,
   RadioGroup,
-  cn,
 } from "@nextui-org/react";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { HiEye, HiPencilAlt, HiTrash } from "react-icons/hi";
-import GoodsPublishPage from "./publish/page";
 import { checkIsLogin } from "@/utils/common";
 
 const auditStatusColorMap: Record<string, ChipProps["color"]> = {
@@ -282,7 +281,7 @@ export default function SellerGoodsPage() {
                             prompt.publish_status === publishStatusConstants.PublishOn
                               ? "text-red-500"
                               : "text-green-500"
-                          }`
+                          }`,
                         )}
                       />
                     }

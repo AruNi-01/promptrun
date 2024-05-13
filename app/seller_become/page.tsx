@@ -1,5 +1,5 @@
 "use client";
-import { userBecomeSeller } from "@/api/user";
+import { userBecomeSeller } from "@/_api/user";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
