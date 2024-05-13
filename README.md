@@ -38,7 +38,6 @@ docker run -p 3000:3000 nextjs-docker
 
 Open http://your-server-ip:3000 with your browser to see the result.
 
-
 <h2>Tech Stack</h2>
 
 Front end tech:
@@ -60,9 +59,25 @@ Back-end tech:
 - [Gorm](https://gorm.io/) - The fantastic ORM library for Golang.
 - [MySQL](https://www.mysql.com/) - MySQL is the world’s most popular open source database.
 - [Redis](https://redis.io/) - Redis is an in-memory data store used by millions of developers as a cache.
-
+- [Kafka](https://kafka.apache.org/) - Apache Kafka is an open-source distributed event streaming platform.
 
 > Back-end project: https://github.com/AruNi-01/promptrun-api
+
+<h2>Preview</h2>
+
+<img src="public/preview/preview1.png" alt="preview1"  width="898" />
+
+<img src="public/preview/preview2.png" alt="preview2"  width="898" />
+
+<img src="public/preview/preview4.png" alt="preview3"  width="898" />
+
+<img src="public/preview/preview3.png" alt="preview4"  width="898" />
+
+<img src="public/preview/preview5.png" alt="preview5"  width="898" />
+
+<img src="public/preview/preview6.png" alt="preview5"  width="898" />
+
+<img src="public/preview/preview7.png" alt="preview5"  width="898" />
 
 
 <h2>License</h2>
