@@ -437,7 +437,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
                     startContent={<HiOutlineTrendingUp />}
                     className="cursor-pointer"
                   >
-                    {likeAmount}
+                    {promptFullInfo.prompt.sell_amount}
                   </Chip>
                 </Tooltip>
                 <Tooltip
