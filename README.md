@@ -60,6 +60,7 @@ Back-end tech:
 - [MySQL](https://www.mysql.com/) - MySQL is the world’s most popular open source database.
 - [Redis](https://redis.io/) - Redis is an in-memory data store used by millions of developers as a cache.
 - [Kafka](https://kafka.apache.org/) - Apache Kafka is an open-source distributed event streaming platform.
+- [Corn](https://github.com/robfig/cron) - A cron library for go.
 
 > Back-end project: https://github.com/AruNi-01/promptrun-api
 
