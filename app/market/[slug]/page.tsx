@@ -102,7 +102,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
     like({ promptId: Number(promptId), userId: loginUser.id, sellerId: promptFullInfo?.seller.id || 0 })
       .then((res) => {
         if (!checkIsLogin(res.errCode)) {
-          removeLoginUser;
+          removeLoginUser();
           router.refresh();
           toastErrorMsg("请先登录后再点赞！");
           return;
