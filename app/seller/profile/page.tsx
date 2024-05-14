@@ -242,7 +242,7 @@ export default function SellerProfilePage() {
                 ratedColor="blue"
               />
               <Chip variant="flat" color="primary" size="sm" radius="sm" className="ml-2">
-                {seller.rating}
+                {seller.rating.toFixed(1)}
               </Chip>
               <span className="ml-1"> — 基于 {seller?.sell_amount} 个已评价订单</span>
             </div>

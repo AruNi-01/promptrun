@@ -1,13 +1,13 @@
 export const sortByOptions = [
   {
-    key: "time",
-    value: "time",
-    label: "时间",
-  },
-  {
     key: "hot",
     value: "hot",
     label: "热度",
+  },
+  {
+    key: "time",
+    value: "time",
+    label: "时间",
   },
   {
     key: "sell_amount",

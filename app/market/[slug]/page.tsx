@@ -326,7 +326,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
               </Link>
             </Tooltip>
             <div className="flex items-center gap-2 text-white/80">
-              <p>{promptFullInfo?.seller.rating}</p>
+              <p>{promptFullInfo?.seller.rating.toFixed(1)}</p>
               <Rating
                 value={
                   // 四舍五入计算评分
@@ -394,14 +394,17 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
           <Typography variant="h1">{promptFullInfo.prompt.title}</Typography>
           <div className="flex w-full justify-between">
             <div className="flex flex-col gap-2">
-              <Rating
-                value={
-                  // 四舍五入计算评分
-                  Math.round(promptFullInfo?.prompt.rating)
-                }
-                readonly
-                ratedColor="blue"
-              />
+              <div className="flex items-center gap-2 text-white/80">
+                <p>{promptFullInfo?.prompt.rating.toFixed(1)}</p>
+                <Rating
+                  value={
+                    // 四舍五入计算评分
+                    Math.round(promptFullInfo?.prompt.rating)
+                  }
+                  readonly
+                  ratedColor="blue"
+                />
+              </div>
               <div className="flex gap-2">
                 <Chip variant="flat" color="warning" size="sm" radius="full" startContent={<HiCube />}>
                   {promptFullInfo.model.name}

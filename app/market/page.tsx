@@ -6,7 +6,7 @@ import { Model } from "@/types/_api/model";
 import { Paginate } from "@/types/_api/paginate";
 import { Prompt } from "@/types/_api/prompt";
 import { PromptImg } from "@/types/_api/prompt_img";
-import { auditStatus, categoryOptions, publishStatus, sortByOptions } from "@/utils/constant";
+import { auditStatus, categoryOptions, publishStatus, sortByOptions, SortByOptionsEnum } from "@/utils/constant";
 import { toastErrorMsg } from "@/utils/messageToast";
 import { Rating } from "@material-tailwind/react";
 import {
@@ -41,7 +41,7 @@ export default function MarketPage() {
   const [modelList, setModelList] = useState<Model[]>([]);
   const [modelSelected, setModelSelected] = useState<string>("all");
   const [categorySelected, setCategorySelected] = useState<number[]>([]);
-  const [sortBy, setSortBy] = useState<string>("time");
+  const [sortBy, setSortBy] = useState<string>(SortByOptionsEnum.Hot);
 
   useEffect(() => {
     fetchModelList();
@@ -126,7 +126,7 @@ export default function MarketPage() {
         <Select
           label="排行方式"
           disallowEmptySelection
-          defaultSelectedKeys={["time"]}
+          defaultSelectedKeys={[SortByOptionsEnum.Hot]}
           className="max-w-[120px] h-8"
           onChange={(e) => {
             setSortBy(e.target.value);

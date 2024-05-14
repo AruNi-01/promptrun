@@ -137,7 +137,7 @@ export default function SellerDetailPage({ params }: { params: { slug: number } 
         </div>
       </div>
       <div className="flex gap-2 text-white/80 items-center mt-[74px]">
-        <p>评分：{seller?.rating}</p>
+        <p>评分：{seller?.rating.toFixed(1)}</p>
         <Rating
           value={
             // 四舍五入计算评分
