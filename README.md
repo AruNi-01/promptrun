@@ -55,6 +55,8 @@ Front end tech:
 Back-end tech:
 
 - [Golang](https://go.dev/) - Build simple, secure, scalable systems with Go.
+- [WebSocket](https://en.wikipedia.org/wiki/WebSocket) - A protocol that provides simultaneous two-way communication
+  channel.
 - [Gin](https://gin-gonic.com/) - The fastest full-featured web framework for Go. Crystal clear.
 - [Gorm](https://gorm.io/) - The fantastic ORM library for Golang.
 - [MySQL](https://www.mysql.com/) - MySQL is the world’s most popular open source database.
