@@ -76,9 +76,11 @@ Back-end tech:
 
 <img src="public/preview/preview5.png" alt="preview5"  width="898" />
 
-<img src="public/preview/preview6.png" alt="preview5"  width="898" />
+<img src="public/preview/preview6.png" alt="preview6"  width="898" />
 
-<img src="public/preview/preview7.png" alt="preview5"  width="898" />
+<img src="public/preview/preview7.png" alt="preview7"  width="898" />
+
+<img src="public/preview/preview8.png" alt="preview8"  width="898" />
 
 
 <h2>License</h2>
