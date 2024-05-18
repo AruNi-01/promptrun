@@ -31,6 +31,8 @@ import {
   HiUserCircle,
   HiViewBoards,
 } from "react-icons/hi";
+import { useWebSocket } from "ahooks";
+import apiConfig from "@/config/apiConfig.";
 
 export default function SellerLayout({ children }: { children: ReactNode }) {
   const route = useRouter();
@@ -43,6 +45,19 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
   }));
 
   const { messageNotReadCount, setMessageNotReadCount } = useMessageNotReadCountState();
+  const findMessageNotReadCount = async (userId: number) => {
+    findMessageNotReadCountByUserId(userId)
+      .then((rsp) => {
+        if (rsp.errCode !== 0) {
+          toastInfoMsg("获取未读消息失败，请稍后重试！");
+        } else {
+          setMessageNotReadCount(rsp.data);
+        }
+      })
+      .catch(() => {
+        toastInfoMsg("获取未读消息失败，请稍后重试！");
+      });
+  };
 
   useEffect(() => {
     const check = async () => {
@@ -61,17 +76,7 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
             toastInfoMsg("您还不是卖家，快去申请成为卖家吧！");
             route.push("/seller_become");
           } else {
-            findMessageNotReadCountByUserId(loginUser.id)
-              .then((rsp) => {
-                if (rsp.errCode !== 0) {
-                  toastInfoMsg("获取未读消息失败，请稍后重试！");
-                } else {
-                  setMessageNotReadCount(rsp.data);
-                }
-              })
-              .catch(() => {
-                toastInfoMsg("获取未读消息失败，请稍后重试！");
-              });
+            findMessageNotReadCount(loginUser.id);
           }
         } else {
           toastErrorMsg("服务器开小差了，请稍后重试！");
@@ -82,6 +87,16 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
     };
     check();
   }, [JSON.stringify(loginUser)]);
+
+  useWebSocket(apiConfig.websocket.messageNotReadCountByUserId(loginUser ? loginUser.id : 0), {
+    onMessage: (msg) => {
+      console.log("websocket.messageNotReadCountByUserId msg", msg);
+      // const data = JSON.parse(msg.data);
+      setMessageNotReadCount(1 + messageNotReadCount);
+    },
+    reconnectLimit: 2,
+    reconnectInterval: 3000,
+  });
 
   const sideItemActiveCN = (path: string): string => {
     return path !== "/" ? (pathname.startsWith(path) ? "bg-[#374151]" : "") : "";

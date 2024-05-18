@@ -102,6 +102,12 @@ const API = {
       return API_URL + `/api/v1/message/notReadCountByUserId/${userId}`;
     },
   },
+
+  websocket: {
+    messageNotReadCountByUserId: (userId: number): string => {
+      return API_URL + `/api/v1/websocket/messageNotReadCountByUserId/${userId}`;
+    },
+  },
 };
 
 export default API;

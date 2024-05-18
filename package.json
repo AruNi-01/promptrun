@@ -30,6 +30,7 @@
     "@types/react-dom": "18.2.7",
     "@vercel/analytics": "^1.1.1",
     "@vercel/speed-insights": "^1.0.2",
+    "ahooks": "^3.7.11",
     "autoprefixer": "10.4.16",
     "clsx": "^2.0.0",
     "date-fns": "^3.6.0",
