@@ -22,7 +22,7 @@ export default function SellerNoticePage() {
 
   const [messageList, setMessageList] = useState<Message[]>([]);
   // 同步 Sidebar messageNotReadCountState
-  const { setMessageNotReadCount } = useMessageNotReadCountState();
+  const { messageNotReadCount, setMessageNotReadCount } = useMessageNotReadCountState();
 
   const [notReadCount, setNotReadCount] = useState<number>();
 
@@ -44,7 +44,8 @@ export default function SellerNoticePage() {
       setMessageList(rsp.data);
       setNotReadCount(rsp.data.filter((msg) => msg.is_read === messageReadStatus.NotRead).length);
     });
-  }, [JSON.stringify(loginUser)]);
+    // messageNotReadCount 更新时（websocket 推送），重新获取消息列表
+  }, [JSON.stringify(loginUser), messageNotReadCount]);
 
   const handleAllRead = () => {
     if (!loginUser) return;
