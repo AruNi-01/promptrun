@@ -93,6 +93,13 @@ export default function SellerLayout({ children }: { children: ReactNode }) {
       console.log("websocket.messageNotReadCountByUserId msg", msg);
       // const data = JSON.parse(msg.data);
       setMessageNotReadCount(1 + messageNotReadCount);
+      toastSuccessMsg("您有新的消息，点击消息通知查看！");
+    },
+    onClose: (event) => {
+      console.log("websocket.messageNotReadCountByUserId onClose", event);
+    },
+    onError: (event) => {
+      console.log("websocket.messageNotReadCountByUserId onError", event);
     },
     reconnectLimit: 2,
     reconnectInterval: 3000,
