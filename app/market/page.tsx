@@ -15,8 +15,10 @@ import {
   CardFooter,
   CheckboxGroup,
   Chip,
+  cn,
   Divider,
   Image,
+  Input,
   Pagination,
   Radio,
   RadioGroup,
@@ -26,6 +28,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { HiSearch } from "react-icons/hi";
+import { Button } from "@nextui-org/button";
 
 export default function MarketPage() {
   const router = useRouter();
@@ -42,6 +46,8 @@ export default function MarketPage() {
   const [modelSelected, setModelSelected] = useState<string>("all");
   const [categorySelected, setCategorySelected] = useState<number[]>([]);
   const [sortBy, setSortBy] = useState<string>(SortByOptionsEnum.Hot);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [isSearch, setIsSearch] = useState<boolean>(false);
 
   useEffect(() => {
     fetchModelList();
@@ -79,6 +85,7 @@ export default function MarketPage() {
         categoryTypes: categorySelected.length === 0 ? undefined : categorySelected,
         // 如果 modelSelected 为 all，则不传 modelId；否则传 modelId，需要根据 modelSelected 去匹配 modelList 中的 id
         modelId: modelSelected === "all" ? undefined : modelList.find((model) => model.name === modelSelected)?.id,
+        searchInput: searchInput,
       });
       if (rsp.errCode !== 0) {
         toastErrorMsg("查询 Prompt 列表失败，请稍后刷新重试！");
@@ -96,13 +103,47 @@ export default function MarketPage() {
       setPromptMasterImgList(rsp.data);
     } catch (error) {
       toastErrorMsg("获取提示词列表失败，请稍后刷新重试！");
+    } finally {
+      setIsSearch(false);
     }
+  };
+
+  const handleSearch = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsSearch(true);
+    setTimeout(() => {
+      fetchPromptData();
+    }, 800);
   };
 
   return (
     <section className="flex flex-col gap-5 w-4/6 mt-8 overflow-hidden">
       <title>Prompt 商店 | PromptRun</title>
-      <h1 className="text-4xl self-start">所有 Prompts</h1>
+      <div className="flex justify-between">
+        <h1 className="text-4xl self-start">所有 Prompts</h1>
+        <div className="relative w-1/3">
+          <Input
+            size="lg"
+            type="search"
+            placeholder="搜索 Prompt 标题、介绍..."
+            value={searchInput}
+            onValueChange={setSearchInput}
+            startContent={
+              <HiSearch
+                className={cn(
+                  "h-5 w-5 text-gray-400 dark:text-gray-300",
+                  `${isSearch ? "animate-spinner-ease-spin" : ""}`,
+                )}
+              />
+            }
+            isClearable
+            classNames={{ clearButton: "pr-20" }}
+          />
+          <Button size="sm" color="primary" onClick={handleSearch} className="absolute end-2.5 bottom-2 text-sm z-20">
+            搜索
+          </Button>
+        </div>
+      </div>
       <Divider />
       <div className="flex justify-between">
         <div className="flex gap-1">

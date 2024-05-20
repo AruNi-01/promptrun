@@ -14,6 +14,8 @@ export interface PromptListReq {
   publishStatus?: number[];
   AuditStatus?: number[];
 
+  searchInput?: string;
+
   userId?: number; // // 用户 ID，用于获取某个用户（seller）发布的提示词
 }
 
