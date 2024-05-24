@@ -3,7 +3,7 @@ import { checkIsLogin } from "@/_api/passport";
 import Accordion from "@/components/home-page/Accordion";
 import ImgGallery from "@/components/home-page/ImgGallery";
 import NavCard from "@/components/home-page/NavCard";
-import { UnderlineIcon } from "@/components/icons";
+import { CircleLineIcon, UnderlineIcon } from "@/components/icons";
 import AnimateArrow from "@/components/ui/AnimateArrow";
 import Tip from "@/components/ui/Tip";
 import { useLoginUserStore } from "@/state_stores/loginUserStore";
@@ -42,11 +42,12 @@ export default function Home() {
         <p className="text-pink-400/80 mb-1">Prompts 交易平台</p>
         <UnderlineIcon className="fill-[#E14AA8]" />
       </div>
-      <p className="text-4xl cursor-default">
+      <div className="text-4xl cursor-default relative">
         让您使用
         <span className="rounded-3xl mx-1 bg-gradient-to-r from-purple-500 to-pink-500"> LLMs </span>
         更容易、更高效、更符合预期
-      </p>
+        <CircleLineIcon stroke={"white"} className="w-10 h-10 inline absolute -top-7" />
+      </div>
       <p className="text-2xl cursor-default bg-gradient-to-r from-pink-600 via-purple-500 to-blue-600 bg-clip-text text-transparent">
         GPT, Claude 3, Midjourney, DALL·E, Stable Diffusion ···
       </p>
