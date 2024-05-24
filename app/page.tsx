@@ -79,7 +79,7 @@ export default function Home() {
       <div className="flex flex-col w-4/6">
         <p className="text-2xl cursor-default text-default-600 self-start">最热 Prompts</p>
         <Divider className="mb-2 mt-1" />
-        <TopPrompts sortBy={SortByOptionsEnum.Sell_Amount} limit={8} />
+        <TopPrompts sortBy={SortByOptionsEnum.Hot} limit={8} />
       </div>
       <div className="flex flex-col w-4/6">
         <p className="text-2xl cursor-default text-default-600 self-start">最新 Prompts</p>
