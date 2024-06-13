@@ -8,9 +8,21 @@ import { checkIsLogin } from "@/utils/common";
 import { categoryOptions, modelMediaType } from "@/utils/constant";
 import { toastErrorMsg, toastInfoMsg, toastSuccessMsg } from "@/utils/messageToast";
 import { Carousel, Step, Stepper, Typography } from "@material-tailwind/react";
-import { Button, Chip, cn, Divider, Input, Select, SelectItem, Textarea } from "@nextui-org/react";
+import {
+  Button,
+  Chip,
+  cn,
+  Divider,
+  Input,
+  Select,
+  SelectItem,
+  Slider,
+  SliderValue,
+  Textarea,
+  Tooltip,
+} from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { HiCheckCircle, HiChevronLeft, HiDocumentText, HiLightningBolt, HiPencilAlt, HiTrash } from "react-icons/hi";
 
 export default function GoodsPublishPage() {
@@ -55,7 +67,20 @@ export default function GoodsPublishPage() {
   }, [modelSelected]);
 
   const [promptContent, setPromptContent] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
+
+  const [price, setPrice] = useState<number>(0.1);
+  const [priceSliderValue, setPriceSliderValue] = useState<SliderValue>(0.1);
+  const [priceInputValue, setPriceInputValue] = useState<string>("0.1");
+
+  const handlePriceInputChange = (value: SliderValue) => {
+    if (isNaN(Number(value))) {
+      toastInfoMsg("请输入正确的价格");
+      return;
+    }
+
+    setPriceSliderValue(value);
+    setPriceInputValue(value.toString());
+  };
   const [useSuggestion, setUseSuggestion] = useState<string>("");
   // 文本类 Prompt
   const [inputExample, setInputExample] = useState<string>("");
@@ -101,8 +126,9 @@ export default function GoodsPublishPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const handlePublish = () => {
-    if (price < 0 || price >= 1000) {
-      toastInfoMsg("请填写正确的出售价格再提交发布！");
+    setPrice(Number(priceSliderValue));
+    if (price < 0 || price > 100) {
+      toastInfoMsg("发布失败，价格范围为 0.1-100.0 元！");
       return;
     } else if (!masterImg) {
       toastInfoMsg("请上传 Banner 图片再提交发布！");
@@ -157,6 +183,8 @@ export default function GoodsPublishPage() {
     setIntro("");
     setPromptContent("");
     setPrice(0);
+    setPriceSliderValue(0.0);
+    setPriceInputValue("0.0");
     setUseSuggestion("");
     setInputExample("");
     setOutputExample("");
@@ -623,22 +651,79 @@ export default function GoodsPublishPage() {
             </div>
           </div>
           <div className="flex justify-center mt-2">
-            <p className="mt-2">出售价格：</p>
-            <Input
-              isRequired
-              variant="underlined"
-              color="success"
-              isInvalid={price < 0 || price >= 1000}
-              errorMessage={price < 0 ? "出售价格不能为负数" : price >= 1000 ? "出售价格不能超过 1000" : ""}
+            {/*<p className="mt-2">出售价格：</p>*/}
+            {/*<Input*/}
+            {/*  isRequired*/}
+            {/*  variant="underlined"*/}
+            {/*  color="success"*/}
+            {/*  isInvalid={price < 0 || price >= 1000}*/}
+            {/*  errorMessage={price < 0 ? "出售价格不能为负数" : price >= 1000 ? "出售价格不能超过 1000" : ""}*/}
+            {/*  classNames={{*/}
+            {/*    errorMessage: `${price === 0 ? "hidden" : ""}`,*/}
+            {/*  }}*/}
+            {/*  type="number"*/}
+            {/*  startContent={<p>￥</p>}*/}
+            {/*  placeholder="请输入出售价格"*/}
+            {/*  value={String(price)}*/}
+            {/*  onChange={(e) => setPrice(Number(e.target.value))}*/}
+            {/*  className="max-w-xs text-start"*/}
+            {/*/>*/}
+            <Slider
+              label="出售价格"
+              showTooltip={true}
+              tooltipValueFormatOptions={{ style: "currency", currency: "CNY" }}
+              size="md"
+              step={0.1}
+              maxValue={100}
+              minValue={0.1}
+              color="primary"
               classNames={{
-                errorMessage: `${price === 0 ? "hidden" : ""}`,
+                base: "max-w-md",
+                label: "text-medium",
               }}
-              type="number"
-              startContent={<p>￥</p>}
-              placeholder="请输入出售价格"
-              value={String(price)}
-              onChange={(e) => setPrice(Number(e.target.value))}
-              className="max-w-xs text-start"
+              // we extract the default children to render the input
+              renderValue={({ children, ...props }) => (
+                <output {...props}>
+                  <Tooltip
+                    className="text-tiny text-default-500 rounded-md"
+                    content="按下 Enter（回车键）确认"
+                    placement="left"
+                  >
+                    <div>
+                      <p className="inline-block">￥</p>
+                      <input
+                        className="px-1 py-0.5 w-12 text-right text-small text-default-700 font-medium bg-default-100 outline-none transition-colors rounded-small border-medium border-transparent hover:border-primary focus:border-primary"
+                        type="text"
+                        value={priceInputValue}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const v = e.target.value;
+                          setPriceInputValue(v);
+                        }}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                          let setDefaultFlag = false;
+                          if (e.key === "Enter") {
+                            if (isNaN(Number(priceInputValue))) {
+                              toastInfoMsg("请输入正确的价格");
+                              setDefaultFlag = true;
+                            } else if (Number(priceInputValue) <= 0 || Number(priceInputValue) > 100) {
+                              toastInfoMsg("价格范围为 0.1-100.0 元");
+                              setDefaultFlag = true;
+                            } else {
+                              setPriceSliderValue(Number(priceInputValue));
+                            }
+                          }
+                          if (setDefaultFlag) {
+                            setPriceInputValue("0.1");
+                            setPriceSliderValue(0.1);
+                          }
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+                </output>
+              )}
+              value={priceSliderValue}
+              onChange={handlePriceInputChange}
             />
           </div>
           <Button
