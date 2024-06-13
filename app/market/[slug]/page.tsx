@@ -45,6 +45,7 @@ import Markdown from "react-markdown";
 import { findWaletByUserId } from "@/_api/wallet";
 import { Wallet } from "@/types/_api/wallet";
 import TopPrompts from "@/components/prompt/TopPrompts";
+import { isRepeatPurchase } from "@/_api/order";
 
 export default function PromptDetailPage({ params }: { params: { slug: number } }) {
   const { slug: promptId } = params;
@@ -128,7 +129,24 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
 
   const [wallet, setWallet] = useState<Wallet>();
 
-  const handlePurchase = () => {
+  const checkIsRepeatPurchase = async (buyerId: number, promptId: number): Promise<boolean> => {
+    try {
+      const res = await isRepeatPurchase({ promptId, buyerId });
+      if (res.errCode !== 0) {
+        toastErrorMsg("检查是否重复购买失败，请稍后刷新重试！");
+        return true;
+      } else if (res.data) {
+        toastInfoMsg("您已购买过该 Prompt，无需重复购买！");
+        return true;
+      }
+    } catch {
+      toastErrorMsg("服务器开了会儿小差，请稍后重试！");
+      return true;
+    }
+    return false;
+  };
+
+  const handlePurchase = async () => {
     if (!loginUser || !promptFullInfo) {
       toastErrorMsg("您未登录，请先登录后再购买！");
       return;
@@ -136,6 +154,11 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
 
     if (loginUser.id === promptFullInfo.sellerUser.id) {
       toastInfoMsg("请勿购买自己的 Prompt！");
+      return;
+    }
+
+    const isRepeat = await checkIsRepeatPurchase(loginUser.id, promptFullInfo.prompt.id);
+    if (isRepeat) {
       return;
     }
 
@@ -150,7 +173,7 @@ export default function PromptDetailPage({ params }: { params: { slug: number } 
         setWallet(res.data);
       })
       .catch(() => {
-        toastErrorMsg("获取用户钱包失败，请稍后刷新重试！");
+        toastErrorMsg("服务器开了会儿小差，请稍后重试！");
       });
 
     lantuWxPay({

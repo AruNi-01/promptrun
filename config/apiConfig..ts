@@ -68,6 +68,7 @@ const API = {
     findById: (orderId: bigint): string => {
       return API_URL + `/api/v1/order/findById/${orderId}`;
     },
+    isRepeatPurchase: API_URL + "/api/v1/order/isRepeatPurchase",
   },
 
   likes: {

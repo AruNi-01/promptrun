@@ -57,3 +57,11 @@ export const findOrderById = async (orderId: bigint): Promise<Result<Order>> => 
     throw new Error("An error occurred while querying the order.");
   }
 };
+
+export const isRepeatPurchase = async (queryParamsObj: {}): Promise<Result<boolean>> => {
+  try {
+    return await baseFetch(API.order.isRepeatPurchase, httpMethod.GET, undefined, queryParamsObj);
+  } catch (error) {
+    throw new Error("An error occurred while querying user is repeat purchase prompt.");
+  }
+};
